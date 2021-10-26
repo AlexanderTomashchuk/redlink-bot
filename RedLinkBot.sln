@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2E516C4-E948-4585-BED2-43407FBBFB5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotAPI", "src\BotAPI\BotAPI.csproj", "{6F21E4BC-5459-46BA-8EDD-53D2DC451E47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bot.Pooling", "src\Bot.Pooling\Bot.Pooling.csproj", "{6F21E4BC-5459-46BA-8EDD-53D2DC451E47}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{684149CC-BC6F-4EB7-8FE0-42F7CEA404DD}"
 ProjectSection(SolutionItems) = preProject

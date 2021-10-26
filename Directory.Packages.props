@@ -1,5 +1,14 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup Label="Microsoft Nugets">
+        <PackageVersion Include="Microsoft.Extensions.Configuration" Version="5.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0"/>
+        <!--        <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0"/>-->
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging" Version="5.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="5.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0"/>
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2"/>
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0"/>
     </ItemGroup>
 
     <ItemGroup Label="Telegram Bot Nugets">
