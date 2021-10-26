@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.79"/>
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -6,13 +7,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Telegram.Bot" Version="16.0.2"/>
-        <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="0.2.0"/>
+        <PackageReference Include="Telegram.Bot"/>
+        <PackageReference Include="Telegram.Bot.Extensions.Polling"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj"/>
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings\appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings\appsettings.Development.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings\appsettings.Local.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
