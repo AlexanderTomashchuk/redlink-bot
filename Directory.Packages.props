@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup Label="Microsoft Nugets">
+    </ItemGroup>
+
+    <ItemGroup Label="Telegram Bot Nugets">
+        <PackageVersion Include="Telegram.Bot" Version="16.0.2"/>
+        <PackageVersion Include="Telegram.Bot.Extensions.Polling" Version="0.2.0"/>
+    </ItemGroup>
+</Project>
