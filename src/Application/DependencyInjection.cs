@@ -1,6 +1,4 @@
-using Application.Handlers;
 using Microsoft.Extensions.DependencyInjection;
-using Telegram.Bot.Extensions.Polling;
 
 namespace Application
 {
@@ -8,7 +6,6 @@ namespace Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
-            services.AddTransient<IUpdateHandler, RootUpdateHandler>();
         }
     }
 }
