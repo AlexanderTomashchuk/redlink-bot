@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Bot.Pooling.Helpers;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
@@ -20,8 +21,10 @@ namespace Bot.Pooling
             _logger = logger;
         }
 
-        public Task Run()
+        public async Task Run()
         {
+            await Init();
+
             using var cts = new CancellationTokenSource();
 
             _botClient.StartReceiving(_rootUpdateHandler, cts.Token);
@@ -31,8 +34,11 @@ namespace Bot.Pooling
 
             cts.Cancel();
             _logger.LogInformation("Bot stopped");
+        }
 
-            return Task.CompletedTask;
+        private async Task Init()
+        {
+            await _botClient.SetMyCommandsAsync(new SupportedCommands());
         }
     }
 }
