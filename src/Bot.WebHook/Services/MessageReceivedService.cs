@@ -1,26 +1,26 @@
 using System;
 using System.Threading.Tasks;
-using Bot.Pooling.Commands;
-using Bot.Pooling.Extensions;
-using Bot.Pooling.Helpers;
+using Bot.WebHook.Commands;
+using Bot.WebHook.Extensions;
+using Bot.WebHook.Helpers;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Pooling.UpdateHandlers
+namespace Bot.WebHook.Services
 {
-    public class MessageReceivedHandler
+    public class MessageReceivedService
     {
         private readonly SellCommandHandler _sellCommandHandler;
         private readonly UsageCommandHandler _usageCommandHandler;
         private readonly TestCommandHandler _testCommandHandler;
-        private readonly ILogger<MessageReceivedHandler> _logger;
+        private readonly ILogger<MessageReceivedService> _logger;
 
-        public MessageReceivedHandler(
+        public MessageReceivedService(
             SellCommandHandler sellCommandHandler,
             UsageCommandHandler usageCommandHandler,
             TestCommandHandler testCommandHandler,
-            ILogger<MessageReceivedHandler> logger)
+            ILogger<MessageReceivedService> logger)
         {
             _sellCommandHandler = sellCommandHandler;
             _usageCommandHandler = usageCommandHandler;
@@ -40,7 +40,8 @@ namespace Bot.Pooling.UpdateHandlers
             {
                 case MessageType.Text:
                 {
-                    if (!message.IsCommand()) return;
+                    //todo: OT uncomment?
+                    //if (!message.IsCommand()) return;
 
                     var handler = message.Command() switch
                     {

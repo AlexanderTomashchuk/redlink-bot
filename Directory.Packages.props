@@ -1,8 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <ItemGroup Label="Microsoft Nugets">
+        <PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11"/>
         <PackageVersion Include="Microsoft.Extensions.Configuration" Version="5.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0"/>
-        <!--        <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0"/>-->
         <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Logging" Version="5.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="5.0.0"/>
@@ -20,5 +20,9 @@
     <ItemGroup Label="Telegram Bot Nugets">
         <PackageVersion Include="Telegram.Bot" Version="16.0.2"/>
         <PackageVersion Include="Telegram.Bot.Extensions.Polling" Version="0.2.0"/>
+    </ItemGroup>
+
+    <ItemGroup Label="Other">
+        <PackageVersion Include="Newtonsoft.Json" Version="12.0.2"/>
     </ItemGroup>
 </Project>

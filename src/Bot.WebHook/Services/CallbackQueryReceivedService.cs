@@ -3,13 +3,13 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Pooling.UpdateHandlers
+namespace Bot.WebHook.Services
 {
-    public class CallbackQueryReceivedHandler
+    public class CallbackQueryReceivedService
     {
         private readonly ITelegramBotClient _botClient;
 
-        public CallbackQueryReceivedHandler(ITelegramBotClient botClient)
+        public CallbackQueryReceivedService(ITelegramBotClient botClient)
         {
             _botClient = botClient;
         }

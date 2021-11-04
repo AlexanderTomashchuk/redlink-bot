@@ -1,7 +1,7 @@
 using System.Linq;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Pooling.Helpers
+namespace Bot.WebHook.Helpers
 {
     public static class InputRestrictions
     {

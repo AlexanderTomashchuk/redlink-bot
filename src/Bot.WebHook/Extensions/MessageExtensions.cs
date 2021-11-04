@@ -1,8 +1,8 @@
 using System.Linq;
-using Bot.Pooling.Helpers;
+using Bot.WebHook.Helpers;
 using Telegram.Bot.Types;
 
-namespace Bot.Pooling.Extensions
+namespace Bot.WebHook.Extensions
 {
     public static class MessageExtensions
     {

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace Bot.Pooling.Commands
+namespace Bot.WebHook.Commands
 {
     public abstract class BaseCommandHandler
     {

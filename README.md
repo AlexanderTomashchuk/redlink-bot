@@ -5,9 +5,13 @@ docker rm pg_container --force; docker volume rm redlink-bot-postgesql_redlink-d
 ```
 
 ```
-docker compose up;
+docker compose up -d;
 ```
 
 ```
-dotnet ef migrations add InitialCreate --verbose -p="./src/Infrastructure" -s="./src/Bot.Pooling" -o="./Persistence/Migrations"; 
+dotnet ef migrations add InitialCreate --verbose -p="./src/Infrastructure" -s="./src/Bot.WebHook" -o="./Persistence/Migrations"; 
+```
+
+```
+ngrok http 5001
 ```

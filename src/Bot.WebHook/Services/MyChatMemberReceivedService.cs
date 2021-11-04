@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace Bot.Pooling.UpdateHandlers
+namespace Bot.WebHook.Services
 {
-    public class MyChatMemberReceivedHandler
+    public class MyChatMemberReceivedService
     {
         public async Task HandleAsync(ChatMemberUpdated chatMemberUpdated)
         {

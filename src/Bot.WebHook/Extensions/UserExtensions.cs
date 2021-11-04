@@ -1,6 +1,6 @@
 using Telegram.Bot.Types;
 
-namespace Bot.Pooling.Extensions
+namespace Bot.WebHook.Extensions
 {
     public static class UserExtensions
     {

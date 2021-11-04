@@ -14,10 +14,6 @@ namespace Infrastructure.Persistence
         private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
 
-        public ApplicationDbContext()
-        {
-        }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions,
             ICurrentUserService currentUserService,
             IDateTime dateTime) : base(dbContextOptions)
@@ -43,18 +39,20 @@ namespace Infrastructure.Persistence
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
+            var currentUserId = await _currentUserService.GetUserIdAsync();
+
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
+                        entry.Entity.CreatedBy = currentUserId;
                         entry.Entity.CreatedOn = _dateTime.UtcNow;
                         break;
 
                     case EntityState.Modified:
 
-                        entry.Entity.ModifiedBy = _currentUserService.UserId;
+                        entry.Entity.ModifiedBy = currentUserId;
                         entry.Entity.ModifiedOn = _dateTime.UtcNow;
                         break;
                 }
@@ -62,7 +60,6 @@ namespace Infrastructure.Persistence
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            //todo: OT review this
             //await DispatchEvents();
 
             return result;
@@ -75,11 +72,6 @@ namespace Infrastructure.Persistence
             base.OnModelCreating(builder);
         }
 
-        //todo: OT REMOVE after moving app to ASP.NET technology
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost;Database=redlink-local-db;Username=root;Password=root;");
-
-        //todo: OT review this
         // private async Task DispatchEvents()
         // {
         //     while (true)
