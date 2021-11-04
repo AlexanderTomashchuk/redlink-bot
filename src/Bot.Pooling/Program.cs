@@ -2,19 +2,22 @@
 using System.IO;
 using System.Threading.Tasks;
 using Application;
-using Bot.Pooling.Handlers;
-using Bot.Pooling.Handlers.CommandHandlers;
-using Bot.Pooling.Options;
+using Application.Common.Interfaces;
+using Bot.Pooling.Commands;
+using Bot.Pooling.Services;
+using Bot.Pooling.UpdateHandlers;
+using Infrastructure;
+using Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 
 namespace Bot.Pooling
 {
-    internal static class Program
+    public class Program
     {
         static async Task Main()
         {
@@ -22,6 +25,8 @@ namespace Bot.Pooling
             ConfigureServices(services);
 
             var serviceProvider = services.BuildServiceProvider();
+
+            await ApplyDbMigrationsAndSeedData(serviceProvider);
 
             // ReSharper disable once PossibleNullReferenceException
             await serviceProvider.GetService<App>()?.Run();
@@ -33,11 +38,9 @@ namespace Bot.Pooling
 
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"./appsettings/appsettings.{environment}.json", optional: false)
+                .AddJsonFile($"appsettings.{environment}.json", optional: false)
                 .AddEnvironmentVariables()
                 .Build();
-
-            services.Configure<BotConfigurationOptions>(configuration.GetSection("BotConfiguration"));
 
             services.AddLogging(builder =>
             {
@@ -45,9 +48,10 @@ namespace Bot.Pooling
                 builder.AddDebug();
             });
 
+            services.AddInfrastructure(configuration);
             services.AddApplication();
 
-            services.AddTransient<IUpdateHandler, RootUpdateHandler>();
+            services.AddTransient<IUpdateHandler, UpdateHandler>();
             services.AddTransient<MessageReceivedHandler>();
             services.AddTransient<CallbackQueryReceivedHandler>();
             services.AddTransient<MyChatMemberReceivedHandler>();
@@ -55,14 +59,35 @@ namespace Bot.Pooling
             services.AddTransient<UsageCommandHandler>();
             services.AddTransient<TestCommandHandler>();
 
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddSingleton<ITelegramBotClient>(sp =>
                 {
-                    var accessToken = sp.GetRequiredService<IOptions<BotConfigurationOptions>>().Value
-                        .AccessToken;
+                    var accessToken = configuration.GetValue<string>("BotConfiguration:AccessToken");
                     return new TelegramBotClient(accessToken);
                 }
             );
+
             services.AddTransient<App>();
+        }
+
+        private static async Task ApplyDbMigrationsAndSeedData(ServiceProvider serviceProvider)
+        {
+            try
+            {
+                var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+                if (context.Database.IsNpgsql())
+                {
+                    await context.Database.MigrateAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
+
+                logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                throw;
+            }
         }
     }
 }

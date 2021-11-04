@@ -1,28 +1,57 @@
 using System.Collections.Generic;
 using System.Text;
 using Domain.Common;
+using Domain.Extensions;
 
 namespace Domain.Entities
 {
-    public class Product
+    public class Product : AuditableEntity
     {
-        public string Name { get; set; }
+        public long Id { get; }
 
-        public string Description { get; set; }
+        public string Name { get; }
 
-        public ProductCondition Condition { get; set; }
+        public string Description { get; }
 
-        public ProductType Type { get; set; }
+        public long ConditionId { get; }
 
-        public decimal Price { get; set; }
+        public ProductCondition Condition { get; }
 
-        public Currency Currency { get; set; }
+        public long TypeId { get; }
 
-        public IEnumerable<string> HashTags { get; set; }
+        public ProductType Type { get; }
 
-        public IEnumerable<string> FileIds { get; set; }
+        public decimal Price { get; }
 
-        public User Seller { get; set; }
+        public long CurrencyId { get; }
+        public Currency Currency { get; }
+
+        public ICollection<HashTag> HashTags { get; }
+
+        public ICollection<File> Files { get; }
+
+        public long SellerId { get; }
+        public User Seller { get; }
+
+        private Product()
+        {
+        }
+
+        public Product(long id, string name, string description, long conditionId,
+            long typeId, decimal price, long currencyId, long sellerId,
+            ICollection<HashTag> hashTags = null, ICollection<File> files = null)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            ConditionId = conditionId;
+            TypeId = typeId;
+            Price = price;
+            CurrencyId = currencyId;
+            SellerId = sellerId;
+            HashTags = hashTags;
+            Files = files;
+        }
 
         public override string ToString()
         {
@@ -42,23 +71,6 @@ namespace Domain.Entities
             sb.AppendLine($"Продавец: [{Seller.FirstName} {Seller.LastName}](tg://user?id={Seller.TelegramId})");
 
             return sb.ToString();
-        }
-    }
-
-    //todo: REMOVE
-    public class ProductBuilder
-    {
-        private Product _product;
-
-        public ProductBuilder()
-        {
-            _product = new Product();
-        }
-
-
-        public Product Build()
-        {
-            return _product;
         }
     }
 }

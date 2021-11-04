@@ -1,17 +1,51 @@
+using System.Collections.Generic;
+using Domain.Common;
 using Domain.ValueObjects;
 
 namespace Domain.Entities
 {
-    public class User
+    public class User : AuditableEntity
     {
-        public string FirstName { get; set; }
+        public long Id { get; }
 
-        public string LastName { get; set; }
+        public long TelegramId { get; }
 
-        public long TelegramId { get; set; }
+        public string FirstName { get; }
 
-        public UserStatus Status { get; set; }
+        public string LastName { get; }
 
-        public Country Country { get; set; }
+        public string Username { get; }
+
+        public long ChatId { get; }
+
+        public UserStatus Status { get; }
+
+        public long CountryId { get; }
+
+        public Country Country { get; }
+
+        public long LanguageId { get; set; }
+
+        public Language Language { get; }
+
+        public ICollection<Product> Products { get; }
+
+        private User()
+        {
+        }
+
+        public User(long id, string firstName, string lastName, long telegramId, string username, long chatId,
+            UserStatus status, long countryId, ICollection<Product> products = null)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            TelegramId = telegramId;
+            Username = username;
+            ChatId = chatId;
+            Status = status;
+            CountryId = countryId;
+            Products = products;
+        }
     }
 }

@@ -3,22 +3,22 @@ using Domain.Common;
 
 namespace Domain.Entities
 {
-    public class ProductType : AuditableEntity
+    public class HashTag : AuditableEntity
     {
         public long Id { get; }
 
-        public string Name { get; }
+        public string Value { get; }
 
         public ICollection<Product> Products { get; }
 
-        private ProductType()
+        private HashTag()
         {
         }
 
-        public ProductType(long id, string name, ICollection<Product> products = null)
+        public HashTag(long id, string value, ICollection<Product> products = null)
         {
             Id = id;
-            Name = name;
+            Value = value;
             Products = products;
         }
     }

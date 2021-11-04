@@ -1,15 +1,37 @@
+using System.Collections.Generic;
+using Domain.Common;
+
 namespace Domain.Entities
 {
-    public class Country
+    public class Country : AuditableEntity
     {
-        public string Name { get; set; }
+        public long Id { get; }
 
-        public string Code { get; set; }
+        public string Name { get; }
 
-        public string Flag { get; set; }
+        public string Code { get; }
 
-        public Language DefaultLanguage { get; set; }
+        public string Flag { get; }
 
-        public Currency DefaultCurrency { get; set; }
+        public long DefaultCurrencyId { get; }
+
+        public Currency DefaultCurrency { get; }
+
+        public ICollection<User> Users { get; }
+
+        private Country()
+        {
+        }
+
+        public Country(long id, string name, string code, string flag,
+            long defaultCurrencyId, ICollection<User> users = null)
+        {
+            Id = id;
+            Name = name;
+            Code = code;
+            Flag = flag;
+            DefaultCurrencyId = defaultCurrencyId;
+            Users = users;
+        }
     }
 }
