@@ -7,8 +7,8 @@ namespace Bot.Pooling.Helpers
     {
         public static UpdateType[] AllowedUpdates => new[]
         {
-            UpdateType.Message, UpdateType.EditedMessage, UpdateType.CallbackQuery, UpdateType.ChosenInlineResult,
-            UpdateType.MyChatMember, UpdateType.Unknown
+            UpdateType.Message, UpdateType.EditedMessage, UpdateType.CallbackQuery, UpdateType.MyChatMember,
+            UpdateType.Unknown
         };
 
         private static MessageType[] AllowedMessageTypes => new[]

@@ -4,7 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Pooling.Handlers.CommandHandlers
+namespace Bot.Pooling.Commands
 {
     public class TestCommandHandler : BaseCommandHandler
     {

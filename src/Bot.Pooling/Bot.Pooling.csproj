@@ -14,12 +14,20 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Telegram.Bot" />
+        <PackageReference Include="Telegram.Bot.Extensions.Polling" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <None Update="appsettings\appsettings.Local.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.Local.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

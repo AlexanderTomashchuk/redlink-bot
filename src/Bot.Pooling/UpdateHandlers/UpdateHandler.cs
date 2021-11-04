@@ -9,20 +9,20 @@ using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Pooling.Handlers
+namespace Bot.Pooling.UpdateHandlers
 {
-    public class RootUpdateHandler : IUpdateHandler
+    public class UpdateHandler : IUpdateHandler
     {
         private readonly MessageReceivedHandler _messageReceivedHandler;
         private readonly CallbackQueryReceivedHandler _callbackQueryReceivedHandler;
         private readonly MyChatMemberReceivedHandler _myChatMemberReceivedHandler;
-        private readonly ILogger<RootUpdateHandler> _logger;
+        private readonly ILogger<UpdateHandler> _logger;
 
-        public RootUpdateHandler(
+        public UpdateHandler(
             MessageReceivedHandler messageReceivedHandler,
             CallbackQueryReceivedHandler callbackQueryReceivedHandler,
             MyChatMemberReceivedHandler myChatMemberReceivedHandler,
-            ILogger<RootUpdateHandler> logger)
+            ILogger<UpdateHandler> logger)
         {
             _messageReceivedHandler = messageReceivedHandler;
             _callbackQueryReceivedHandler = callbackQueryReceivedHandler;
@@ -34,6 +34,15 @@ namespace Bot.Pooling.Handlers
 
         public async Task HandleUpdate(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
         {
+            CurrentContext.Build(update);
+
+            var from = update.Message.From.LanguageCode;
+            var messageText = update.Message.Text;
+            var cc = CurrentContext.User;
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+
+            await Task.Delay(6000);
+
             var handler = update.Type switch
             {
                 UpdateType.Message => _messageReceivedHandler.HandleAsync(update.Message),
@@ -68,7 +77,7 @@ namespace Bot.Pooling.Handlers
 
         private Task UnknownUpdateHandleAsync(Update update)
         {
-            _logger.LogWarning($"Unknown update type: {update.Type}");
+            _logger.LogWarning("Unknown update type: {UpdateType}", update.Type);
             return Task.CompletedTask;
         }
     }

@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
-namespace Bot.Pooling.Handlers
+namespace Bot.Pooling.UpdateHandlers
 {
     public class MyChatMemberReceivedHandler
     {
@@ -10,7 +9,7 @@ namespace Bot.Pooling.Handlers
         {
             var newcm = chatMemberUpdated.NewChatMember?.Status;
             var oldcm = chatMemberUpdated.OldChatMember?.Status;
-            
+
             await Task.Delay(1000);
         }
     }

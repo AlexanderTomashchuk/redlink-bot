@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Bot.Pooling.Commands;
 using Bot.Pooling.Extensions;
-using Bot.Pooling.Handlers.CommandHandlers;
 using Bot.Pooling.Helpers;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.Pooling.Handlers
+namespace Bot.Pooling.UpdateHandlers
 {
     public class MessageReceivedHandler
     {

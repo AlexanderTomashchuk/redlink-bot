@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 using Bot.Pooling.Extensions;
-using Bot.Pooling.Helpers;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Pooling.Handlers.CommandHandlers
+namespace Bot.Pooling.Commands
 {
     public class UsageCommandHandler : BaseCommandHandler
     {
