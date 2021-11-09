@@ -4,7 +4,7 @@ using Domain.ValueObjects;
 
 namespace Domain.Entities
 {
-    public class User : AuditableEntity
+    public class AppUser : AuditableEntity
     {
         public long Id { get; }
 
@@ -30,11 +30,11 @@ namespace Domain.Entities
 
         public ICollection<Product> Products { get; }
 
-        private User()
+        private AppUser()
         {
         }
 
-        public User(long id, string firstName, string lastName, long telegramId, string username, long chatId,
+        public AppUser(long id, string firstName, string lastName, long telegramId, string username, long chatId,
             UserStatus status, long countryId, ICollection<Product> products = null)
         {
             Id = id;

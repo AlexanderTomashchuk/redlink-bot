@@ -35,7 +35,7 @@ namespace Infrastructure.Persistence
 
         public DbSet<ProductType> ProductTypes { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<AppUser> Users { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {

@@ -1,36 +1,37 @@
 using System;
 using System.Threading.Tasks;
-using Bot.WebHook.Commands;
-using Bot.WebHook.Extensions;
-using Bot.WebHook.Helpers;
+using Application.BotCommands;
+using Application.Common.Extensions;
+using Application.Common.Restrictions;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.WebHook.Services
+namespace Application.Processors
 {
-    public class MessageReceivedService
+    public class MessageReceivedProcessor
     {
-        private readonly SellCommandHandler _sellCommandHandler;
-        private readonly UsageCommandHandler _usageCommandHandler;
-        private readonly TestCommandHandler _testCommandHandler;
-        private readonly ILogger<MessageReceivedService> _logger;
+        private readonly SellCommand _sellCommand;
+        private readonly UsageCommand _usageCommand;
+        private readonly TestCommand _testCommand;
+        private readonly ILogger<MessageReceivedProcessor> _logger;
 
-        public MessageReceivedService(
-            SellCommandHandler sellCommandHandler,
-            UsageCommandHandler usageCommandHandler,
-            TestCommandHandler testCommandHandler,
-            ILogger<MessageReceivedService> logger)
+        public MessageReceivedProcessor(
+            SellCommand sellCommand,
+            UsageCommand usageCommand,
+            TestCommand testCommand,
+            ILogger<MessageReceivedProcessor> logger)
         {
-            _sellCommandHandler = sellCommandHandler;
-            _usageCommandHandler = usageCommandHandler;
-            _testCommandHandler = testCommandHandler;
+            _sellCommand = sellCommand;
+            _usageCommand = usageCommand;
+            _testCommand = testCommand;
             _logger = logger;
         }
 
-        public async Task HandleAsync(Message message)
+        public async Task ProcessAsync(Message message)
         {
             _logger.LogInformation(message.Chat.Id.ToString());
+
             if (!message.Type.IsAllowedMessageType())
             {
                 return;
@@ -45,9 +46,9 @@ namespace Bot.WebHook.Services
 
                     var handler = message.Command() switch
                     {
-                        "/sell" => _sellCommandHandler.HandleAsync(message),
-                        "/test" => _testCommandHandler.HandleAsync(message),
-                        _ => _usageCommandHandler.HandleAsync(message)
+                        "/sell" => _sellCommand.ExecuteAsync(message),
+                        "/test" => _testCommand.ExecuteAsync(message),
+                        _ => _usageCommand.ExecuteAsync(message)
                     };
                     await handler;
 

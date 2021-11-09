@@ -1,18 +1,21 @@
 using System.Threading.Tasks;
-using Bot.WebHook.Extensions;
+using Application.Common;
+using Application.Common.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.WebHook.Commands
+namespace Application.BotCommands
 {
-    public class SellCommandHandler : BaseCommandHandler
+    public class SellCommand : BaseCommand
     {
-        public SellCommandHandler(ITelegramBotClient botClient) : base(botClient)
+        public SellCommand(ITelegramBotClient botClient) : base(botClient)
         {
         }
 
-        public override async Task HandleAsync(Message message)
+        public override string Name => CommandNames.SellCommand;
+
+        public override async Task ExecuteAsync(Message message)
         {
             message.Deconstruct(out var chatId);
 

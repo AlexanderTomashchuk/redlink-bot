@@ -3,18 +3,18 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.WebHook.Services
+namespace Application.Processors
 {
-    public class CallbackQueryReceivedService
+    public class CallbackQueryReceivedProcessor
     {
         private readonly ITelegramBotClient _botClient;
 
-        public CallbackQueryReceivedService(ITelegramBotClient botClient)
+        public CallbackQueryReceivedProcessor(ITelegramBotClient botClient)
         {
             _botClient = botClient;
         }
 
-        public async Task HandleAsync(CallbackQuery updateCallbackQuery)
+        public async Task ProcessAsync(CallbackQuery updateCallbackQuery)
         {
             switch (updateCallbackQuery.Data)
             {

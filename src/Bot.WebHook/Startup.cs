@@ -1,6 +1,6 @@
 using Application;
 using Application.Common.Interfaces;
-using Bot.WebHook.Commands;
+using Application.Processors;
 using Bot.WebHook.Services;
 using Bot.WebHook.Services.HostedServices;
 using Infrastructure;
@@ -50,13 +50,6 @@ namespace Bot.WebHook
             services.AddApplication();
 
             services.AddScoped<HandleUpdateService>();
-            services.AddScoped<MessageReceivedService>();
-            services.AddScoped<CallbackQueryReceivedService>();
-            services.AddScoped<MyChatMemberReceivedService>();
-            services.AddScoped<SellCommandHandler>();
-            services.AddScoped<UsageCommandHandler>();
-            services.AddScoped<TestCommandHandler>();
-
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
             services.AddHostedService<WebHookConfiguratorService>();

@@ -1,8 +1,9 @@
 using System.Linq;
-using Bot.WebHook.Helpers;
+using Application.BotCommands;
+using Application.Common.Restrictions;
 using Telegram.Bot.Types;
 
-namespace Bot.WebHook.Extensions
+namespace Application.Common.Extensions
 {
     public static class MessageExtensions
     {

@@ -19,7 +19,7 @@ namespace Application.Common.Interfaces
 
         DbSet<ProductType> ProductTypes { get; set; }
 
-        DbSet<User> Users { get; set; }
+        DbSet<AppUser> Users { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

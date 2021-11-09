@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Telegram.Bot.Types;
 
-namespace Bot.WebHook.Helpers
+namespace Application.Common
 {
     //todo: is this shit?
     public class SupportedCommands : IEnumerable<BotCommand>

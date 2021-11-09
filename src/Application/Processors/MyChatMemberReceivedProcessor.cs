@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 
-namespace Bot.WebHook.Services
+namespace Application.Processors
 {
-    public class MyChatMemberReceivedService
+    public class MyChatMemberReceivedProcessor
     {
-        public async Task HandleAsync(ChatMemberUpdated chatMemberUpdated)
+        public async Task ProcessAsync(ChatMemberUpdated chatMemberUpdated)
         {
             var newcm = chatMemberUpdated.NewChatMember?.Status;
             var oldcm = chatMemberUpdated.OldChatMember?.Status;

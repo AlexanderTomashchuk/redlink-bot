@@ -13,14 +13,14 @@ namespace Domain.Entities
 
         public string Flag { get; }
 
-        public ICollection<User> Users { get; }
+        public ICollection<AppUser> Users { get; }
 
         private Language()
         {
         }
 
         public Language(long id, string name, string code, string flag,
-            ICollection<User> users = null)
+            ICollection<AppUser> users = null)
         {
             Id = id;
             Name = name;

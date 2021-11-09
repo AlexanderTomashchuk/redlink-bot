@@ -17,14 +17,14 @@ namespace Domain.Entities
 
         public Currency DefaultCurrency { get; }
 
-        public ICollection<User> Users { get; }
+        public ICollection<AppUser> Users { get; }
 
         private Country()
         {
         }
 
         public Country(long id, string name, string code, string flag,
-            long defaultCurrencyId, ICollection<User> users = null)
+            long defaultCurrencyId, ICollection<AppUser> users = null)
         {
             Id = id;
             Name = name;

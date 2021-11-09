@@ -31,7 +31,7 @@ namespace Domain.Entities
         public ICollection<File> Files { get; }
 
         public long SellerId { get; }
-        public User Seller { get; }
+        public AppUser Seller { get; }
 
         private Product()
         {

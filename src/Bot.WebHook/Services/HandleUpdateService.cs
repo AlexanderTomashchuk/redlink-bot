@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Application.Common.Interfaces;
+using Application.Processors;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -10,35 +10,30 @@ namespace Bot.WebHook.Services
 {
     public class HandleUpdateService
     {
-        private readonly MessageReceivedService _messageReceivedService;
-        private readonly CallbackQueryReceivedService _callbackQueryReceivedService;
-        private readonly MyChatMemberReceivedService _myChatMemberReceivedService;
+        private readonly MessageReceivedProcessor _messageReceivedProcessor;
+        private readonly CallbackQueryReceivedProcessor _callbackQueryReceivedProcessor;
+        private readonly MyChatMemberReceivedProcessor _myChatMemberReceivedProcessor;
         private readonly ILogger<HandleUpdateService> _logger;
 
-        private readonly ICurrentUserService _currentUserService;
         public HandleUpdateService(
-            MessageReceivedService messageReceivedService,
-            CallbackQueryReceivedService callbackQueryReceivedService,
-            MyChatMemberReceivedService myChatMemberReceivedService,
-            ILogger<HandleUpdateService> logger,
-            ICurrentUserService currentUserService)
+            MessageReceivedProcessor messageReceivedProcessor,
+            CallbackQueryReceivedProcessor callbackQueryReceivedProcessor,
+            MyChatMemberReceivedProcessor myChatMemberReceivedProcessor,
+            ILogger<HandleUpdateService> logger)
         {
-            _messageReceivedService = messageReceivedService;
-            _callbackQueryReceivedService = callbackQueryReceivedService;
-            _myChatMemberReceivedService = myChatMemberReceivedService;
+            _messageReceivedProcessor = messageReceivedProcessor;
+            _callbackQueryReceivedProcessor = callbackQueryReceivedProcessor;
+            _myChatMemberReceivedProcessor = myChatMemberReceivedProcessor;
             _logger = logger;
-            _currentUserService = currentUserService;
         }
 
         public async Task EchoAsync(Update update)
         {
-            var test = await _currentUserService.GetUserIdAsync();
-            
             var handler = update.Type switch
             {
-                UpdateType.Message => _messageReceivedService.HandleAsync(update.Message),
-                UpdateType.CallbackQuery => _callbackQueryReceivedService.HandleAsync(update.CallbackQuery),
-                UpdateType.MyChatMember => _myChatMemberReceivedService.HandleAsync(update.MyChatMember),
+                UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message),
+                UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery),
+                UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember),
                 _ => UnknownUpdateHandleAsync(update)
             };
 
