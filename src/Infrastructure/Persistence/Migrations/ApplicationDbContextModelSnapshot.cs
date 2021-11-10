@@ -26,10 +26,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("ChatId")
+                    b.Property<long?>("ChatId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CountryId")
+                    b.Property<long?>("CountryId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("CreatedBy")
@@ -42,7 +42,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("text");
 
-                    b.Property<long>("LanguageId")
+                    b.Property<long?>("LanguageId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
@@ -55,8 +55,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<long>("TelegramId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -66,9 +69,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.HasIndex("TelegramId");
-
-                    b.ToTable("User");
+                    b.ToTable("AppUser");
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
@@ -634,15 +635,11 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Country", "Country")
                         .WithMany("Users")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CountryId");
 
                     b.HasOne("Domain.Entities.Language", "Language")
                         .WithMany("Users")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LanguageId");
 
                     b.Navigation("Country");
 

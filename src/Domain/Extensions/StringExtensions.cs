@@ -5,6 +5,8 @@ namespace Domain.Extensions
 {
     public static class StringExtensions
     {
+        //characters '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'
+        //must be escaped with the preceding character '\'.
         public static string Escape(this string input)
         {
             var charsToEscape = new[]

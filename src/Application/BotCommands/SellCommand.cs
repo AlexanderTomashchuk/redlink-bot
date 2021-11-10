@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
@@ -15,7 +16,7 @@ namespace Application.BotCommands
 
         public override string Name => CommandNames.SellCommand;
 
-        public override async Task ExecuteAsync(Message message)
+        public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
             message.Deconstruct(out var chatId);
 
@@ -36,8 +37,6 @@ namespace Application.BotCommands
                         { Text = "Set Currency", CallbackData = "SET_PRODUCT_CURRENCY" }
                 }
             });
-
-            //BotClient.SendTextMessageAsync(cha)
 
             await BotClient.SendTextMessageAsync(chatId, "Let's create a product to sell", replyMarkup: menu);
         }

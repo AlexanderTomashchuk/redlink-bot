@@ -6,25 +6,26 @@ namespace Domain.Entities
 {
     public class AppUser : AuditableEntity
     {
-        public long Id { get; }
+        /// <summary>
+        /// Equals to Telegram.User.Id
+        /// </summary>
+        public long Id { get; set; }
 
-        public long TelegramId { get; }
+        public string FirstName { get; set; }
 
-        public string FirstName { get; }
+        public string LastName { get; set; }
 
-        public string LastName { get; }
+        public string Username { get; set; }
 
-        public string Username { get; }
+        public long? ChatId { get; set; }
 
-        public long ChatId { get; }
+        public AppUserStatus? Status { get; set; }
 
-        public UserStatus Status { get; }
+        public long? CountryId { get; set; }
 
-        public long CountryId { get; }
+        public Country Country { get; set; }
 
-        public Country Country { get; }
-
-        public long LanguageId { get; set; }
+        public long? LanguageId { get; set; }
 
         public Language Language { get; }
 
@@ -34,13 +35,13 @@ namespace Domain.Entities
         {
         }
 
-        public AppUser(long id, string firstName, string lastName, long telegramId, string username, long chatId,
-            UserStatus status, long countryId, ICollection<Product> products = null)
+        public AppUser(long id, string firstName, string lastName, string username, long? chatId = null,
+            AppUserStatus? status = null, long? countryId = null, long? languageId = null,
+            ICollection<Product> products = null)
         {
             Id = id;
             FirstName = firstName;
             LastName = lastName;
-            TelegramId = telegramId;
             Username = username;
             ChatId = chatId;
             Status = status;

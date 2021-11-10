@@ -30,6 +30,8 @@ namespace Bot.WebHook.Services.HostedServices
 
                 if (applicationDbContext.Database.IsNpgsql())
                 {
+                    _logger.LogInformation("Applying migrations on DB...");
+
                     await applicationDbContext.Database.MigrateAsync(cancellationToken);
                 }
             }

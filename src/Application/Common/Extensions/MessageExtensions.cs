@@ -1,6 +1,4 @@
 using System.Linq;
-using Application.BotCommands;
-using Application.Common.Restrictions;
 using Telegram.Bot.Types;
 
 namespace Application.Common.Extensions
@@ -10,10 +8,10 @@ namespace Application.Common.Extensions
         public static bool IsCommand(this Message message)
         {
             var allowedCommands = new SupportedCommands();
-            return allowedCommands.Any(ac => ac.Command == message.Command());
+            return allowedCommands.Any(ac => ac.Command == message.ExtractCommandFromText());
         }
 
-        public static string Command(this Message message)
+        public static string ExtractCommandFromText(this Message message)
         {
             return message.Text?.Trim().Split(' ').First();
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Application.Processors;
 using Microsoft.Extensions.Logging;
@@ -27,13 +28,15 @@ namespace Bot.WebHook.Services
             _logger = logger;
         }
 
-        public async Task EchoAsync(Update update)
+        public async Task EchoAsync(Update update, CancellationToken cancellationToken)
         {
             var handler = update.Type switch
             {
-                UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message),
-                UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery),
-                UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember),
+                UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message, cancellationToken),
+                UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery,
+                    cancellationToken),
+                UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember,
+                    cancellationToken),
                 _ => UnknownUpdateHandleAsync(update)
             };
 

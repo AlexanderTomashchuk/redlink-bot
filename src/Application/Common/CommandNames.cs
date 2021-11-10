@@ -1,6 +1,6 @@
 namespace Application.Common
 {
-    public class CommandNames
+    public static class CommandNames
     {
         public const string StartCommand = "/start";
         public const string SellCommand = "/sell";

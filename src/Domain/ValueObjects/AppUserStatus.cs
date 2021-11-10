@@ -1,6 +1,6 @@
 namespace Domain.ValueObjects
 {
-    public enum UserStatus
+    public enum AppUserStatus
     {
         Creator,
         Administrator,

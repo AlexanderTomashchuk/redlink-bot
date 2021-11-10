@@ -8,13 +8,11 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<AppUser> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("AppUser");
             builder.HasKey(u => u.Id);
             builder.Property(u => u.FirstName).IsUnicode();
             builder.Property(u => u.LastName).IsUnicode();
-            builder.Property(u => u.TelegramId).IsRequired();
 
-            builder.HasIndex(u => u.TelegramId);
             builder.HasIndex(u => u.ChatId);
 
             builder.HasOne(u => u.Country)

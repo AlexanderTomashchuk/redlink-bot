@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -15,6 +16,6 @@ namespace Application.BotCommands
 
         public abstract string Name { get; }
 
-        public abstract Task ExecuteAsync(Message message);
+        public abstract Task ExecuteAsync(Message message, CancellationToken cancellationToken = default);
     }
 }

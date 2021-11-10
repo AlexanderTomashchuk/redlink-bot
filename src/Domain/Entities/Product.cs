@@ -68,7 +68,7 @@ namespace Domain.Entities
             sb.AppendLine();
             sb.AppendLine($"Раздел: {Type.Name.Escape()}");
             sb.AppendLine($"Состояние: {Condition.Name.Escape()}");
-            sb.AppendLine($"Продавец: [{Seller.FirstName} {Seller.LastName}](tg://user?id={Seller.TelegramId})");
+            sb.AppendLine($"Продавец: [{Seller.FirstName} {Seller.LastName}](tg://user?id={Seller.Id})");
 
             return sb.ToString();
         }

@@ -124,17 +124,18 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "AppUser",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TelegramId = table.Column<long>(type: "bigint", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
-                    ChatId = table.Column<long>(type: "bigint", nullable: false),
-                    CountryId = table.Column<long>(type: "bigint", nullable: false),
-                    LanguageId = table.Column<long>(type: "bigint", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: true),
+                    ChatId = table.Column<long>(type: "bigint", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: true),
+                    CountryId = table.Column<long>(type: "bigint", nullable: true),
+                    LanguageId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<long>(type: "bigint", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -142,19 +143,19 @@ namespace Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_AppUser", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_User_Country_CountryId",
+                        name: "FK_AppUser_Country_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Country",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_User_Language_LanguageId",
+                        name: "FK_AppUser_Language_LanguageId",
                         column: x => x.LanguageId,
                         principalTable: "Language",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,6 +179,12 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Product_AppUser_SellerId",
+                        column: x => x.SellerId,
+                        principalTable: "AppUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Product_Currency_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
@@ -193,12 +200,6 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_Product_ProductType_TypeId",
                         column: x => x.TypeId,
                         principalTable: "ProductType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Product_User_SellerId",
-                        column: x => x.SellerId,
-                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -320,6 +321,21 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppUser_ChatId",
+                table: "AppUser",
+                column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUser_CountryId",
+                table: "AppUser",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUser_LanguageId",
+                table: "AppUser",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Country_DefaultCurrencyId",
                 table: "Country",
                 column: "DefaultCurrencyId");
@@ -353,26 +369,6 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_ProductHashTags_ProductsId",
                 table: "ProductHashTags",
                 column: "ProductsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ChatId",
-                table: "User",
-                column: "ChatId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_CountryId",
-                table: "User",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_LanguageId",
-                table: "User",
-                column: "LanguageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_TelegramId",
-                table: "User",
-                column: "TelegramId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -390,13 +386,13 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Product");
 
             migrationBuilder.DropTable(
+                name: "AppUser");
+
+            migrationBuilder.DropTable(
                 name: "ProductCondition");
 
             migrationBuilder.DropTable(
                 name: "ProductType");
-
-            migrationBuilder.DropTable(
-                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Country");

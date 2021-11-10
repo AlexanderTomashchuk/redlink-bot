@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Bot.WebHook.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +10,9 @@ namespace Bot.WebHook.Controllers
     {
         [HttpPost]
         public async Task<IActionResult> Post([FromServices] HandleUpdateService handleUpdateService,
-            [FromBody] Update update)
+            [FromBody] Update update, CancellationToken cancellationToken = default)
         {
-            await handleUpdateService.EchoAsync(update);
+            await handleUpdateService.EchoAsync(update, cancellationToken);
 
             return Ok();
         }

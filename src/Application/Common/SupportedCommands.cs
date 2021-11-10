@@ -10,7 +10,8 @@ namespace Application.Common
     {
         public IEnumerator<BotCommand> GetEnumerator()
         {
-            yield return new BotCommand { Command = "/sell", Description = "Create new product" };
+            yield return new BotCommand { Command = "/start", Description = "Getting started with the bot" };
+            yield return new BotCommand { Command = "/sell", Description = "Create a new product" };
             yield return new BotCommand { Command = "/find", Description = "Find a product" };
             yield return new BotCommand { Command = "/setting", Description = "Change user settings" };
             yield return new BotCommand { Command = "/test", Description = "Test command" };
