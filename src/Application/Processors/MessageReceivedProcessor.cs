@@ -2,8 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.BotCommands;
+using Application.Common;
 using Application.Common.Extensions;
-using Application.Common.Restrictions;
+using Application.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -16,6 +17,7 @@ namespace Application.Processors
         private readonly SellCommand _sellCommand;
         private readonly UsageCommand _usageCommand;
         private readonly TestCommand _testCommand;
+        private readonly IAppUserService _appUserService;
         private readonly ILogger<MessageReceivedProcessor> _logger;
 
         public MessageReceivedProcessor(
@@ -23,12 +25,14 @@ namespace Application.Processors
             SellCommand sellCommand,
             UsageCommand usageCommand,
             TestCommand testCommand,
+            IAppUserService appUserService,
             ILogger<MessageReceivedProcessor> logger)
         {
             _startCommand = startCommand;
             _sellCommand = sellCommand;
             _usageCommand = usageCommand;
             _testCommand = testCommand;
+            _appUserService = appUserService;
             _logger = logger;
         }
 
@@ -57,7 +61,7 @@ namespace Application.Processors
                 }
                 default:
                     throw new ArgumentOutOfRangeException(
-                        $"User {message.From.GetUsername()} sent the unsupported message type {message.Type}");
+                        $"User {_appUserService.Current.GetUsername()} sent the unsupported message type {message.Type}");
             }
         }
     }

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
-using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -14,32 +14,44 @@ namespace Application.Processors
     {
         private readonly ITelegramBotClient _botClient;
         private readonly IAppUserService _appUserService;
+        private readonly IMapper _mapper;
 
-        public CallbackQueryReceivedProcessor(ITelegramBotClient botClient, IAppUserService appUserService)
+        public CallbackQueryReceivedProcessor(ITelegramBotClient botClient,
+            IAppUserService appUserService, IMapper mapper)
         {
             _botClient = botClient;
             _appUserService = appUserService;
+            _mapper = mapper;
         }
 
         public async Task ProcessAsync(CallbackQuery updateCallbackQuery, CancellationToken cancellationToken = default)
         {
-            var callbackQueryModel = updateCallbackQuery.ToCallbackQueryModel();
-            var (chatId, commandName, id, text, from) = callbackQueryModel;
+            var chatId = _appUserService.Current.ChatId;
+            var callbackQueryData = _mapper.Map<CallbackQueryDataModel>(updateCallbackQuery.Data);
 
-            switch (commandName)
+            switch (callbackQueryData.CommandName)
             {
                 case "SET_COUNTRY":
                     //todo: OT TO COMMAND???
-                    var appUser = await _appUserService.SetCountryAsync(id, from, cancellationToken);
+                    await _appUserService.UpdateAsync(appUser => appUser.CountryId = callbackQueryData.Id,
+                        cancellationToken);
 
-                    await _botClient.SendTextMessageAsync(chatId, $"Selected country: _{text}_",
+                    var sentTextMessageTask = _botClient.SendTextMessageAsync(chatId,
+                        $"Selected country: _{callbackQueryData.Text}_",
                         ParseMode.MarkdownV2, cancellationToken: cancellationToken);
+
+                    var answerCbQueryTask = _botClient.AnswerCallbackQueryAsync(updateCallbackQuery.Id,
+                        $"Selected country: {callbackQueryData.Text}",
+                        cancellationToken: cancellationToken);
+
+                    await Task.WhenAll(sentTextMessageTask, answerCbQueryTask);
 
                     break;
                 case "SET_PRODUCT_NAME":
                     var messageId = updateCallbackQuery.Message.MessageId;
 
-                    await _botClient.EditMessageTextAsync(chatId, messageId, "CHANGED TEXT",
+                    await _botClient.EditMessageTextAsync(_appUserService.Current.ChatId, messageId,
+                        "CHANGED TEXT",
                         replyMarkup: new InlineKeyboardMarkup(new InlineKeyboardButton
                             { Text = "test button", CallbackData = "SET_PRODUCT_DESCRIPTION" }),
                         cancellationToken: cancellationToken);

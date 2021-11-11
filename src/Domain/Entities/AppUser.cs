@@ -25,7 +25,7 @@ namespace Domain.Entities
 
         public Country Country { get; set; }
 
-        public long? LanguageId { get; set; }
+        public long? LanguageId { get; set; } = 1;
 
         public Language Language { get; }
 

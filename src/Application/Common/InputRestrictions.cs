@@ -1,7 +1,7 @@
 using System.Linq;
 using Telegram.Bot.Types.Enums;
 
-namespace Application.Common.Restrictions
+namespace Application.Common
 {
     public static class InputRestrictions
     {

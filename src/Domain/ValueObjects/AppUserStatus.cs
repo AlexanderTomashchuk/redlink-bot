@@ -8,6 +8,5 @@ namespace Domain.ValueObjects
         Left,
         Kicked,
         Restricted,
-        Banned
     }
 }

@@ -11,15 +11,12 @@ namespace Infrastructure.Persistence
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
-        private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions,
-            ICurrentUserService currentUserService,
             IDateTime dateTime) : base(dbContextOptions)
         {
             _dbContextOptions = dbContextOptions;
-            _currentUserService = currentUserService;
             _dateTime = dateTime;
         }
 
@@ -39,20 +36,15 @@ namespace Infrastructure.Persistence
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
-            var currentUserId = await _currentUserService.GetUserIdAsync();
-
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedBy = currentUserId;
                         entry.Entity.CreatedOn = _dateTime.UtcNow;
                         break;
 
                     case EntityState.Modified:
-
-                        entry.Entity.ModifiedBy = currentUserId;
                         entry.Entity.ModifiedOn = _dateTime.UtcNow;
                         break;
                 }

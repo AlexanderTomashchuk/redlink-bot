@@ -20,24 +20,5 @@ namespace Application.Common.Extensions
         {
             chatId = m.Chat.Id;
         }
-
-        public static void Deconstruct(this Message m, out long chatId, out int messageId)
-        {
-            chatId = m.Chat.Id;
-            messageId = m.MessageId;
-        }
-
-        public static void Deconstruct(this Message m, out long chatId, out User from)
-        {
-            chatId = m.Chat.Id;
-            from = m.From;
-        }
-
-        public static void Deconstruct(this Message m, out long chatId, out int messageId, out User from)
-        {
-            chatId = m.Chat.Id;
-            messageId = m.MessageId;
-            from = m.From;
-        }
     }
 }

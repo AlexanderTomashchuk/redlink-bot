@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211109184638_InitialCreate")]
+    [Migration("20211111000735_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,9 +34,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<long?>("CountryId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -51,14 +48,12 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("text");
 
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Username")
                         .HasColumnType("text");
@@ -86,9 +81,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -99,9 +91,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("text");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -122,44 +111,36 @@ namespace Infrastructure.Persistence.Migrations
                         {
                             Id = 1L,
                             Code = "US",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DefaultCurrencyId = 1L,
                             Flag = "🇺🇸",
-                            ModifiedBy = 0L,
                             Name = "USA"
                         },
                         new
                         {
                             Id = 2L,
                             Code = "UA",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DefaultCurrencyId = 2L,
                             Flag = "🇺🇦",
-                            ModifiedBy = 0L,
                             Name = "Ukraine"
                         },
                         new
                         {
                             Id = 3L,
                             Code = "PL",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DefaultCurrencyId = 3L,
                             Flag = "🇵🇱",
-                            ModifiedBy = 0L,
                             Name = "Poland"
                         },
                         new
                         {
                             Id = 4L,
                             Code = "RU",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DefaultCurrencyId = 4L,
                             Flag = "🇷🇺",
-                            ModifiedBy = 0L,
                             Name = "Russia"
                         });
                 });
@@ -181,14 +162,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -208,9 +183,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 1L,
                             Abbreviation = "$",
                             Code = "USD",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Sign = "$"
                         },
                         new
@@ -218,9 +191,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 2L,
                             Abbreviation = "грн",
                             Code = "UAH",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Sign = "₴"
                         },
                         new
@@ -228,9 +199,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 3L,
                             Abbreviation = "zł",
                             Code = "PLN",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Sign = "zł"
                         },
                         new
@@ -238,9 +207,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 4L,
                             Abbreviation = "руб",
                             Code = "RUB",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Sign = "₽"
                         });
                 });
@@ -252,14 +219,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -281,14 +242,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -306,25 +261,19 @@ namespace Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Value = "#куртки"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Value = "#штаны"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Value = "#б/у"
                         });
                 });
@@ -341,9 +290,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -351,9 +297,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("text");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -372,30 +315,24 @@ namespace Infrastructure.Persistence.Migrations
                         {
                             Id = 1L,
                             Code = "en",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇬🇧",
-                            ModifiedBy = 0L,
                             Name = "English"
                         },
                         new
                         {
                             Id = 2L,
                             Code = "uk",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇺🇦",
-                            ModifiedBy = 0L,
                             Name = "Ukrainian"
                         },
                         new
                         {
                             Id = 3L,
                             Code = "ru",
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇷🇺",
-                            ModifiedBy = 0L,
                             Name = "Russian"
                         });
                 });
@@ -410,9 +347,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<long>("ConditionId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -422,9 +356,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Description")
                         .IsUnicode(true)
                         .HasColumnType("text");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -459,14 +390,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -484,41 +409,31 @@ namespace Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "New"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Perfect"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Very good"
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Good"
                         },
                         new
                         {
                             Id = 5L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Satisfactory"
                         });
                 });
@@ -530,14 +445,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("ModifiedBy")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
@@ -555,65 +464,49 @@ namespace Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Clothes"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Outer wear"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Lingerie"
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Foot wear"
                         },
                         new
                         {
                             Id = 5L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Bags"
                         },
                         new
                         {
                             Id = 6L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Accessories"
                         },
                         new
                         {
                             Id = 7L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "jewelry"
                         },
                         new
                         {
                             Id = 8L,
-                            CreatedBy = 0L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ModifiedBy = 0L,
                             Name = "Clothes for home"
                         });
                 });

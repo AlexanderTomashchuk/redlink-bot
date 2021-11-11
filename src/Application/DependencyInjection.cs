@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application.BotCommands;
 using Application.Processors;
 using Application.Services;
@@ -10,6 +11,8 @@ namespace Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
             services.AddScoped<MessageReceivedProcessor>();
             services.AddScoped<CallbackQueryReceivedProcessor>();
             services.AddScoped<MyChatMemberReceivedProcessor>();
@@ -18,7 +21,7 @@ namespace Application
             services.AddScoped<UsageCommand>();
             services.AddScoped<TestCommand>();
 
-            services.AddTransient<IAppUserService, AppUserService>();
+            services.AddScoped<IAppUserService, AppUserService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<ICountryService, CountryService>();
 
@@ -26,26 +29,3 @@ namespace Application
         }
     }
 }
-
-/*
-select * from "Country";
-
-select * from "Currency";
-,.,
-select * from "File";
-
-select * from "HashTag";
-
-select * from "ProductHashTags";
-
-select * from "Language";
-
-select * from "Product";
-
-select * from "ProductCondition";
-
-select * from "ProductType";
-
-select * from "AppUser";
-
-*/

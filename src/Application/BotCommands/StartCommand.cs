@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using Domain.Entities;
 using Domain.Extensions;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,7 +17,9 @@ namespace Application.BotCommands
         private readonly IAppUserService _appUserService;
         private readonly ICountryService _countryService;
 
-        public StartCommand(ITelegramBotClient botClient, IAppUserService appUserService,
+        public StartCommand(
+            ITelegramBotClient botClient,
+            IAppUserService appUserService,
             ICountryService countryService) : base(botClient)
         {
             _appUserService = appUserService;
@@ -27,14 +30,12 @@ namespace Application.BotCommands
 
         public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            message.Deconstruct(out var chatId, out User user);
+            message.Deconstruct(out var chatId);
 
-            var appUser = await _appUserService.CreateOrUpdateAsync(chatId, user, cancellationToken);
-
-            await BotClient.SendTextMessageAsync(chatId, GetWelcomeMessage(user), ParseMode.MarkdownV2,
+            await BotClient.SendTextMessageAsync(chatId, GetWelcomeMessage(_appUserService.Current), ParseMode.MarkdownV2,
                 cancellationToken: cancellationToken);
 
-            if (appUser.CountryId == null)
+            if (_appUserService.Current.CountryId == null)
             {
                 var countries = await _countryService.GetAllAsync(cancellationToken);
                 var replyMarkup = countries.ToInlineKeyboardMarkup();
@@ -44,7 +45,7 @@ namespace Application.BotCommands
             }
         }
 
-        private string GetWelcomeMessage(User user)
+        private string GetWelcomeMessage(AppUser user)
         {
             var sb = new StringBuilder();
             sb.AppendLine(

@@ -1,6 +1,7 @@
 using Application;
-using Application.Common.Interfaces;
-using Application.Processors;
+using Application.Services;
+using Application.Services.Interfaces;
+using Bot.WebHook.Middlewares;
 using Bot.WebHook.Services;
 using Bot.WebHook.Services.HostedServices;
 using Infrastructure;
@@ -44,13 +45,12 @@ namespace Bot.WebHook
                     return new TelegramBotClient(accessToken);
                 });
 
-            services.AddHttpContextAccessor();
-
             services.AddInfrastructure(Configuration);
             services.AddApplication();
 
             services.AddScoped<HandleUpdateService>();
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<AppUserInitMiddleware>();
 
             services.AddHostedService<WebHookConfiguratorService>();
             services.AddHostedService<BotCommandsConfiguratorService>();
@@ -75,6 +75,8 @@ namespace Bot.WebHook
                 context.Request.EnableBuffering();
                 return next();
             });
+
+            app.UseMiddleware<AppUserInitMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -10,11 +10,11 @@ namespace Application.Common.Extensions
     {
         public static InlineKeyboardMarkup ToInlineKeyboardMarkup(this IEnumerable<Country> countries)
         {
-            //todo: OT STRANGE PLACE CO SET CallbackData DATA?
+            //todo: OT STRANGE PLACE CO SET CallbackQueryDataModel DATA?
             var buttons = countries.Select(c =>
                 {
                     var text = $"{c.Flag} {c.Name}";
-                    var cbData = new CallbackQueryModel.CallbackQueryData
+                    var cbData = new CallbackQueryDataModel
                     {
                         CommandName = "SET_COUNTRY",
                         Id = c.Id,
