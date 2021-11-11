@@ -35,7 +35,7 @@ namespace Application.Services
         private async Task<AppUser> UpsertAsync(AppUser appUser, Action<AppUser> updateOtherProperties = null,
             CancellationToken cancellationToken = default)
         {
-            var appUserFromDb = await _context.Users.FirstOrDefaultAsync(au => au.Id == appUser.Id, cancellationToken);
+            var appUserFromDb = await GetByIdAsync(appUser.Id, cancellationToken);
 
             if (appUserFromDb == null)
             {
@@ -54,6 +54,16 @@ namespace Application.Services
             return appUserFromDb;
         }
 
+        private async Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+        {
+            var appUserFromDb = await _context.Users
+                .Include(u => u.Country)
+                .Include(u => u.Language)
+                .FirstOrDefaultAsync(au => au.Id == id, cancellationToken);
+
+            return appUserFromDb;
+        }
+
         private async Task<AppUser> InsertAsync(AppUser appUser, CancellationToken cancellationToken = default)
         {
             var result = await _context.Users.AddAsync(appUser, cancellationToken);
@@ -62,9 +72,5 @@ namespace Application.Services
 
             return result.Entity;
         }
-
-        //TODO: TOMORROW 1. set default language based on code received from telegram client (use enum as primary key - https://medium.com/agilix/entity-framework-core-enums-ee0f8f4063f2) 
-        //TODO: TOMORROW 2. ask country on any update if countryId is null
-        //TODO: TOMORROW 3. implement /profile bot command 
     }
 }

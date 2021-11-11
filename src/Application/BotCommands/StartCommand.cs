@@ -1,6 +1,7 @@
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.BotRequests;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
@@ -14,16 +15,14 @@ namespace Application.BotCommands
 {
     public class StartCommand : BaseCommand
     {
-        private readonly IAppUserService _appUserService;
-        private readonly ICountryService _countryService;
+        private readonly AskCountryRequest _askCountryRequest;
 
         public StartCommand(
             ITelegramBotClient botClient,
             IAppUserService appUserService,
-            ICountryService countryService) : base(botClient)
+            AskCountryRequest askCountryRequest) : base(botClient, appUserService)
         {
-            _appUserService = appUserService;
-            _countryService = countryService;
+            _askCountryRequest = askCountryRequest;
         }
 
         public override string Name => CommandNames.StartCommand;
@@ -32,16 +31,13 @@ namespace Application.BotCommands
         {
             message.Deconstruct(out var chatId);
 
-            await BotClient.SendTextMessageAsync(chatId, GetWelcomeMessage(_appUserService.Current), ParseMode.MarkdownV2,
+            await BotClient.SendTextMessageAsync(chatId, GetWelcomeMessage(CurrentAppUser),
+                ParseMode.MarkdownV2,
                 cancellationToken: cancellationToken);
 
-            if (_appUserService.Current.CountryId == null)
+            if (CurrentAppUser.CountryId == null)
             {
-                var countries = await _countryService.GetAllAsync(cancellationToken);
-                var replyMarkup = countries.ToInlineKeyboardMarkup();
-
-                await BotClient.SendTextMessageAsync(chatId, GetSetCountryMessage(), ParseMode.MarkdownV2,
-                    replyMarkup: replyMarkup, cancellationToken: cancellationToken);
+                await _askCountryRequest.ExecuteAsync(cancellationToken);
             }
         }
 
@@ -55,18 +51,6 @@ namespace Application.BotCommands
             {
                 sb.AppendLine($"{botCommand.Command} - {botCommand.Description}".Escape());
             }
-
-            return sb.ToString();
-        }
-
-        private string GetSetCountryMessage()
-        {
-            var sb = new StringBuilder();
-
-            //Прежде чем начать, пожалуйста выберите страну проживания из списка ниже. Мы нуждаемся в данной информации, чтобы предоставить вам максимально релевантные данные о товарах, которые мы имеем.
-            sb.AppendLine("Before you start working with bot, please select your country from the list below\\.");
-            sb.AppendLine(
-                "_We need this information to provide you with the most relevant data about the products that we have\\._");
 
             return sb.ToString();
         }

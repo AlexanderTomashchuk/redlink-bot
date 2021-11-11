@@ -1,5 +1,6 @@
 using System.Reflection;
 using Application.BotCommands;
+using Application.BotRequests;
 using Application.Processors;
 using Application.Services;
 using Application.Services.Interfaces;
@@ -20,6 +21,8 @@ namespace Application
             services.AddScoped<SellCommand>();
             services.AddScoped<UsageCommand>();
             services.AddScoped<TestCommand>();
+
+            services.AddScoped<AskCountryRequest>();
 
             services.AddScoped<IAppUserService, AppUserService>();
             services.AddTransient<ILanguageService, LanguageService>();

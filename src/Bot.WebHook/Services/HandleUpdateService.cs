@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Processors;
 using Microsoft.Extensions.Logging;
-using Telegram.Bot.Exceptions;
+using Newtonsoft.Json;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -46,12 +46,7 @@ namespace Bot.WebHook.Services
             }
             catch (Exception exception)
             {
-                var errorMessage = exception switch
-                {
-                    ApiRequestException apiRequestException =>
-                        $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-                    _ => exception.ToString()
-                };
+                var errorMessage = JsonConvert.SerializeObject(exception, Formatting.Indented);
 
                 _logger.LogError(errorMessage);
             }

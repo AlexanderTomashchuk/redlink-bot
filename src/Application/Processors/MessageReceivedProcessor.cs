@@ -2,10 +2,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.BotCommands;
+using Application.BotRequests;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
-using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -18,7 +18,7 @@ namespace Application.Processors
         private readonly UsageCommand _usageCommand;
         private readonly TestCommand _testCommand;
         private readonly IAppUserService _appUserService;
-        private readonly ILogger<MessageReceivedProcessor> _logger;
+        private readonly AskCountryRequest _askCountryRequest;
 
         public MessageReceivedProcessor(
             StartCommand startCommand,
@@ -26,14 +26,14 @@ namespace Application.Processors
             UsageCommand usageCommand,
             TestCommand testCommand,
             IAppUserService appUserService,
-            ILogger<MessageReceivedProcessor> logger)
+            AskCountryRequest askCountryRequest)
         {
             _startCommand = startCommand;
             _sellCommand = sellCommand;
             _usageCommand = usageCommand;
             _testCommand = testCommand;
             _appUserService = appUserService;
-            _logger = logger;
+            _askCountryRequest = askCountryRequest;
         }
 
         public async Task ProcessAsync(Message message, CancellationToken cancellationToken = default)
@@ -47,12 +47,13 @@ namespace Application.Processors
             {
                 case MessageType.Text:
                 {
-                    var handler = message.ExtractCommandFromText() switch
+                    var handler = (message.ExtractCommandFromText(), _appUserService.Current.CountryId) switch
                     {
-                        //todo: OT DON'T WANT TO CHANGE EACH TIME
-                        "/start" => _startCommand.ExecuteAsync(message, cancellationToken),
-                        "/sell" => _sellCommand.ExecuteAsync(message, cancellationToken),
-                        "/test" => _testCommand.ExecuteAsync(message, cancellationToken),
+                        //todo: OT TO ENUM!!
+                        (not "/start", null) => _askCountryRequest.ExecuteAsync(cancellationToken),
+                        ("/start", _) => _startCommand.ExecuteAsync(message, cancellationToken),
+                        ("/sell", _) => _sellCommand.ExecuteAsync(message, cancellationToken),
+                        ("/test", _) => _testCommand.ExecuteAsync(message, cancellationToken),
                         _ => _usageCommand.ExecuteAsync(message, cancellationToken)
                     };
                     await handler;

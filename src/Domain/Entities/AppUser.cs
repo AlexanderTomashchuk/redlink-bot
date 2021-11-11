@@ -19,7 +19,7 @@ namespace Domain.Entities
 
         public long? ChatId { get; set; }
 
-        public AppUserStatus? Status { get; set; }
+        public AppUserStatus? Status { get; set; } = AppUserStatus.Member;
 
         public long? CountryId { get; set; }
 

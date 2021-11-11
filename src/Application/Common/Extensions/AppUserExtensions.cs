@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Extensions;
 
 namespace Application.Common.Extensions
 {
@@ -6,12 +7,13 @@ namespace Application.Common.Extensions
     {
         public static string GetUsername(this AppUser user)
         {
-            return user.Username ?? string.Join(" ", user.FirstName, user.LastName).Trim();
+            return (user.Username ?? string.Join(" ", user.FirstName, user.LastName).Trim()).Escape();
         }
 
         public static string GetTelegramMarkdownLink(this AppUser user)
         {
-            return $"[{user.GetUsername()}](tg://user?id={user.Id})";
+            var userName = user.GetUsername();
+            return $"[{userName}](tg://user?id={user.Id})";
         }
     }
 }

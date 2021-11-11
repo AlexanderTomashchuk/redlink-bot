@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
+using Application.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -10,7 +11,8 @@ namespace Application.BotCommands
 {
     public class TestCommand : BaseCommand
     {
-        public TestCommand(ITelegramBotClient botClient) : base(botClient)
+        public TestCommand(ITelegramBotClient botClient, IAppUserService appUserService)
+            : base(botClient, appUserService)
         {
         }
 
