@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211111000735_InitialCreate")]
+    [Migration("20211112012002_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,8 +41,9 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("text");
 
-                    b.Property<long?>("LanguageId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("LastName")
                         .IsUnicode(true)
@@ -64,7 +65,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("LanguageId");
+                    b.HasIndex("LanguageCode");
 
                     b.ToTable("AppUser");
                 });
@@ -280,13 +281,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Language", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
@@ -306,14 +301,13 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Code");
 
                     b.ToTable("Language");
 
                     b.HasData(
                         new
                         {
-                            Id = 1L,
                             Code = "en",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇬🇧",
@@ -321,7 +315,6 @@ namespace Infrastructure.Persistence.Migrations
                         },
                         new
                         {
-                            Id = 2L,
                             Code = "uk",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇺🇦",
@@ -329,7 +322,6 @@ namespace Infrastructure.Persistence.Migrations
                         },
                         new
                         {
-                            Id = 3L,
                             Code = "ru",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇷🇺",
@@ -534,7 +526,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasOne("Domain.Entities.Language", "Language")
                         .WithMany("Users")
-                        .HasForeignKey("LanguageId");
+                        .HasForeignKey("LanguageCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Country");
 

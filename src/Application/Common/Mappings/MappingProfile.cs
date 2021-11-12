@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using Domain.Entities;
 using Domain.ValueObjects;
@@ -48,7 +49,9 @@ namespace Application.Common.Mappings
 
             CreateMap<ChatMemberUpdated, AppUser>().IncludeMembers(src => src.From, src => src.Chat);
 
-            CreateMap<User, AppUser>();
+            CreateMap<User, AppUser>()
+                .ForMember(dest => dest.LanguageCode,
+                    opt => opt.MapFrom(src => MapLanguageCode(src.LanguageCode)));
 
             CreateMap<Chat, AppUser>();
 
@@ -56,6 +59,14 @@ namespace Application.Common.Mappings
 
             CreateMap<string, CallbackQueryDataModel>()
                 .ConvertUsing<FromJsonTypeConverter<CallbackQueryDataModel>>();
+        }
+
+        private static Language.LanguageCode? MapLanguageCode(string languageCode)
+        {
+            var parsedSuccessfully = Enum.TryParse(typeof(Language.LanguageCode), languageCode, ignoreCase: true,
+                out object result);
+
+            return parsedSuccessfully ? result as Language.LanguageCode? : Language.DefaultLanguageCode;
         }
     }
 }

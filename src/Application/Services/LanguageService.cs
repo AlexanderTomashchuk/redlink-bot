@@ -23,7 +23,7 @@ namespace Application.Services
         {
             var language = await _context.Languages.FirstOrDefaultAsync(predicate, cancellationToken) ??
                            await _context.Languages.FirstAsync(l =>
-                               l.Code.ToLower() == "en", cancellationToken);
+                               l.Code == Language.DefaultLanguageCode, cancellationToken);
 
             return language;
         }

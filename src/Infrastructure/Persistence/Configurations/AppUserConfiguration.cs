@@ -22,7 +22,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(u => u.Language)
                 .WithMany(l => l.Users)
-                .HasForeignKey(u => u.LanguageId);
+                .HasForeignKey(u => u.LanguageCode);
         }
     }
 }

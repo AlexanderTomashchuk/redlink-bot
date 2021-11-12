@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,15 +10,18 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Language> builder)
         {
             builder.ToTable("Language");
-            builder.HasKey(l => l.Id);
+
+            builder.HasKey(l => l.Code);
+            builder.Property(l => l.Code).HasTypeToLowerStringConversion();
+
             builder.Property(l => l.Name).HasMaxLength(50).IsRequired();
             builder.Property(l => l.Code).HasMaxLength(20).IsRequired();
             builder.Property(l => l.Flag).IsUnicode().IsRequired();
 
             builder.HasData(
-                new Language(1, "English", "en", "🇬🇧"),
-                new Language(2, "Ukrainian", "uk", "🇺🇦"),
-                new Language(3, "Russian", "ru", "🇷🇺")
+                new Language(Language.LanguageCode.En, "English", "🇬🇧"),
+                new Language(Language.LanguageCode.Uk, "Ukrainian", "🇺🇦"),
+                new Language(Language.LanguageCode.Ru, "Russian", "🇷🇺")
             );
         }
     }

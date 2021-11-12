@@ -3,27 +3,33 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Telegram.Bot.Types;
 
 namespace Application.Services
 {
     public class AppUserService : IAppUserService
     {
         private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public AppUserService(IApplicationDbContext context)
+        public AppUserService(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         private AppUser _currentAppUser;
 
         public AppUser Current => _currentAppUser;
 
-        public async Task InitAsync(AppUser appUser, CancellationToken cancellationToken = default)
+        public async Task InitAsync(Update update, CancellationToken cancellationToken = default)
         {
-            _currentAppUser = await UpsertAsync(appUser, cancellationToken: cancellationToken);
+            var appUserFromRequest = _mapper.Map<AppUser>(update);
+
+            _currentAppUser = await UpsertAsync(appUserFromRequest, cancellationToken: cancellationToken);
         }
 
         public async Task UpdateAsync(Action<AppUser> updateOtherProperties,
@@ -32,20 +38,20 @@ namespace Application.Services
             _currentAppUser = await UpsertAsync(_currentAppUser, updateOtherProperties, cancellationToken);
         }
 
-        private async Task<AppUser> UpsertAsync(AppUser appUser, Action<AppUser> updateOtherProperties = null,
+        private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest, Action<AppUser> updateOtherProperties = null,
             CancellationToken cancellationToken = default)
         {
-            var appUserFromDb = await GetByIdAsync(appUser.Id, cancellationToken);
+            var appUserFromDb = await GetByIdAsync(appUserFromRequest.Id, cancellationToken);
 
             if (appUserFromDb == null)
             {
-                return await InsertAsync(appUser, cancellationToken);
+                return await InsertAsync(appUserFromRequest, cancellationToken);
             }
 
-            appUserFromDb.FirstName = appUser.FirstName;
-            appUserFromDb.LastName = appUser.LastName;
-            appUserFromDb.Username = appUser.Username;
-            appUserFromDb.ChatId = appUser.ChatId;
+            appUserFromDb.FirstName = appUserFromRequest.FirstName;
+            appUserFromDb.LastName = appUserFromRequest.LastName;
+            appUserFromDb.Username = appUserFromRequest.Username;
+            appUserFromDb.ChatId = appUserFromRequest.ChatId;
 
             updateOtherProperties?.Invoke(appUserFromDb);
 

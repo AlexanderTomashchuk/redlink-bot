@@ -25,7 +25,7 @@ namespace Domain.Entities
 
         public Country Country { get; set; }
 
-        public long? LanguageId { get; set; } = 1;
+        public Language.LanguageCode? LanguageCode { get; set; }
 
         public Language Language { get; }
 
@@ -33,20 +33,6 @@ namespace Domain.Entities
 
         private AppUser()
         {
-        }
-
-        public AppUser(long id, string firstName, string lastName, string username, long? chatId = null,
-            AppUserStatus? status = null, long? countryId = null, long? languageId = null,
-            ICollection<Product> products = null)
-        {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Username = username;
-            ChatId = chatId;
-            Status = status;
-            CountryId = countryId;
-            Products = products;
         }
     }
 }

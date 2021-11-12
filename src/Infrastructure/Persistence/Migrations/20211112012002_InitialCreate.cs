@@ -44,17 +44,15 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Language",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Flag = table.Column<string>(type: "text", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Language", x => x.Id);
+                    table.PrimaryKey("PK_Language", x => x.Code);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,7 +121,7 @@ namespace Infrastructure.Persistence.Migrations
                     ChatId = table.Column<long>(type: "bigint", nullable: true),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CountryId = table.Column<long>(type: "bigint", nullable: true),
-                    LanguageId = table.Column<long>(type: "bigint", nullable: true),
+                    LanguageCode = table.Column<string>(type: "character varying(20)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
@@ -137,11 +135,11 @@ namespace Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AppUser_Language_LanguageId",
-                        column: x => x.LanguageId,
+                        name: "FK_AppUser_Language_LanguageCode",
+                        column: x => x.LanguageCode,
                         principalTable: "Language",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,12 +254,12 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Language",
-                columns: new[] { "Id", "Code", "CreatedOn", "Flag", "ModifiedOn", "Name" },
+                columns: new[] { "Code", "CreatedOn", "Flag", "ModifiedOn", "Name" },
                 values: new object[,]
                 {
-                    { 1L, "en", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇬🇧", null, "English" },
-                    { 2L, "uk", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇦", null, "Ukrainian" },
-                    { 3L, "ru", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇷🇺", null, "Russian" }
+                    { "en", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇬🇧", null, "English" },
+                    { "uk", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇦", null, "Ukrainian" },
+                    { "ru", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇷🇺", null, "Russian" }
                 });
 
             migrationBuilder.InsertData(
@@ -313,9 +311,9 @@ namespace Infrastructure.Persistence.Migrations
                 column: "CountryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppUser_LanguageId",
+                name: "IX_AppUser_LanguageCode",
                 table: "AppUser",
-                column: "LanguageId");
+                column: "LanguageCode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Country_DefaultCurrencyId",

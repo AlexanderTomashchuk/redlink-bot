@@ -5,11 +5,17 @@ namespace Domain.Entities
 {
     public class Language : AuditableEntity
     {
-        public long Id { get; }
+        public enum LanguageCode
+        {
+            En,
+            Uk,
+            Ru
+        }
+
+        public LanguageCode Code { get; }
+        public static LanguageCode DefaultLanguageCode => LanguageCode.En;
 
         public string Name { get; }
-
-        public string Code { get; }
 
         public string Flag { get; }
 
@@ -19,12 +25,10 @@ namespace Domain.Entities
         {
         }
 
-        public Language(long id, string name, string code, string flag,
-            ICollection<AppUser> users = null)
+        public Language(LanguageCode code, string name, string flag, ICollection<AppUser> users = null)
         {
-            Id = id;
-            Name = name;
             Code = code;
+            Name = name;
             Flag = flag;
             Users = users;
         }

@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E2E516C4-E948-4585-BED2-43407FBBFB5E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{684149CC-BC6F-4EB7-8FE0-42F7CEA404DD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".items", ".items", "{684149CC-BC6F-4EB7-8FE0-42F7CEA404DD}"
 ProjectSection(SolutionItems) = preProject
 	.gitignore = .gitignore
 	README.md = README.md
