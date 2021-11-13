@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Application.BotCommands;
 using Application.BotRequests;
@@ -17,10 +18,13 @@ namespace Application
             services.AddScoped<MessageReceivedProcessor>();
             services.AddScoped<CallbackQueryReceivedProcessor>();
             services.AddScoped<MyChatMemberReceivedProcessor>();
+
             services.AddScoped<StartCommand>();
             services.AddScoped<SellCommand>();
-            services.AddScoped<UsageCommand>();
-            services.AddScoped<TestCommand>();
+            services.AddScoped<ProfileCommand>();
+            services.AddScoped<FindCommand>();
+            services.AddScoped<Func<CommandType, BaseCommand>>(
+                serviceProvider => key => (BaseCommand)serviceProvider.GetService(key.CommandHandlerType));
 
             services.AddScoped<AskCountryRequest>();
 

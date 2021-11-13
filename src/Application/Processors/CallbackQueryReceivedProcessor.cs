@@ -6,7 +6,6 @@ using AutoMapper;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Application.Processors
 {
@@ -45,16 +44,6 @@ namespace Application.Processors
                         cancellationToken: cancellationToken);
 
                     await Task.WhenAll(sentTextMessageTask, answerCbQueryTask);
-
-                    break;
-                case "SET_PRODUCT_NAME":
-                    var messageId = updateCallbackQuery.Message.MessageId;
-
-                    await _botClient.EditMessageTextAsync(_appUserService.Current.ChatId, messageId,
-                        "CHANGED TEXT",
-                        replyMarkup: new InlineKeyboardMarkup(new InlineKeyboardButton
-                            { Text = "test button", CallbackData = "SET_PRODUCT_DESCRIPTION" }),
-                        cancellationToken: cancellationToken);
 
                     break;
             }

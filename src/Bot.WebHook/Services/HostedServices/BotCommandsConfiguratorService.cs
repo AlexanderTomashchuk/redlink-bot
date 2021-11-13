@@ -1,12 +1,13 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.BotCommands;
-using Application.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 
 namespace Bot.WebHook.Services.HostedServices
 {
@@ -28,8 +29,10 @@ namespace Bot.WebHook.Services.HostedServices
             using var scope = _services.CreateScope();
             var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-            var supportedCommands = new SupportedCommands();
-            _logger.LogInformation("Setting bot commands: {BotCommands}", supportedCommands.ToString());
+            var supportedCommands = CommandTypeEnumeration.GetAll()
+                .Where(ct => ct.IsVisibleInCommandsMenu)
+                .Select(ct => new BotCommand { Command = ct.Name, Description = ct.Description });
+
             await botClient.SetMyCommandsAsync(supportedCommands, cancellationToken);
         }
 

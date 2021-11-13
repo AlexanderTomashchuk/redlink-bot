@@ -17,7 +17,6 @@ namespace Infrastructure
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString("RedLinkDBContext"));
-                //todo: OT (feature) log to ELK
                 options.LogTo(Console.WriteLine, LogLevel.Information);
             });
 

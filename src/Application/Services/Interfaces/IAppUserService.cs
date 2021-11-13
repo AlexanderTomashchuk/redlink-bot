@@ -11,6 +11,7 @@ namespace Application.Services.Interfaces
         public AppUser Current { get; }
 
         Task InitAsync(Update update, CancellationToken cancellationToken = default);
+
         Task UpdateAsync(Action<AppUser> updateOtherProperties, CancellationToken cancellationToken = default);
     }
 }

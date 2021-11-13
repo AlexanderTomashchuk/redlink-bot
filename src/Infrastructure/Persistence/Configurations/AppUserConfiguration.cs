@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(u => u.FirstName).IsUnicode();
             builder.Property(u => u.LastName).IsUnicode();
             builder.Property(u => u.Status).HasConversion<string>().HasMaxLength(50);
+            builder.Ignore(u => u.HasCountry);
 
             builder.HasIndex(u => u.ChatId);
 

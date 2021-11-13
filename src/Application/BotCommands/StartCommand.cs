@@ -2,7 +2,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.BotRequests;
-using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
 using Domain.Entities;
@@ -25,13 +24,11 @@ namespace Application.BotCommands
             _askCountryRequest = askCountryRequest;
         }
 
-        public override string Name => CommandNames.StartCommand;
+        public override CommandType CommandType => CommandType.Start;
 
         public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            message.Deconstruct(out var chatId);
-
-            await BotClient.SendTextMessageAsync(chatId, GetWelcomeMessage(CurrentAppUser),
+            await BotClient.SendTextMessageAsync(ChatId, GetWelcomeMessage(CurrentAppUser),
                 ParseMode.MarkdownV2,
                 cancellationToken: cancellationToken);
 
@@ -47,9 +44,9 @@ namespace Application.BotCommands
             sb.AppendLine(
                 $"👋 Hello {user.GetTelegramMarkdownLink()}\\. I can help you sell or buy a variety of clothes\\.");
             sb.AppendLine("You can control me by sending these commands:");
-            foreach (var botCommand in new SupportedCommands())
+            foreach (var commandType in CommandTypeEnumeration.GetAll())
             {
-                sb.AppendLine($"{botCommand.Command} - {botCommand.Description}".Escape());
+                sb.AppendLine($"{commandType.Name} - {commandType.Description}".Escape());
             }
 
             return sb.ToString();

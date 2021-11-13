@@ -1,7 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common;
-using Application.Common.Extensions;
 using Application.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -9,20 +7,18 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Application.BotCommands
 {
-    public class TestCommand : BaseCommand
+    public class FindCommand : BaseCommand
     {
-        public TestCommand(ITelegramBotClient botClient, IAppUserService appUserService)
+        public FindCommand(ITelegramBotClient botClient, IAppUserService appUserService)
             : base(botClient, appUserService)
         {
         }
 
-        public override string Name => CommandNames.TestCommand;
-
+        public override CommandType CommandType => CommandType.Find;
+        
         public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            message.Deconstruct(out var chatId);
-
-            var msg = await BotClient.SendTextMessageAsync(chatId, "Введите название для Вашего розыгрыша.",
+            var msg = await BotClient.SendTextMessageAsync(ChatId, "Введите название для Вашего розыгрыша.",
                 replyMarkup: new ForceReplyMarkup());
 
             // await BotClient.SendTextMessageAsync(chatId, "test", replyMarkup:
@@ -34,10 +30,6 @@ namespace Application.BotCommands
 
                 await Task.Delay(1000);
             }
-
-            return;
-            await BotClient.SendTextMessageAsync(chatId, "Please provide the product name:",
-                replyMarkup: new ForceReplyMarkup());
         }
     }
 }

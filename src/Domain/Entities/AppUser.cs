@@ -22,9 +22,11 @@ namespace Domain.Entities
         public AppUserStatus? Status { get; set; } = AppUserStatus.Member;
 
         public long? CountryId { get; set; }
-
+        
         public Country Country { get; set; }
-
+        
+        public bool HasCountry => CountryId != null;
+        
         public Language.LanguageCode? LanguageCode { get; set; }
 
         public Language Language { get; }

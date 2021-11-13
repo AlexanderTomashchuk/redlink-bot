@@ -1,24 +1,26 @@
+using System;
 using System.Linq;
+using Application.BotCommands;
 using Telegram.Bot.Types;
 
 namespace Application.Common.Extensions
 {
     public static class MessageExtensions
     {
-        public static bool IsCommand(this Message message)
+        public static bool TryParseCommandType(this Message message, out CommandType commandType)
         {
-            var allowedCommands = new SupportedCommands();
-            return allowedCommands.Any(ac => ac.Command == message.ExtractCommandFromText());
-        }
+            var commandString = message?.Text.Trim().Split(' ').FirstOrDefault();
 
-        public static string ExtractCommandFromText(this Message message)
-        {
-            return message.Text?.Trim().Split(' ').First();
-        }
+            if (commandString is null)
+            {
+                commandType = null;
+                return false;
+            }
 
-        public static void Deconstruct(this Message m, out long chatId)
-        {
-            chatId = m.Chat.Id;
+            commandType = CommandTypeEnumeration.GetAll().FirstOrDefault(ct =>
+                commandString.Equals(ct.Name, StringComparison.InvariantCultureIgnoreCase));
+
+            return commandType is not null;
         }
     }
 }

@@ -13,25 +13,16 @@ namespace Application.Processors
 {
     public class MessageReceivedProcessor
     {
-        private readonly StartCommand _startCommand;
-        private readonly SellCommand _sellCommand;
-        private readonly UsageCommand _usageCommand;
-        private readonly TestCommand _testCommand;
+        private readonly Func<CommandType, BaseCommand> _commandResolver;
         private readonly IAppUserService _appUserService;
         private readonly AskCountryRequest _askCountryRequest;
 
         public MessageReceivedProcessor(
-            StartCommand startCommand,
-            SellCommand sellCommand,
-            UsageCommand usageCommand,
-            TestCommand testCommand,
+            Func<CommandType, BaseCommand> commandResolver,
             IAppUserService appUserService,
             AskCountryRequest askCountryRequest)
         {
-            _startCommand = startCommand;
-            _sellCommand = sellCommand;
-            _usageCommand = usageCommand;
-            _testCommand = testCommand;
+            _commandResolver = commandResolver;
             _appUserService = appUserService;
             _askCountryRequest = askCountryRequest;
         }
@@ -47,16 +38,17 @@ namespace Application.Processors
             {
                 case MessageType.Text:
                 {
-                    var handler = (message.ExtractCommandFromText(), _appUserService.Current.CountryId) switch
+                    if (message.TryParseCommandType(out var commandType))
                     {
-                        //todo: OT TO ENUM!!
-                        (not "/start", null) => _askCountryRequest.ExecuteAsync(cancellationToken),
-                        ("/start", _) => _startCommand.ExecuteAsync(message, cancellationToken),
-                        ("/sell", _) => _sellCommand.ExecuteAsync(message, cancellationToken),
-                        ("/test", _) => _testCommand.ExecuteAsync(message, cancellationToken),
-                        _ => _usageCommand.ExecuteAsync(message, cancellationToken)
-                    };
-                    await handler;
+                        var handler = (commandType.Name, _appUserService.Current.HasCountry) switch
+                        {
+                            (not "/start", false) => _askCountryRequest.ExecuteAsync(cancellationToken),
+                            _ => _commandResolver(commandType).ExecuteAsync(message, cancellationToken)
+                        };
+
+                        await handler;
+                        return;
+                    }
 
                     return;
                 }

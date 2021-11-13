@@ -1,7 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Common;
-using Application.Common.Extensions;
 using Application.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,12 +14,10 @@ namespace Application.BotCommands
         {
         }
 
-        public override string Name => CommandNames.SellCommand;
+        public override CommandType CommandType => CommandType.Sell;
 
         public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            message.Deconstruct(out var chatId);
-
             var menu = new InlineKeyboardMarkup(new[]
             {
                 new[]
@@ -40,7 +36,7 @@ namespace Application.BotCommands
                 }
             });
 
-            await BotClient.SendTextMessageAsync(chatId, "Let's create a product to sell", replyMarkup: menu);
+            await BotClient.SendTextMessageAsync(ChatId, "Let's create a product to sell", replyMarkup: menu);
         }
     }
 }
