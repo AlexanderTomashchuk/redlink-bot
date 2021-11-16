@@ -1,9 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common;
 using Application.Services.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Enums;
 
 namespace Application.BotCommands
 {
@@ -18,16 +19,11 @@ namespace Application.BotCommands
 
         public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
         {
-            var botInfo = await BotClient.GetMeAsync();
+            var profileInfoMessage = BotMessage.GetProfileInfoMessage(CurrentAppUser);
+            var replyMarkup = BotInlineKeyboard.GetChangeProfileKeyboard();
 
-            var usage = $"How to use {botInfo.FirstName} bot:\n" +
-                        "/inline   - send inline keyboard\n" +
-                        "/keyboard - send custom keyboard\n" +
-                        "/sell     - Create new product\n" +
-                        "/find     - Find a product\n" +
-                        "/settings - Change user settings";
-
-            await BotClient.SendTextMessageAsync(ChatId, usage, replyMarkup: new ReplyKeyboardRemove());
+            await BotClient.SendTextMessageAsync(ChatId, profileInfoMessage, ParseMode.MarkdownV2,
+                replyMarkup: replyMarkup, cancellationToken: cancellationToken);
         }
     }
 }

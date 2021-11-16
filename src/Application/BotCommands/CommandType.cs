@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using Application.Common;
 
 namespace Application.BotCommands
 {
@@ -26,12 +25,8 @@ namespace Application.BotCommands
         }
     }
 
-    public abstract class CommandTypeEnumeration
+    public abstract class CommandTypeEnumeration : Enumeration
     {
-        public int Id { get; }
-
-        public string Name { get; }
-
         public string Description { get; }
 
         public Type CommandHandlerType { get; }
@@ -39,18 +34,10 @@ namespace Application.BotCommands
         public bool IsVisibleInCommandsMenu { get; }
 
         protected CommandTypeEnumeration(int id, string name, string description, Type commandHandlerType,
-            bool isVisibleInCommandsMenu = true)
-            => (Id, Name, Description, CommandHandlerType, IsVisibleInCommandsMenu)
-                = (id, name, description, commandHandlerType, isVisibleInCommandsMenu);
+            bool isVisibleInCommandsMenu = true) : base(id, name)
+            => (Description, CommandHandlerType, IsVisibleInCommandsMenu) =
+                (description, commandHandlerType, isVisibleInCommandsMenu);
 
-        public override string ToString() => Name;
-
-        public static IEnumerable<CommandType> GetAll() =>
-            typeof(CommandType).GetFields(BindingFlags.Public |
-                                          BindingFlags.Static |
-                                          BindingFlags.DeclaredOnly)
-                .Select(f => f.GetValue(null))
-                .Cast<CommandType>()
-                .OrderBy(s => s.Id);
+        public static IEnumerable<CommandType> GetAll() => GetAll<CommandType>();
     }
 }

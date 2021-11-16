@@ -30,17 +30,19 @@ namespace Application.Processors
 
             switch (callbackQueryData.CommandName)
             {
-                case "SET_COUNTRY":
+                case "INIT_COUNTRY":
                     //todo: OT TO COMMAND???
                     await _appUserService.UpdateAsync(appUser => appUser.CountryId = callbackQueryData.Id,
                         cancellationToken);
 
+                    var selectedCountryMessage = BotMessage.GetSelectedCountryMessage(callbackQueryData.Text);
+
                     var sentTextMessageTask = _botClient.SendTextMessageAsync(chatId,
-                        $"Selected country: _{callbackQueryData.Text}_",
+                        selectedCountryMessage,
                         ParseMode.MarkdownV2, cancellationToken: cancellationToken);
 
                     var answerCbQueryTask = _botClient.AnswerCallbackQueryAsync(updateCallbackQuery.Id,
-                        $"Selected country: {callbackQueryData.Text}",
+                        selectedCountryMessage,
                         cancellationToken: cancellationToken);
 
                     await Task.WhenAll(sentTextMessageTask, answerCbQueryTask);

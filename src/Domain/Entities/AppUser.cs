@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Domain.Common;
+using Domain.Extensions;
 using Domain.ValueObjects;
 
 namespace Domain.Entities
@@ -22,11 +23,11 @@ namespace Domain.Entities
         public AppUserStatus? Status { get; set; } = AppUserStatus.Member;
 
         public long? CountryId { get; set; }
-        
+
         public Country Country { get; set; }
-        
+
         public bool HasCountry => CountryId != null;
-        
+
         public Language.LanguageCode? LanguageCode { get; set; }
 
         public Language Language { get; }
@@ -35,6 +36,17 @@ namespace Domain.Entities
 
         private AppUser()
         {
+        }
+
+        public string GetUsername()
+        {
+            return (Username ?? string.Join(" ", FirstName, LastName).Trim()).Escape();
+        }
+
+        public string GetTelegramMarkdownLink()
+        {
+            var userName = GetUsername();
+            return $"[{userName}](tg://user?id={Id})";
         }
     }
 }

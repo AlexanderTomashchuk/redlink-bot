@@ -38,17 +38,18 @@ namespace Application.Processors
             {
                 case MessageType.Text:
                 {
-                    if (message.TryParseCommandType(out var commandType))
-                    {
-                        var handler = (commandType.Name, _appUserService.Current.HasCountry) switch
-                        {
-                            (not "/start", false) => _askCountryRequest.ExecuteAsync(cancellationToken),
-                            _ => _commandResolver(commandType).ExecuteAsync(message, cancellationToken)
-                        };
+                    var isCommand = message.TryParseCommandType(out var commandType);
+                    var isCountrySelected = _appUserService.Current.HasCountry;
 
-                        await handler;
-                        return;
-                    }
+                    var handler = (isCommand, commandType?.Name, isCountrySelected) switch
+                    {
+                        (true, not "/start", false) => _askCountryRequest.ExecuteAsync(cancellationToken),
+                        (true, _, _) => _commandResolver(commandType).ExecuteAsync(message, cancellationToken),
+                        (false, _, false) => _askCountryRequest.ExecuteAsync(cancellationToken),
+                        (false, _, true) => Task.FromResult("THIS IS NOT IMPLEMENTED MESSAGE HANDLER")
+                    };
+
+                    await handler;
 
                     return;
                 }
