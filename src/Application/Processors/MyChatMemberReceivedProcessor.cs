@@ -5,25 +5,24 @@ using AutoMapper;
 using Domain.ValueObjects;
 using Telegram.Bot.Types;
 
-namespace Application.Processors
+namespace Application.Processors;
+
+public class MyChatMemberReceivedProcessor
 {
-    public class MyChatMemberReceivedProcessor
+    private readonly IAppUserService _appUserService;
+    private readonly IMapper _mapper;
+
+    public MyChatMemberReceivedProcessor(IAppUserService appUserService, IMapper mapper)
     {
-        private readonly IAppUserService _appUserService;
-        private readonly IMapper _mapper;
+        _appUserService = appUserService;
+        _mapper = mapper;
+    }
 
-        public MyChatMemberReceivedProcessor(IAppUserService appUserService, IMapper mapper)
-        {
-            _appUserService = appUserService;
-            _mapper = mapper;
-        }
+    public async Task ProcessAsync(ChatMemberUpdated chatMemberUpdated,
+        CancellationToken cancellationToken = default)
+    {
+        var appUserStatus = _mapper.Map<AppUserStatus>(chatMemberUpdated.NewChatMember.Status);
 
-        public async Task ProcessAsync(ChatMemberUpdated chatMemberUpdated,
-            CancellationToken cancellationToken = default)
-        {
-            var appUserStatus = _mapper.Map<AppUserStatus>(chatMemberUpdated.NewChatMember.Status);
-
-            await _appUserService.UpdateAsync(appUser => appUser.Status = appUserStatus, cancellationToken);
-        }
+        await _appUserService.UpdateAsync(appUser => appUser.Status = appUserStatus, cancellationToken);
     }
 }

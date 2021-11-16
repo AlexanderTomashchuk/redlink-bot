@@ -15,77 +15,76 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 
-namespace Bot.WebHook
+namespace Bot.WebHook;
+
+public class Startup
 {
-    public class Startup
+    private IConfiguration Configuration { get; }
+
+    public Startup(IConfiguration configuration)
     {
-        private IConfiguration Configuration { get; }
+        Configuration = configuration;
+    }
 
-        public Startup(IConfiguration configuration)
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddLogging(builder =>
         {
-            Configuration = configuration;
-        }
+            builder.AddConsole();
+            builder.AddDebug();
+        });
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddLogging(builder =>
+        services.AddOptions();
+
+        services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
+
+        services.AddHttpClient("tgwebhook")
+            .AddTypedClient<ITelegramBotClient>((_, provider) =>
             {
-                builder.AddConsole();
-                builder.AddDebug();
+                var accessToken = provider.GetRequiredService<IOptions<BotConfiguration>>().Value.AccessToken;
+                return new TelegramBotClient(accessToken);
             });
 
-            services.AddOptions();
+        services.AddInfrastructure(Configuration);
+        services.AddApplication();
 
-            services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
+        services.AddScoped<HandleUpdateService>();
+        services.AddScoped<IAppUserService, AppUserService>();
+        services.AddScoped<AppUserInitMiddleware>();
 
-            services.AddHttpClient("tgwebhook")
-                .AddTypedClient<ITelegramBotClient>((_, provider) =>
-                {
-                    var accessToken = provider.GetRequiredService<IOptions<BotConfiguration>>().Value.AccessToken;
-                    return new TelegramBotClient(accessToken);
-                });
+        services.AddHostedService<WebHookConfiguratorService>();
+        services.AddHostedService<BotCommandsConfiguratorService>();
+        services.AddHostedService<DatabaseMigratorService>();
 
-            services.AddInfrastructure(Configuration);
-            services.AddApplication();
+        services.AddControllers()
+            .AddNewtonsoftJson();
+    }
 
-            services.AddScoped<HandleUpdateService>();
-            services.AddScoped<IAppUserService, AppUserService>();
-            services.AddScoped<AppUserInitMiddleware>();
-
-            services.AddHostedService<WebHookConfiguratorService>();
-            services.AddHostedService<BotCommandsConfiguratorService>();
-            services.AddHostedService<DatabaseMigratorService>();
-
-            services.AddControllers()
-                .AddNewtonsoftJson();
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<BotConfiguration> botConfig)
+    {
+        if (env.IsDevelopment())
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-            app.UseCors();
-
-            app.Use((context, next) =>
-            {
-                context.Request.EnableBuffering();
-                return next();
-            });
-
-            app.UseMiddleware<AppUserInitMiddleware>();
-
-            app.UseEndpoints(endpoints =>
-            {
-                var accessToken = botConfig.Value.AccessToken;
-                endpoints.MapControllerRoute(name: "tgwebhook",
-                    pattern: $"bot/{accessToken}",
-                    new { controller = "Webhook", action = "Post" });
-                endpoints.MapControllers();
-            });
+            app.UseDeveloperExceptionPage();
         }
+
+        app.UseRouting();
+        app.UseCors();
+
+        app.Use((context, next) =>
+        {
+            context.Request.EnableBuffering();
+            return next();
+        });
+
+        app.UseMiddleware<AppUserInitMiddleware>();
+
+        app.UseEndpoints(endpoints =>
+        {
+            var accessToken = botConfig.Value.AccessToken;
+            endpoints.MapControllerRoute(name: "tgwebhook",
+                pattern: $"bot/{accessToken}",
+                new { controller = "Webhook", action = "Post" });
+            endpoints.MapControllers();
+        });
     }
 }

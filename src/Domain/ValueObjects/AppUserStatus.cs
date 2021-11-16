@@ -1,12 +1,11 @@
-namespace Domain.ValueObjects
+namespace Domain.ValueObjects;
+
+public enum AppUserStatus
 {
-    public enum AppUserStatus
-    {
-        Creator,
-        Administrator,
-        Member,
-        Left,
-        Kicked,
-        Restricted,
-    }
+    Creator,
+    Administrator,
+    Member,
+    Left,
+    Kicked,
+    Restricted,
 }

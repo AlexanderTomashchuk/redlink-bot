@@ -8,75 +8,74 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot.Types;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class AppUserService : IAppUserService
 {
-    public class AppUserService : IAppUserService
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public AppUserService(IApplicationDbContext context, IMapper mapper)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        _context = context;
+        _mapper = mapper;
+    }
 
-        public AppUserService(IApplicationDbContext context, IMapper mapper)
+    private AppUser _currentAppUser;
+
+    public AppUser Current => _currentAppUser;
+
+    public async Task InitAsync(Update update, CancellationToken cancellationToken = default)
+    {
+        var appUserFromRequest = _mapper.Map<AppUser>(update);
+
+        _currentAppUser = await UpsertAsync(appUserFromRequest, cancellationToken: cancellationToken);
+    }
+
+    public async Task UpdateAsync(Action<AppUser> updateOtherProperties,
+        CancellationToken cancellationToken = default)
+    {
+        _currentAppUser = await UpsertAsync(_currentAppUser, updateOtherProperties, cancellationToken);
+    }
+
+    private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest, Action<AppUser> updateOtherProperties = null,
+        CancellationToken cancellationToken = default)
+    {
+        var appUserFromDb = await GetByIdAsync(appUserFromRequest.Id, cancellationToken);
+
+        if (appUserFromDb == null)
         {
-            _context = context;
-            _mapper = mapper;
+            return await InsertAsync(appUserFromRequest, cancellationToken);
         }
 
-        private AppUser _currentAppUser;
+        appUserFromDb.FirstName = appUserFromRequest.FirstName;
+        appUserFromDb.LastName = appUserFromRequest.LastName;
+        appUserFromDb.Username = appUserFromRequest.Username;
+        appUserFromDb.ChatId = appUserFromRequest.ChatId;
 
-        public AppUser Current => _currentAppUser;
+        updateOtherProperties?.Invoke(appUserFromDb);
 
-        public async Task InitAsync(Update update, CancellationToken cancellationToken = default)
-        {
-            var appUserFromRequest = _mapper.Map<AppUser>(update);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            _currentAppUser = await UpsertAsync(appUserFromRequest, cancellationToken: cancellationToken);
-        }
+        return appUserFromDb;
+    }
 
-        public async Task UpdateAsync(Action<AppUser> updateOtherProperties,
-            CancellationToken cancellationToken = default)
-        {
-            _currentAppUser = await UpsertAsync(_currentAppUser, updateOtherProperties, cancellationToken);
-        }
+    private async Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+    {
+        var appUserFromDb = await _context.Users
+            .Include(u => u.Country)
+            .Include(u => u.Language)
+            .FirstOrDefaultAsync(au => au.Id == id, cancellationToken);
 
-        private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest, Action<AppUser> updateOtherProperties = null,
-            CancellationToken cancellationToken = default)
-        {
-            var appUserFromDb = await GetByIdAsync(appUserFromRequest.Id, cancellationToken);
+        return appUserFromDb;
+    }
 
-            if (appUserFromDb == null)
-            {
-                return await InsertAsync(appUserFromRequest, cancellationToken);
-            }
+    private async Task<AppUser> InsertAsync(AppUser appUser, CancellationToken cancellationToken = default)
+    {
+        var result = await _context.Users.AddAsync(appUser, cancellationToken);
 
-            appUserFromDb.FirstName = appUserFromRequest.FirstName;
-            appUserFromDb.LastName = appUserFromRequest.LastName;
-            appUserFromDb.Username = appUserFromRequest.Username;
-            appUserFromDb.ChatId = appUserFromRequest.ChatId;
+        await _context.SaveChangesAsync(cancellationToken);
 
-            updateOtherProperties?.Invoke(appUserFromDb);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return appUserFromDb;
-        }
-
-        private async Task<AppUser> GetByIdAsync(long id, CancellationToken cancellationToken = default)
-        {
-            var appUserFromDb = await _context.Users
-                .Include(u => u.Country)
-                .Include(u => u.Language)
-                .FirstOrDefaultAsync(au => au.Id == id, cancellationToken);
-
-            return appUserFromDb;
-        }
-
-        private async Task<AppUser> InsertAsync(AppUser appUser, CancellationToken cancellationToken = default)
-        {
-            var result = await _context.Users.AddAsync(appUser, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return result.Entity;
-        }
+        return result.Entity;
     }
 }

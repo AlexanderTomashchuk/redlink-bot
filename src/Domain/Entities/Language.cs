@@ -1,36 +1,35 @@
 using System.Collections.Generic;
 using Domain.Common;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public class Language : AuditableEntity
 {
-    public class Language : AuditableEntity
+    public enum LanguageCode
     {
-        public enum LanguageCode
-        {
-            En,
-            Uk,
-            Ru
-        }
+        En,
+        Uk,
+        Ru
+    }
 
-        public LanguageCode Code { get; }
-        public static LanguageCode DefaultLanguageCode => LanguageCode.En;
+    public LanguageCode Code { get; }
+    public static LanguageCode DefaultLanguageCode => LanguageCode.En;
 
-        public string Name { get; }
+    public string Name { get; }
 
-        public string Flag { get; }
+    public string Flag { get; }
 
-        public ICollection<AppUser> Users { get; }
+    public ICollection<AppUser> Users { get; }
 
-        private Language()
-        {
-        }
+    private Language()
+    {
+    }
 
-        public Language(LanguageCode code, string name, string flag, ICollection<AppUser> users = null)
-        {
-            Code = code;
-            Name = name;
-            Flag = flag;
-            Users = users;
-        }
+    public Language(LanguageCode code, string name, string flag, ICollection<AppUser> users = null)
+    {
+        Code = code;
+        Name = name;
+        Flag = flag;
+        Users = users;
     }
 }

@@ -3,50 +3,49 @@ using Domain.Common;
 using Domain.Extensions;
 using Domain.ValueObjects;
 
-namespace Domain.Entities
+namespace Domain.Entities;
+
+public class AppUser : AuditableEntity
 {
-    public class AppUser : AuditableEntity
+    /// <summary>
+    /// Equals to Telegram.User.Id
+    /// </summary>
+    public long Id { get; set; }
+
+    public string FirstName { get; set; }
+
+    public string LastName { get; set; }
+
+    public string Username { get; set; }
+
+    public long? ChatId { get; set; }
+
+    public AppUserStatus? Status { get; set; } = AppUserStatus.Member;
+
+    public long? CountryId { get; set; }
+
+    public Country Country { get; set; }
+
+    public bool HasCountry => CountryId != null;
+
+    public Language.LanguageCode? LanguageCode { get; set; }
+
+    public Language Language { get; }
+
+    public ICollection<Product> Products { get; }
+
+    private AppUser()
     {
-        /// <summary>
-        /// Equals to Telegram.User.Id
-        /// </summary>
-        public long Id { get; set; }
+    }
 
-        public string FirstName { get; set; }
+    public string GetUsername()
+    {
+        return (Username ?? string.Join(" ", FirstName, LastName).Trim()).Escape();
+    }
 
-        public string LastName { get; set; }
-
-        public string Username { get; set; }
-
-        public long? ChatId { get; set; }
-
-        public AppUserStatus? Status { get; set; } = AppUserStatus.Member;
-
-        public long? CountryId { get; set; }
-
-        public Country Country { get; set; }
-
-        public bool HasCountry => CountryId != null;
-
-        public Language.LanguageCode? LanguageCode { get; set; }
-
-        public Language Language { get; }
-
-        public ICollection<Product> Products { get; }
-
-        private AppUser()
-        {
-        }
-
-        public string GetUsername()
-        {
-            return (Username ?? string.Join(" ", FirstName, LastName).Trim()).Escape();
-        }
-
-        public string GetTelegramMarkdownLink()
-        {
-            var userName = GetUsername();
-            return $"[{userName}](tg://user?id={Id})";
-        }
+    public string GetTelegramMarkdownLink()
+    {
+        var userName = GetUsername();
+        return $"[{userName}](tg://user?id={Id})";
     }
 }

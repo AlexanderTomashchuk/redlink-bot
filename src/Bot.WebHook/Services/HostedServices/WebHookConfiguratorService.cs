@@ -8,44 +8,43 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.WebHook.Services.HostedServices
+namespace Bot.WebHook.Services.HostedServices;
+
+public class WebHookConfiguratorService : IHostedService
 {
-    public class WebHookConfiguratorService : IHostedService
+    private readonly IServiceProvider _services;
+    private readonly ILogger<WebHookConfiguratorService> _logger;
+
+    public WebHookConfiguratorService(
+        IServiceProvider serviceProvider,
+        ILogger<WebHookConfiguratorService> logger)
     {
-        private readonly IServiceProvider _services;
-        private readonly ILogger<WebHookConfiguratorService> _logger;
+        _services = serviceProvider;
+        _logger = logger;
+    }
 
-        public WebHookConfiguratorService(
-            IServiceProvider serviceProvider,
-            ILogger<WebHookConfiguratorService> logger)
-        {
-            _services = serviceProvider;
-            _logger = logger;
-        }
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        using var scope = _services.CreateScope();
+        var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
+        var botConfiguration = scope.ServiceProvider.GetRequiredService<IOptions<BotConfiguration>>().Value;
 
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
-            var botConfiguration = scope.ServiceProvider.GetRequiredService<IOptions<BotConfiguration>>().Value;
+        _logger.LogInformation("Setting webhook: {WebHookFullAddress}", botConfiguration.WebHookFullAddress);
 
-            _logger.LogInformation("Setting webhook: {WebHookFullAddress}", botConfiguration.WebHookFullAddress);
+        await botClient.SetWebhookAsync(
+            url: botConfiguration.WebHookFullAddress,
+            allowedUpdates: Array.Empty<UpdateType>(),
+            cancellationToken: cancellationToken);
+    }
 
-            await botClient.SetWebhookAsync(
-                url: botConfiguration.WebHookFullAddress,
-                allowedUpdates: Array.Empty<UpdateType>(),
-                cancellationToken: cancellationToken);
-        }
+    //todo: OT investigate why this method not called
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        using var scope = _services.CreateScope();
+        var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        //todo: OT investigate why this method not called
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _services.CreateScope();
-            var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
-
-            // Remove webhook upon app shutdown
-            _logger.LogInformation("Removing webhook");
-            await botClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
-        }
+        // Remove webhook upon app shutdown
+        _logger.LogInformation("Removing webhook");
+        await botClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
     }
 }

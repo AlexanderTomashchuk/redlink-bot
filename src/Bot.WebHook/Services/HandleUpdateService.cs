@@ -7,55 +7,54 @@ using Newtonsoft.Json;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Bot.WebHook.Services
+namespace Bot.WebHook.Services;
+
+public class HandleUpdateService
 {
-    public class HandleUpdateService
+    private readonly MessageReceivedProcessor _messageReceivedProcessor;
+    private readonly CallbackQueryReceivedProcessor _callbackQueryReceivedProcessor;
+    private readonly MyChatMemberReceivedProcessor _myChatMemberReceivedProcessor;
+    private readonly ILogger<HandleUpdateService> _logger;
+
+    public HandleUpdateService(
+        MessageReceivedProcessor messageReceivedProcessor,
+        CallbackQueryReceivedProcessor callbackQueryReceivedProcessor,
+        MyChatMemberReceivedProcessor myChatMemberReceivedProcessor,
+        ILogger<HandleUpdateService> logger)
     {
-        private readonly MessageReceivedProcessor _messageReceivedProcessor;
-        private readonly CallbackQueryReceivedProcessor _callbackQueryReceivedProcessor;
-        private readonly MyChatMemberReceivedProcessor _myChatMemberReceivedProcessor;
-        private readonly ILogger<HandleUpdateService> _logger;
+        _messageReceivedProcessor = messageReceivedProcessor;
+        _callbackQueryReceivedProcessor = callbackQueryReceivedProcessor;
+        _myChatMemberReceivedProcessor = myChatMemberReceivedProcessor;
+        _logger = logger;
+    }
 
-        public HandleUpdateService(
-            MessageReceivedProcessor messageReceivedProcessor,
-            CallbackQueryReceivedProcessor callbackQueryReceivedProcessor,
-            MyChatMemberReceivedProcessor myChatMemberReceivedProcessor,
-            ILogger<HandleUpdateService> logger)
+    public async Task EchoAsync(Update update, CancellationToken cancellationToken)
+    {
+        var handler = update.Type switch
         {
-            _messageReceivedProcessor = messageReceivedProcessor;
-            _callbackQueryReceivedProcessor = callbackQueryReceivedProcessor;
-            _myChatMemberReceivedProcessor = myChatMemberReceivedProcessor;
-            _logger = logger;
-        }
+            UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message, cancellationToken),
+            UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery,
+                cancellationToken),
+            UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember,
+                cancellationToken),
+            _ => UnknownUpdateHandleAsync(update)
+        };
 
-        public async Task EchoAsync(Update update, CancellationToken cancellationToken)
+        try
         {
-            var handler = update.Type switch
-            {
-                UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message, cancellationToken),
-                UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery,
-                    cancellationToken),
-                UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember,
-                    cancellationToken),
-                _ => UnknownUpdateHandleAsync(update)
-            };
-
-            try
-            {
-                await handler;
-            }
-            catch (Exception exception)
-            {
-                var errorMessage = JsonConvert.SerializeObject(exception, Formatting.Indented);
-
-                _logger.LogError(errorMessage);
-            }
+            await handler;
         }
-
-        private Task UnknownUpdateHandleAsync(Update update)
+        catch (Exception exception)
         {
-            _logger.LogWarning("Unknown update type: {UpdateType}", update.Type);
-            return Task.CompletedTask;
+            var errorMessage = JsonConvert.SerializeObject(exception, Formatting.Indented);
+
+            _logger.LogError(errorMessage);
         }
+    }
+
+    private Task UnknownUpdateHandleAsync(Update update)
+    {
+        _logger.LogWarning("Unknown update type: {UpdateType}", update.Type);
+        return Task.CompletedTask;
     }
 }

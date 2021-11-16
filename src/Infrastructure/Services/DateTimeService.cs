@@ -1,10 +1,9 @@
 using System;
 using Application.Common.Interfaces;
 
-namespace Infrastructure.Services
+namespace Infrastructure.Services;
+
+public class DateTimeService : IDateTime
 {
-    public class DateTimeService : IDateTime
-    {
-        public DateTime UtcNow => DateTime.UtcNow;
-    }
+    public DateTime UtcNow => DateTime.UtcNow;
 }

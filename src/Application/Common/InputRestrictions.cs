@@ -1,24 +1,23 @@
 using System.Linq;
 using Telegram.Bot.Types.Enums;
 
-namespace Application.Common
+namespace Application.Common;
+
+public static class InputRestrictions
 {
-    public static class InputRestrictions
+    public static UpdateType[] AllowedUpdates => new[]
     {
-        public static UpdateType[] AllowedUpdates => new[]
-        {
-            UpdateType.Message, UpdateType.EditedMessage, UpdateType.CallbackQuery, UpdateType.MyChatMember,
-            UpdateType.Unknown
-        };
+        UpdateType.Message, UpdateType.EditedMessage, UpdateType.CallbackQuery, UpdateType.MyChatMember,
+        UpdateType.Unknown
+    };
 
-        private static MessageType[] AllowedMessageTypes => new[]
-        {
-            MessageType.Text, MessageType.Photo, MessageType.Contact
-        };
+    private static MessageType[] AllowedMessageTypes => new[]
+    {
+        MessageType.Text, MessageType.Photo, MessageType.Contact
+    };
 
-        public static bool IsAllowedMessageType(this MessageType messageType)
-        {
-            return AllowedMessageTypes.Any(amt => amt == messageType);
-        }
+    public static bool IsAllowedMessageType(this MessageType messageType)
+    {
+        return AllowedMessageTypes.Any(amt => amt == messageType);
     }
 }

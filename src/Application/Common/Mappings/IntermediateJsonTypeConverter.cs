@@ -1,13 +1,12 @@
 using AutoMapper;
 using Newtonsoft.Json;
 
-namespace Application.Common.Mappings
+namespace Application.Common.Mappings;
+
+public class FromJsonTypeConverter<TDestination> : ITypeConverter<string, TDestination>
 {
-    public class FromJsonTypeConverter<TDestination> : ITypeConverter<string, TDestination>
+    public TDestination Convert(string source, TDestination destination, ResolutionContext context)
     {
-        public TDestination Convert(string source, TDestination destination, ResolutionContext context)
-        {
-            return JsonConvert.DeserializeObject<TDestination>(source);
-        }
+        return JsonConvert.DeserializeObject<TDestination>(source);
     }
 }

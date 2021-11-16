@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace Application.Services.Interfaces
+namespace Application.Services.Interfaces;
+
+public interface ICountryService
 {
-    public interface ICountryService
-    {
-        Task<List<Country>> GetAllAsync(CancellationToken cancellationToken);
-    }
+    Task<List<Country>> GetAllAsync(CancellationToken cancellationToken);
 }

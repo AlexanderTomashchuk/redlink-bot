@@ -2,14 +2,13 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class FileConfiguration : IEntityTypeConfiguration<File>
 {
-    public class FileConfiguration : IEntityTypeConfiguration<File>
+    public void Configure(EntityTypeBuilder<File> builder)
     {
-        public void Configure(EntityTypeBuilder<File> builder)
-        {
-            builder.ToTable("File");
-            builder.HasKey(f => f.Id);
-        }
+        builder.ToTable("File");
+        builder.HasKey(f => f.Id);
     }
 }

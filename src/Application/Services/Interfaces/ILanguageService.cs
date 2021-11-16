@@ -4,10 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Domain.Entities;
 
-namespace Application.Services.Interfaces
+namespace Application.Services.Interfaces;
+
+public interface ILanguageService
 {
-    public interface ILanguageService
-    {
-        Task<Language> FirstOrDefaultAsync(Expression<Func<Language, bool>> predicate, CancellationToken cancellationToken);
-    }
+    Task<Language> FirstOrDefaultAsync(Expression<Func<Language, bool>> predicate, CancellationToken cancellationToken);
 }

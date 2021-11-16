@@ -1,11 +1,10 @@
 using System;
 
-namespace Domain.Common
-{
-    public class AuditableEntity
-    {
-        public DateTime CreatedOn { get; set; }
+namespace Domain.Common;
 
-        public DateTime? ModifiedOn { get; set; }
-    }
+public class AuditableEntity
+{
+    public DateTime CreatedOn { get; set; }
+
+    public DateTime? ModifiedOn { get; set; }
 }

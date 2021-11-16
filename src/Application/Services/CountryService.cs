@@ -8,22 +8,21 @@ using Application.Services.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class CountryService : ICountryService
 {
-    public class CountryService : ICountryService
+    private readonly IApplicationDbContext _context;
+
+    public CountryService(IApplicationDbContext context)
     {
-        private readonly IApplicationDbContext _context;
+        _context = context;
+    }
 
-        public CountryService(IApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var allCountries = _context.Countries.ToListAsync(cancellationToken);
 
-        public Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            var allCountries = _context.Countries.ToListAsync(cancellationToken);
-
-            return allCountries;
-        }
+        return allCountries;
     }
 }
