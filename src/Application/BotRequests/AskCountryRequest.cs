@@ -28,7 +28,7 @@ public class AskCountryRequest
         var countries = await _countryService.GetAllAsync(cancellationToken);
 
         var initCountryMessage = BotMessage.GetInitCountryMessage();
-        var replyMarkup = BotInlineKeyboard.GetCountriesKeyboard(countries, "INIT_COUNTRY");
+        var replyMarkup = BotInlineKeyboard.GetInitCountryKeyboard(countries);
 
         await _botClient.SendTextMessageAsync(chatId, initCountryMessage, ParseMode.MarkdownV2,
             replyMarkup: replyMarkup, cancellationToken: cancellationToken);

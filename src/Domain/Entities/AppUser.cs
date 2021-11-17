@@ -30,7 +30,7 @@ public class AppUser : AuditableEntity
 
     public Language.LanguageCode? LanguageCode { get; set; }
 
-    public Language Language { get; }
+    public Language Language { get; set; }
 
     public ICollection<Product> Products { get; }
 

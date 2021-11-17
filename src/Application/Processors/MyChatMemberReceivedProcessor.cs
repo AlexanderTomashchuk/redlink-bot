@@ -23,6 +23,7 @@ public class MyChatMemberReceivedProcessor
     {
         var appUserStatus = _mapper.Map<AppUserStatus>(chatMemberUpdated.NewChatMember.Status);
 
-        await _appUserService.UpdateAsync(appUser => appUser.Status = appUserStatus, cancellationToken);
+        await _appUserService.UpdateAsync((appUser, _) => Task.FromResult(appUser.Status = appUserStatus),
+            cancellationToken);
     }
 }

@@ -35,6 +35,15 @@ public static class BotMessage
         return sb.ToString();
     }
 
+    public static string GetEditCountryMessage()
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("Please select your country from the list below\\.");
+
+        return sb.ToString();
+    }
+
     public static string GetSelectedCountryMessage(string countryName) => $"Selected country: {countryName}";
 
     public static string GetProfileInfoMessage(AppUser currentAppUser)
@@ -51,4 +60,15 @@ public static class BotMessage
 
         return sb.ToString();
     }
+
+    public static string GetEditLanguageMessage()
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("Please choose your language from the list below\\.");
+
+        return sb.ToString();
+    }
+
+    public static string GetSelectedLanguageMessage(string languageName) => $"Selected language: {languageName}";
 }

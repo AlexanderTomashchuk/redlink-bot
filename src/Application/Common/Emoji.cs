@@ -7,4 +7,5 @@ public static class Emoji
     public static string HELLO = "👋";
     public static string COUNTRY = "🌎";
     public static string LANGUAGE = "💬";
+    public static string BACK = "◀️"; // ⬅️  🔙  ◀️
 }

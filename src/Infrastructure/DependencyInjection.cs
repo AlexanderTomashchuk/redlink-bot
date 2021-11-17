@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("RedLinkDBContext"));
-            options.LogTo(Console.WriteLine, LogLevel.Information);
+            options.LogTo(Console.WriteLine, LogLevel.Error);
         });
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());

@@ -20,9 +20,9 @@ public class ProfileCommand : BaseCommand
     public override async Task ExecuteAsync(Message message, CancellationToken cancellationToken = default)
     {
         var profileInfoMessage = BotMessage.GetProfileInfoMessage(CurrentAppUser);
-        var replyMarkup = BotInlineKeyboard.GetChangeProfileKeyboard();
+        var changeProfileKeyboard = BotInlineKeyboard.GetChangeProfileKeyboard();
 
         await BotClient.SendTextMessageAsync(ChatId, profileInfoMessage, ParseMode.MarkdownV2,
-            replyMarkup: replyMarkup, cancellationToken: cancellationToken);
+            replyMarkup: changeProfileKeyboard, cancellationToken: cancellationToken);
     }
 }
