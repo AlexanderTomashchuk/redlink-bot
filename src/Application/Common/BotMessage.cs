@@ -44,8 +44,6 @@ public static class BotMessage
         return sb.ToString();
     }
 
-    public static string GetSelectedCountryMessage(string countryName) => $"Selected country: {countryName}";
-
     public static string GetProfileInfoMessage(AppUser currentAppUser)
     {
         var sb = new StringBuilder();
@@ -69,6 +67,8 @@ public static class BotMessage
 
         return sb.ToString();
     }
+
+    public static string GetSelectedCountryMessage(string countryName) => $"Selected country: {countryName}";
 
     public static string GetSelectedLanguageMessage(string languageName) => $"Selected language: {languageName}";
 }

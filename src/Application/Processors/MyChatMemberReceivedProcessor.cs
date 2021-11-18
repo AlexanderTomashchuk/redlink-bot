@@ -21,9 +21,10 @@ public class MyChatMemberReceivedProcessor
     public async Task ProcessAsync(ChatMemberUpdated chatMemberUpdated,
         CancellationToken cancellationToken = default)
     {
+        //todo: use workflow?
         var appUserStatus = _mapper.Map<AppUserStatus>(chatMemberUpdated.NewChatMember.Status);
 
-        await _appUserService.UpdateAsync((appUser, _) => Task.FromResult(appUser.Status = appUserStatus),
+        await _appUserService.UpdateAsync(au => au.Status = appUserStatus,
             cancellationToken);
     }
 }

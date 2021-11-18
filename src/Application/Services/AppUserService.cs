@@ -32,14 +32,12 @@ public class AppUserService : IAppUserService
         _currentAppUser = await UpsertAsync(appUserFromRequest, cancellationToken: cancellationToken);
     }
 
-    public async Task UpdateAsync(Func<AppUser, IApplicationDbContext, Task> updateOtherProperties,
-        CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Action<AppUser> updateOtherProperties, CancellationToken cancellationToken = default)
     {
         _currentAppUser = await UpsertAsync(_currentAppUser, updateOtherProperties, cancellationToken);
     }
 
-    private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest,
-        Func<AppUser, IApplicationDbContext, Task> updateOtherProperties = null,
+    private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest, Action<AppUser> updateOtherProperties = null,
         CancellationToken cancellationToken = default)
     {
         var appUserFromDb = await GetByIdAsync(appUserFromRequest.Id, cancellationToken);
@@ -54,10 +52,7 @@ public class AppUserService : IAppUserService
         appUserFromDb.Username = appUserFromRequest.Username;
         appUserFromDb.ChatId = appUserFromRequest.ChatId;
 
-        if (updateOtherProperties is not null)
-        {
-            await updateOtherProperties.Invoke(appUserFromDb, _context);
-        }
+        updateOtherProperties?.Invoke(appUserFromDb);
 
         await _context.SaveChangesAsync(cancellationToken);
 

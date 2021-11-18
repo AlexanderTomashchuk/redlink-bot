@@ -13,13 +13,9 @@ public class StartCommand : BaseCommand
 {
     private readonly AskCountryRequest _askCountryRequest;
 
-    public StartCommand(
-        ITelegramBotClient botClient,
-        IAppUserService appUserService,
-        AskCountryRequest askCountryRequest) : base(botClient, appUserService)
-    {
+    public StartCommand(ITelegramBotClient botClient, IAppUserService appUserService,
+        AskCountryRequest askCountryRequest) : base(botClient, appUserService) =>
         _askCountryRequest = askCountryRequest;
-    }
 
     public override CommandType CommandType => CommandType.Start;
 

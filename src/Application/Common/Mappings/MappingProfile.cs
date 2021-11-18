@@ -1,4 +1,5 @@
 using System;
+using Application.Workflows;
 using AutoMapper;
 using Domain.Entities;
 using Domain.ValueObjects;
@@ -57,8 +58,8 @@ public class MappingProfile : Profile
 
         CreateMap<ChatMemberStatus, AppUserStatus>();
 
-        CreateMap<string, CallbackQueryDataModel>()
-            .ConvertUsing<FromJsonTypeConverter<CallbackQueryDataModel>>();
+        CreateMap<string, CallbackQueryDto>()
+            .ConvertUsing<FromJsonTypeConverter<CallbackQueryDto>>();
     }
 
     private static Language.LanguageCode? MapLanguageCode(string languageCode)

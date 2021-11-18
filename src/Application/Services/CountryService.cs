@@ -1,6 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -24,5 +24,13 @@ public class CountryService : ICountryService
         var allCountries = _context.Countries.ToListAsync(cancellationToken);
 
         return allCountries;
+    }
+
+    public async Task<Country> FirstAsync(Expression<Func<Country, bool>> predicate,
+        CancellationToken cancellationToken = default)
+    {
+        var country = await _context.Countries.FirstAsync(predicate, cancellationToken);
+
+        return country;
     }
 }

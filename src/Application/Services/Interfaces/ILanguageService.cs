@@ -9,7 +9,8 @@ namespace Application.Services.Interfaces;
 
 public interface ILanguageService
 {
-    Task<Language> FirstOrDefaultAsync(Expression<Func<Language, bool>> predicate, CancellationToken cancellationToken);
+    Task<Language> FirstOrDefaultAsync(Expression<Func<Language, bool>> predicate,
+        CancellationToken cancellationToken = default);
 
-    Task<List<Language>> GetAllAsync(CancellationToken cancellationToken);
+    Task<List<Language>> GetAllAsync(CancellationToken cancellationToken = default);
 }

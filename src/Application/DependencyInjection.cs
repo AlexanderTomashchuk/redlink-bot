@@ -5,6 +5,7 @@ using Application.BotRequests;
 using Application.Processors;
 using Application.Services;
 using Application.Services.Interfaces;
+using Application.Workflows.Profile;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -31,6 +32,8 @@ public static class DependencyInjection
         services.AddScoped<IAppUserService, AppUserService>();
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<ICountryService, CountryService>();
+
+        services.AddScoped<IProfileWorkflow, ProfileWorkflow>();
 
         return services;
     }
