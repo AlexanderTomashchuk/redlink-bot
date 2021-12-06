@@ -9,7 +9,7 @@ namespace Application.Services.Interfaces;
 
 public interface ICountryService
 {
-    Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default);
-
     Task<Country> FirstAsync(Expression<Func<Country, bool>> predicate, CancellationToken cancellationToken = default);
+
+    Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default);
 }

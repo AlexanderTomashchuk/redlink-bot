@@ -1,48 +1,30 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Processors;
+using Application.Workflows;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace Bot.WebHook.Services;
 
 public class HandleUpdateService
 {
-    private readonly MessageReceivedProcessor _messageReceivedProcessor;
-    private readonly CallbackQueryReceivedProcessor _callbackQueryReceivedProcessor;
-    private readonly MyChatMemberReceivedProcessor _myChatMemberReceivedProcessor;
+    private readonly WorkflowFactory _workflowFactory;
     private readonly ILogger<HandleUpdateService> _logger;
 
-    public HandleUpdateService(
-        MessageReceivedProcessor messageReceivedProcessor,
-        CallbackQueryReceivedProcessor callbackQueryReceivedProcessor,
-        MyChatMemberReceivedProcessor myChatMemberReceivedProcessor,
-        ILogger<HandleUpdateService> logger)
+    public HandleUpdateService(WorkflowFactory workflowFactory, ILogger<HandleUpdateService> logger)
     {
-        _messageReceivedProcessor = messageReceivedProcessor;
-        _callbackQueryReceivedProcessor = callbackQueryReceivedProcessor;
-        _myChatMemberReceivedProcessor = myChatMemberReceivedProcessor;
+        _workflowFactory = workflowFactory;
         _logger = logger;
     }
 
     public async Task EchoAsync(Update update, CancellationToken cancellationToken)
     {
-        var handler = update.Type switch
-        {
-            UpdateType.Message => _messageReceivedProcessor.ProcessAsync(update.Message, cancellationToken),
-            UpdateType.CallbackQuery => _callbackQueryReceivedProcessor.ProcessAsync(update.CallbackQuery,
-                cancellationToken),
-            UpdateType.MyChatMember => _myChatMemberReceivedProcessor.ProcessAsync(update.MyChatMember,
-                cancellationToken),
-            _ => UnknownUpdateHandleAsync(update)
-        };
-
+        var workflow = _workflowFactory.DetermineWorkflowAsync(update);
         try
         {
-            await handler;
+            await workflow.RunAsync(update, cancellationToken);
         }
         catch (Exception exception)
         {
@@ -50,11 +32,5 @@ public class HandleUpdateService
 
             _logger.LogError(errorMessage);
         }
-    }
-
-    private Task UnknownUpdateHandleAsync(Update update)
-    {
-        _logger.LogWarning("Unknown update type: {UpdateType}", update.Type);
-        return Task.CompletedTask;
     }
 }

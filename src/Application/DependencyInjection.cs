@@ -1,11 +1,8 @@
 using System;
 using System.Reflection;
-using Application.BotCommands;
-using Application.BotRequests;
-using Application.Processors;
 using Application.Services;
 using Application.Services.Interfaces;
-using Application.Workflows.Profile;
+using Application.Workflows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -16,24 +13,27 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-        services.AddScoped<MessageReceivedProcessor>();
-        services.AddScoped<CallbackQueryReceivedProcessor>();
-        services.AddScoped<MyChatMemberReceivedProcessor>();
-
-        services.AddScoped<StartCommand>();
-        services.AddScoped<SellCommand>();
-        services.AddScoped<ProfileCommand>();
-        services.AddScoped<FindCommand>();
-        services.AddScoped<Func<CommandType, BaseCommand>>(
-            serviceProvider => key => (BaseCommand)serviceProvider.GetService(key.CommandHandlerType));
-
-        services.AddScoped<AskCountryRequest>();
-
         services.AddScoped<IAppUserService, AppUserService>();
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<ICountryService, CountryService>();
+        services.AddTransient<IProductConditionService, ProductConditionService>();
+        services.AddTransient<IProductService, ProductService>();
 
-        services.AddScoped<IProfileWorkflow, ProfileWorkflow>();
+        services.AddScoped<WorkflowFactory>();
+        services.Scan(scan =>
+            scan.FromAssemblyOf<Workflow>()
+                .AddClasses(classes => classes.AssignableTo<Workflow>())
+                .AsSelf()
+                .WithScopedLifetime());
+        // services.AddScoped<StartWorkflow>();
+        // services.AddScoped<CreateProductWorkflow>();
+        // services.AddScoped<FindProductWorkflow>();
+        // services.AddScoped<EditProfileWorkflow>();
+        // services.AddScoped<DemandCountryWorkflow>();
+        // services.AddScoped<ChatMemberUpdatedWorkflow>();
+        // services.AddScoped<UnknownUpdateWorkflow>();
+        services.AddScoped<Func<WorkflowType, Workflow>>(serviceProvider =>
+            key => (Workflow)serviceProvider.GetService(key.WorkflowType));
 
         return services;
     }

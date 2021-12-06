@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ public class LanguageService : ILanguageService
 
     public Task<List<Language>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var allLanguages = _context.Languages.ToListAsync(cancellationToken);
+        var allLanguages = _context.Languages.OrderBy(l => l.Code).ToListAsync(cancellationToken);
 
         return allLanguages;
     }

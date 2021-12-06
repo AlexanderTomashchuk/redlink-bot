@@ -6,13 +6,13 @@ public class File : AuditableEntity
 {
     public long Id { get; }
 
-    public string TelegramId { get; }
+    public string TelegramId { get; set; }
 
-    public long ProductId { get; }
+    public long ProductId { get; set; }
 
-    public Product Product { get; }
+    public Product Product { get; set; }
 
-    private File()
+    public File()
     {
     }
 

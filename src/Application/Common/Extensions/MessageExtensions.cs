@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Application.BotCommands;
 using Telegram.Bot.Types;
 
 namespace Application.Common.Extensions;

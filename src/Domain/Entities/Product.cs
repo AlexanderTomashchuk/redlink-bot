@@ -9,48 +9,34 @@ public class Product : AuditableEntity
 {
     public long Id { get; }
 
-    public string Name { get; }
+    public string Name { get; set; }
 
-    public string Description { get; }
+    public string Description { get; set; }
 
     public long ConditionId { get; }
 
-    public ProductCondition Condition { get; }
+    public ProductCondition Condition { get; set; }
 
     public long TypeId { get; }
 
-    public ProductType Type { get; }
+    public ProductType Type { get; set; }
 
-    public decimal Price { get; }
+    public decimal Price { get; set; }
 
     public long CurrencyId { get; }
-    public Currency Currency { get; }
+    public Currency Currency { get; set; }
 
     public ICollection<HashTag> HashTags { get; }
 
     public ICollection<File> Files { get; }
 
-    public long SellerId { get; }
-    public AppUser Seller { get; }
+    public long SellerId { get; set; }
+    public AppUser Seller { get; set; }
 
-    private Product()
+    public ProductState CurrentState { get; set; }
+    
+    public Product()
     {
-    }
-
-    public Product(long id, string name, string description, long conditionId,
-        long typeId, decimal price, long currencyId, long sellerId,
-        ICollection<HashTag> hashTags = null, ICollection<File> files = null)
-    {
-        Id = id;
-        Name = name;
-        Description = description;
-        ConditionId = conditionId;
-        TypeId = typeId;
-        Price = price;
-        CurrencyId = currencyId;
-        SellerId = sellerId;
-        HashTags = hashTags;
-        Files = files;
     }
 
     public override string ToString()

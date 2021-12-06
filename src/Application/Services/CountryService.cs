@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,18 +20,18 @@ public class CountryService : ICountryService
         _context = context;
     }
 
-    public Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        var allCountries = _context.Countries.ToListAsync(cancellationToken);
-
-        return allCountries;
-    }
-
     public async Task<Country> FirstAsync(Expression<Func<Country, bool>> predicate,
         CancellationToken cancellationToken = default)
     {
         var country = await _context.Countries.FirstAsync(predicate, cancellationToken);
 
         return country;
+    }
+
+    public Task<List<Country>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var allCountries = _context.Countries.OrderBy(c => c.Id).ToListAsync(cancellationToken);
+
+        return allCountries;
     }
 }

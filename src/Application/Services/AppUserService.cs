@@ -32,9 +32,9 @@ public class AppUserService : IAppUserService
         _currentAppUser = await UpsertAsync(appUserFromRequest, cancellationToken: cancellationToken);
     }
 
-    public async Task UpdateAsync(Action<AppUser> updateOtherProperties, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Action<AppUser> updateAction, CancellationToken cancellationToken = default)
     {
-        _currentAppUser = await UpsertAsync(_currentAppUser, updateOtherProperties, cancellationToken);
+        _currentAppUser = await UpsertAsync(_currentAppUser, updateAction, cancellationToken);
     }
 
     private async Task<AppUser> UpsertAsync(AppUser appUserFromRequest, Action<AppUser> updateOtherProperties = null,

@@ -10,36 +10,31 @@ namespace Application.Processors;
 
 public class CallbackQueryReceivedProcessor
 {
-    private readonly IProfileWorkflow _profileWorkflow;
-    private readonly IMapper _mapper;
-
-    public CallbackQueryReceivedProcessor(IProfileWorkflow profileWorkflow, IMapper mapper)
-        => (_profileWorkflow, _mapper) = (profileWorkflow, mapper);
 
     public async Task ProcessAsync(CallbackQuery updateCallbackQuery, CancellationToken cancellationToken = default)
     {
-        var callbackQueryId = updateCallbackQuery.Id;
-        var fromMessageId = updateCallbackQuery.Message.MessageId;
-        var callbackQueryDto = _mapper.Map<CallbackQueryDto>(updateCallbackQuery.Data);
-
-        switch (callbackQueryDto.WorkflowType)
-        {
-            case WorkflowType.Profile:
-            {
-                var (state, trigger, entityId) = callbackQueryDto.ProfileWorkflowDto;
-
-                var profileWorkflowStateMachine = _profileWorkflow
-                    .ForMessageId(fromMessageId)
-                    .ForCallbackQueryId(callbackQueryId)
-                    .ConfigureStateMachine(state);
-
-                await profileWorkflowStateMachine.TriggerAsync(trigger, entityId, cancellationToken);
-
-                return;
-            }
-            default:
-                throw new ArgumentOutOfRangeException(nameof(callbackQueryDto.WorkflowType));
-        }
+        // var callbackQueryId = updateCallbackQuery.Id;
+        // var fromMessageId = updateCallbackQuery.Message.MessageId;
+        // var callbackQueryDto = _mapper.Map<CallbackQueryDto>(updateCallbackQuery.Data);
+        //
+        // switch (callbackQueryDto.WorkflowType)
+        // {
+        //     case WorkflowType.EditProfile:
+        //     {
+        //         var (state, trigger, entityId) = callbackQueryDto.EditProfileWorkflowDto;
+        //
+        //         var profileWorkflowStateMachine = _profileWorkflow
+        //             .ForMessageId(fromMessageId)
+        //             .ForCallbackQueryId(callbackQueryId)
+        //             .ConfigureStateMachine(state);
+        //
+        //         await profileWorkflowStateMachine.TriggerAsync(trigger, entityId, cancellationToken);
+        //
+        //         return;
+        //     }
+        //     default:
+        //         throw new ArgumentOutOfRangeException(nameof(callbackQueryDto.WorkflowType));
+        // }
 
         //todo: OT remove
         // switch (callbackQueryData.CommandName)

@@ -6,48 +6,24 @@ using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace Application.Workflows.Profile;
 
-public interface IProfileWorkflow
-{
-    IConfigureCallbackQueryIdState ForMessageId(int messageId);
-
-    IConfigureCallbackQueryIdState SkipForMessageId { get; }
-
-    public interface IConfigureCallbackQueryIdState
-    {
-        IConfigureStateMachineStage ForCallbackQueryId(string callbackQueryId);
-        IConfigureStateMachineStage SkipCallbackQueryId { get; }
-    }
-
-    public interface IConfigureStateMachineStage
-    {
-        IProvideActionsStage ConfigureStateMachine(ProfileWorkflow.State state);
-    }
-
-    public interface IProvideActionsStage
-    {
-        Task TriggerAsync(ProfileWorkflow.Trigger trigger, long? entityId = default,
-            CancellationToken cancellationToken = default);
-    }
-}
-
-public class ProfileWorkflow : IProfileWorkflow,
-    IProfileWorkflow.IConfigureCallbackQueryIdState,
-    IProfileWorkflow.IConfigureStateMachineStage,
-    IProfileWorkflow.IProvideActionsStage
+public class EditProfileWorkflow : Workflow
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IAppUserService _appUserService;
     private readonly ICountryService _countryService;
     private readonly ILanguageService _languageService;
-    private readonly ILogger<ProfileWorkflow> _logger;
+    private readonly IMapper _mapper;
+    private readonly ILogger<EditProfileWorkflow> _logger;
 
     public enum Trigger
     {
@@ -78,28 +54,34 @@ public class ProfileWorkflow : IProfileWorkflow,
     StateMachine<State, Trigger>.TriggerWithParameters<long?, CancellationToken> _updateCountryTrigger;
     StateMachine<State, Trigger>.TriggerWithParameters<long?, CancellationToken> _updateLanguageTrigger;
 
-    public ProfileWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        ICountryService countryService, ILanguageService languageService, ILogger<ProfileWorkflow> logger) =>
-        (_botClient, _appUserService, _countryService, _languageService, _logger) =
-        (botClient, appUserService, countryService, languageService, logger);
+    public EditProfileWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
+        ICountryService countryService, ILanguageService languageService, IMapper mapper, ILogger<EditProfileWorkflow> logger) =>
+        (_botClient, _appUserService, _countryService, _languageService, _mapper, _logger) =
+            (botClient, appUserService, countryService, languageService, mapper, logger);
 
-    public IProfileWorkflow.IConfigureCallbackQueryIdState SkipForMessageId => this;
-
-    public IProfileWorkflow.IConfigureCallbackQueryIdState ForMessageId(int messageId)
+    public override WorkflowType Type => WorkflowType.EditProfile;
+    
+    public override async Task RunAsync(Update update, CancellationToken cancellationToken = default)
     {
-        _messageId = messageId;
-        return this;
+        var state = State.Initial;
+        var trigger = Trigger.ShowProfileInfo;
+        var entityId = (long?)null;
+        if (update.CallbackQuery is not null)
+        {
+            _callbackQueryId = update.CallbackQuery.Id;
+            _messageId = update.CallbackQuery.Message.MessageId;
+            var callbackQueryDto = _mapper.Map<CallbackQueryDto>(update.CallbackQuery.Data);
+            var (changedState, changedTrigger, changedEntityId) = callbackQueryDto.EditProfileWorkflowDto;
+            state = changedState;
+            trigger = changedTrigger;
+            entityId = changedEntityId;
+        }
+        
+        await ConfigureStateMachine(state)
+            .TriggerAsync(trigger, entityId, cancellationToken);
     }
-
-    public IProfileWorkflow.IConfigureStateMachineStage SkipCallbackQueryId => this;
-
-    public IProfileWorkflow.IConfigureStateMachineStage ForCallbackQueryId(string callbackQueryId)
-    {
-        _callbackQueryId = callbackQueryId;
-        return this;
-    }
-
-    public IProfileWorkflow.IProvideActionsStage ConfigureStateMachine(State state)
+    
+    private EditProfileWorkflow ConfigureStateMachine(State state)
     {
         _state = state;
 
@@ -129,6 +111,7 @@ public class ProfileWorkflow : IProfileWorkflow,
             .Permit(Trigger.SelectLanguage, State.LanguageSelection);
 
         _machine.Configure(State.CountrySelection)
+            
             .OnEntryFromAsync(_selectCountryTrigger, ShowCountriesAsync)
             .Permit(Trigger.UpdateCountry, State.CountryUpdated)
             .Permit(Trigger.ShowProfileInfo, State.ProfileInfoShowing);
@@ -153,9 +136,8 @@ public class ProfileWorkflow : IProfileWorkflow,
 
         return this;
     }
-
-    public async Task TriggerAsync(Trigger trigger, long? entityId = default,
-        CancellationToken cancellationToken = default)
+    
+    private async Task TriggerAsync(Trigger trigger, long? entityId = default, CancellationToken cancellationToken = default)
     {
         var handler = trigger switch
         {
@@ -170,19 +152,17 @@ public class ProfileWorkflow : IProfileWorkflow,
 
         await handler;
     }
-
+    
     private async Task ShowProfileInfoAsync(CancellationToken cancellationToken)
     {
-        var chatId = GetChatId();
-
         var message = BotMessage.GetProfileInfoMessage(_appUserService.Current);
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButton("Change country",
-                new ProfileWorkflowDto { State = State.ProfileInfoShowing, Trigger = Trigger.SelectCountry }
+                new EditProfileWorkflowDto { State = State.ProfileInfoShowing, Trigger = Trigger.SelectCountry }
                     .ToCallbackQueryDto()
             )
             .AddButton("Change language",
-                new ProfileWorkflowDto { State = State.ProfileInfoShowing, Trigger = Trigger.SelectLanguage }
+                new EditProfileWorkflowDto { State = State.ProfileInfoShowing, Trigger = Trigger.SelectLanguage }
                     .ToCallbackQueryDto()
             )
             .ChunkBy(2)
@@ -190,12 +170,12 @@ public class ProfileWorkflow : IProfileWorkflow,
 
         if (_messageId is not null)
         {
-            await _botClient.EditMessageTextAsync(chatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
+            await _botClient.EditMessageTextAsync(ChatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
                 cancellationToken);
         }
         else
         {
-            await _botClient.SendTextMessageAsync(chatId, message, ParseMode.MarkdownV2, replyMarkup,
+            await _botClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2, replyMarkup,
                 cancellationToken);
         }
     }
@@ -204,27 +184,25 @@ public class ProfileWorkflow : IProfileWorkflow,
     {
         var countries = await _countryService.GetAllAsync(cancellationToken);
 
-        var chatId = GetChatId();
-
         var message = BotMessage.GetEditCountryMessage();
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(countries.Select(c =>
             {
                 var text = $"{c.Flag} {c.Name}";
-                var cbData = new ProfileWorkflowDto
+                var cbData = new EditProfileWorkflowDto
                 {
                     State = State.CountrySelection, Trigger = Trigger.UpdateCountry, EntityId = c.Id
                 }.ToCallbackQueryDto();
 
                 return (text, cbData);
             }))
-            .WithBackButton(new ProfileWorkflowDto { State = State.CountrySelection, Trigger = Trigger.ShowProfileInfo }
+            .WithBackButton(new EditProfileWorkflowDto { State = State.CountrySelection, Trigger = Trigger.ShowProfileInfo }
                 .ToCallbackQueryDto())
             .ChunkBy(2)
             .Build();
 
         Debug.Assert(_messageId != null, nameof(_messageId) + " != null");
-        await _botClient.EditMessageTextAsync(chatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
+        await _botClient.EditMessageTextAsync(ChatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
             cancellationToken);
     }
 
@@ -232,28 +210,26 @@ public class ProfileWorkflow : IProfileWorkflow,
     {
         var languages = await _languageService.GetAllAsync(cancellationToken);
 
-        var chatId = GetChatId();
-
         var message = BotMessage.GetEditLanguageMessage();
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(languages.Select(l =>
             {
                 var text = l.Name;
-                var cbData = new ProfileWorkflowDto
+                var cbData = new EditProfileWorkflowDto
                 {
                     State = State.LanguageSelection, Trigger = Trigger.UpdateLanguage, EntityId = (long?)l.Code
                 }.ToCallbackQueryDto();
 
                 return (text, cbData);
             }))
-            .WithBackButton(new ProfileWorkflowDto
+            .WithBackButton(new EditProfileWorkflowDto
                     { State = State.LanguageSelection, Trigger = Trigger.ShowProfileInfo }
                 .ToCallbackQueryDto())
             .ChunkBy(2)
             .Build();
 
         Debug.Assert(_messageId != null, nameof(_messageId) + " != null");
-        await _botClient.EditMessageTextAsync(chatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
+        await _botClient.EditMessageTextAsync(ChatId, _messageId.Value, message, ParseMode.MarkdownV2, replyMarkup,
             cancellationToken);
     }
 
@@ -283,8 +259,5 @@ public class ProfileWorkflow : IProfileWorkflow,
         await TriggerAsync(Trigger.ShowProfileInfo, cancellationToken: cancellationToken);
     }
 
-    private long? GetChatId()
-    {
-        return _appUserService.Current.ChatId;
-    }
+    private long? ChatId => _appUserService.Current.ChatId;
 }

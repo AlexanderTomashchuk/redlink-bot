@@ -12,5 +12,5 @@ public interface IAppUserService
 
     Task InitAsync(Update update, CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(Action<AppUser> updateOtherProperties, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Action<AppUser> updateAction, CancellationToken cancellationToken = default);
 }
