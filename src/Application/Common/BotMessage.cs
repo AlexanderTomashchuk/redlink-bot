@@ -14,7 +14,7 @@ public static class BotMessage
             $"{Emoji.HELLO} Hello {currentAppUser.GetTelegramMarkdownLink()}\\. I can help you sell or buy a variety of clothes\\.");
         sb.AppendLine();
         sb.AppendLine("You can control me by sending these commands:");
-        foreach (var commandType in CommandTypeEnumeration.GetAll())
+        foreach (var commandType in CommandType.List)
         {
             sb.AppendLine($"{commandType.Name} - {commandType.Description}".Escape());
         }

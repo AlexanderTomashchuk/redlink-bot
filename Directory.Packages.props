@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup Label="Other">
+        <PackageVersion Include="Ardalis.SmartEnum" Version="2.0.1"/>
         <PackageVersion Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
         <PackageVersion Include="Newtonsoft.Json" Version="12.0.2"/>
         <PackageVersion Include="Scrutor" Version="3.3.0"/>

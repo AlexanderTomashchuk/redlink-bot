@@ -29,7 +29,7 @@ public class BotCommandsConfiguratorService : IHostedService
         using var scope = _services.CreateScope();
         var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        var supportedCommands = CommandTypeEnumeration.GetAll()
+        var supportedCommands = CommandType.List
             .Where(ct => ct.IsVisibleInCommandsMenu)
             .Select(ct => new BotCommand { Command = ct.Name, Description = ct.Description });
 

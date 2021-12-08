@@ -25,15 +25,8 @@ public static class DependencyInjection
                 .AddClasses(classes => classes.AssignableTo<Workflow>())
                 .AsSelf()
                 .WithScopedLifetime());
-        // services.AddScoped<StartWorkflow>();
-        // services.AddScoped<CreateProductWorkflow>();
-        // services.AddScoped<FindProductWorkflow>();
-        // services.AddScoped<EditProfileWorkflow>();
-        // services.AddScoped<DemandCountryWorkflow>();
-        // services.AddScoped<ChatMemberUpdatedWorkflow>();
-        // services.AddScoped<UnknownUpdateWorkflow>();
         services.AddScoped<Func<WorkflowType, Workflow>>(serviceProvider =>
-            key => (Workflow)serviceProvider.GetService(key.WorkflowType));
+            key => (Workflow)serviceProvider.GetService(key.TypeOfWorkflow));
 
         return services;
     }

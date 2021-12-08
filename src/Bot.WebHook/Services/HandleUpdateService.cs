@@ -21,9 +21,9 @@ public class HandleUpdateService
 
     public async Task EchoAsync(Update update, CancellationToken cancellationToken)
     {
-        var workflow = _workflowFactory.DetermineWorkflowAsync(update);
         try
         {
+            var workflow = _workflowFactory.DetermineWorkflowAsync(update);
             await workflow.RunAsync(update, cancellationToken);
         }
         catch (Exception exception)

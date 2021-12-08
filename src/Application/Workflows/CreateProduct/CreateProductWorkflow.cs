@@ -141,10 +141,7 @@ public class CreateProductWorkflow
             .AddButtons(productConditions.Select(pc =>
             {
                 var text = pc.Name;
-                var cbData = new CreateProductWorkflowDto
-                {
-                    Trigger = Trigger.RequestPrice, EntityId = pc.Id
-                }.ToCallbackQueryDto();
+                var cbData = new CreateProductCbDto(Trigger.RequestPrice, pc.Id);
 
                 return (text, cbData);
             }))

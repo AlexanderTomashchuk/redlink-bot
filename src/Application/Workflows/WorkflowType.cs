@@ -1,40 +1,36 @@
 using System;
-using System.Collections.Generic;
-using Application.Common;
+using Application.Workflows.ChatMemberUpdated;
 using Application.Workflows.CreateProduct;
+using Application.Workflows.FindProduct;
 using Application.Workflows.Profile;
+using Application.Workflows.Start;
+using Application.Workflows.UnknownUpdate;
+using Ardalis.SmartEnum;
 
 namespace Application.Workflows;
 
-public class WorkflowType : WorkflowTypeEnumeration
+public sealed class WorkflowType : SmartEnum<WorkflowType>
 {
-    public static readonly WorkflowType Start = new(1, "Start", typeof(StartWorkflow));
+    public static readonly WorkflowType Start = new(1, nameof(Start), typeof(StartWorkflow));
 
-    public static readonly WorkflowType CreateProduct = new(2, "CreateProduct", typeof(CreateProductWorkflow));
-    
-    public static readonly WorkflowType FindProduct = new(3, "FindProduct", typeof(FindProductWorkflow));
+    public static readonly WorkflowType CreateProduct = new(2, nameof(CreateProduct), typeof(CreateProductWorkflow));
 
-    public static readonly WorkflowType EditProfile = new(3, "EditProfile", typeof(EditProfileWorkflow));
+    public static readonly WorkflowType FindProduct = new(3, nameof(FindProduct), typeof(FindProductWorkflow));
 
-    public static readonly WorkflowType DemandCountry = new(98, "DemandCountry", typeof(DemandCountryWorkflow));
+    public static readonly WorkflowType EditProfile = new(4, nameof(EditProfile), typeof(EditProfileWorkflow));
+
+    public static readonly WorkflowType DemandCountry = new(98, nameof(DemandCountry), typeof(DemandCountryWorkflow));
 
     public static readonly WorkflowType ChatMemberUpdated =
-        new(99, "ChatMemberUpdated", typeof(ChatMemberUpdatedWorkflow));
+        new(99, nameof(ChatMemberUpdated), typeof(ChatMemberUpdatedWorkflow));
 
-    public static readonly WorkflowType Unknown = new(100, "Unknown", typeof(UnknownUpdateWorkflow));
+    public static readonly WorkflowType Unknown = new(100, nameof(Unknown), typeof(UnknownUpdateWorkflow));
 
-    private WorkflowType(int id, string name, Type workflowType)
-        : base(id, name, workflowType)
+    private WorkflowType(short id, string name, Type typeOfWorkflow)
+        : base(name, id)
     {
+        TypeOfWorkflow = typeOfWorkflow;
     }
-}
 
-public abstract class WorkflowTypeEnumeration : Enumeration
-{
-    public Type WorkflowType { get; }
-
-    protected WorkflowTypeEnumeration(int id, string name, Type workflowType) : base(id, name) =>
-        (WorkflowType) = (workflowType);
-
-    public static IEnumerable<WorkflowType> GetAll() => GetAll<WorkflowType>();
+    public Type TypeOfWorkflow { get; }
 }

@@ -12,14 +12,14 @@ public class InlineKeyboardBuilder
     private int _chunkSize = 1;
     private InlineKeyboardButton _backButton;
 
-    public InlineKeyboardBuilder AddButton(string text, CallbackQueryDto callbackQueryDto)
+    public InlineKeyboardBuilder AddButton<T>(string text, T callbackQueryDto) where T: CallbackQueryDto
     {
         _buttons.Add(new InlineKeyboardButton
             { Text = text, CallbackData = JsonConvert.SerializeObject(callbackQueryDto) });
         return this;
     }
 
-    public InlineKeyboardBuilder AddButtons(IEnumerable<(string, CallbackQueryDto)> buttons)
+    public InlineKeyboardBuilder AddButtons<T>(IEnumerable<(string, T)> buttons) where T: CallbackQueryDto
     {
         foreach (var (text, callbackQueryDto) in buttons)
         {
@@ -29,7 +29,7 @@ public class InlineKeyboardBuilder
         return this;
     }
 
-    public InlineKeyboardBuilder WithBackButton(CallbackQueryDto callbackQueryDto)
+    public InlineKeyboardBuilder WithBackButton<T>(T callbackQueryDto) where T: CallbackQueryDto
     {
         _backButton = new InlineKeyboardButton
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Telegram.Bot.Types;
 
@@ -16,9 +15,6 @@ public static class MessageExtensions
             return false;
         }
 
-        commandType = CommandTypeEnumeration.GetAll().FirstOrDefault(ct =>
-            commandString.Equals(ct.Name, StringComparison.InvariantCultureIgnoreCase));
-
-        return commandType is not null;
+        return CommandType.TryFromName(commandString, out commandType);
     }
 }
