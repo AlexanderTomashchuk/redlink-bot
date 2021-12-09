@@ -52,8 +52,7 @@ public class WorkflowFactory
             (_, true, CommandType.ProfileCmdName) => WorkflowType.EditProfile,
             (_, true, CommandType.SellCmdName) => WorkflowType.CreateProduct,
             (_, true, CommandType.FindCmdName) => WorkflowType.FindProduct,
-            //todo: add field to appuser and uncomment
-            //(_, false, _) => _appUserService.Current.LastMessageWorkflowType
+            (_, false, _) => WorkflowType.FromName(_appUserService.Current.LastMessageWorkflowType),
             _ => WorkflowType.Unknown
         };
 

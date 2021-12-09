@@ -3,18 +3,18 @@ using System.Threading.Tasks;
 using Application.Services.Interfaces;
 using AutoMapper;
 using Domain.ValueObjects;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Application.Workflows.ChatMemberUpdated;
 
 public class ChatMemberUpdatedWorkflow : Workflow
 {
-    private readonly IAppUserService _appUserService;
     private readonly IMapper _mapper;
 
-    public ChatMemberUpdatedWorkflow(IAppUserService appUserService, IMapper mapper)
+    public ChatMemberUpdatedWorkflow(ITelegramBotClient botClient, IAppUserService appUserService, IMapper mapper)
+        : base(botClient, appUserService)
     {
-        _appUserService = appUserService;
         _mapper = mapper;
     }
 
@@ -24,7 +24,7 @@ public class ChatMemberUpdatedWorkflow : Workflow
     {
         var appUserStatus = _mapper.Map<AppUserStatus>(update.MyChatMember.NewChatMember.Status);
 
-        await _appUserService.UpdateAsync(au => au.Status = appUserStatus,
+        await AppUserService.UpdateAsync(au => au.Status = appUserStatus,
             cancellationToken);
     }
 }

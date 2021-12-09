@@ -16,7 +16,6 @@ public static class DependencyInjection
         services.AddScoped<IAppUserService, AppUserService>();
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<ICountryService, CountryService>();
-        services.AddTransient<IProductConditionService, ProductConditionService>();
         services.AddTransient<IProductService, ProductService>();
 
         services.AddScoped<WorkflowFactory>();

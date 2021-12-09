@@ -15,10 +15,9 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.Workflows.Profile;
 
-public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.State, EditProfileWorkflow.Trigger>
+public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.State, EditProfileWorkflow.Trigger>,
+    StateStorageMode.ITransitional<EditProfileWorkflow.State>
 {
-    private readonly ITelegramBotClient _botClient;
-    private readonly IAppUserService _appUserService;
     private readonly ICountryService _countryService;
     private readonly ILanguageService _languageService;
 
@@ -30,20 +29,19 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
     public EditProfileWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
         ICountryService countryService, ILanguageService languageService, IMapper mapper,
-        ILogger<EditProfileWorkflow> logger) : base(mapper, logger) =>
-        (_botClient, _appUserService, _countryService, _languageService) =
-        (botClient, appUserService, countryService, languageService);
+        ILogger<EditProfileWorkflow> logger) : base(botClient, appUserService, mapper, logger) =>
+        (_countryService, _languageService) = (countryService, languageService);
 
     public override WorkflowType Type => WorkflowType.EditProfile;
 
-    protected override State InitialState => GetCbData<EditProfileCqDto>()?.State ?? State.Initial;
+    public State CurrentState => GetCbData<EditProfileCqDto>()?.State ?? State.Initial;
 
     protected override Trigger GetTriggerToInvoke() =>
         GetCbData<EditProfileCqDto>()?.Trigger ?? Trigger.ShowProfileInfo;
 
     protected override void ConfigureStateMachine()
     {
-        Machine = new StateMachine<State, Trigger>(InitialState);
+        Machine = new StateMachine<State, Trigger>(CurrentState);
 
         _showProfileInfoTrigger =
             new StateMachine<State, Trigger>.TriggerWithParameters<CancellationToken>(Trigger.ShowProfileInfo);
@@ -108,7 +106,7 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
     private async Task ShowProfileInfoAsync(CancellationToken cancellationToken)
     {
-        var message = BotMessage.GetProfileInfoMessage(_appUserService.Current);
+        var message = BotMessage.GetProfileInfoMessage(CurrentAppUser);
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButton("Change country", new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectCountry))
             .AddButton("Change language", new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectLanguage))
@@ -117,13 +115,13 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
         if (MessageIdBelongsToCb is not null)
         {
-            await _botClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
+            await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
                 replyMarkup,
                 cancellationToken);
         }
         else
         {
-            await _botClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2, replyMarkup,
+            await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2, replyMarkup,
                 cancellationToken);
         }
     }
@@ -146,7 +144,7 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             .Build();
 
         Debug.Assert(MessageIdBelongsToCb != null, nameof(MessageIdBelongsToCb) + " != null");
-        await _botClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
+        await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
             replyMarkup,
             cancellationToken);
     }
@@ -169,7 +167,7 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             .Build();
 
         Debug.Assert(MessageIdBelongsToCb != null, nameof(MessageIdBelongsToCb) + " != null");
-        await _botClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
+        await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
             replyMarkup,
             cancellationToken);
     }
@@ -178,10 +176,10 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
     {
         var newCountry = await _countryService.FirstAsync(c => c.Id == entityId, cancellationToken);
 
-        await _appUserService.UpdateAsync(au => au.Country = newCountry, cancellationToken);
+        await AppUserService.UpdateAsync(au => au.Country = newCountry, cancellationToken);
 
         var message = BotMessage.GetSelectedCountryMessage(newCountry.Name);
-        _ = _botClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken);
+        _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken);
 
         await TriggerAsync(Trigger.ShowProfileInfo, cancellationToken);
     }
@@ -192,15 +190,13 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             await _languageService.FirstOrDefaultAsync(l => l.Code == (Language.LanguageCode)entityId,
                 cancellationToken);
 
-        await _appUserService.UpdateAsync(au => au.Language = newLanguage, cancellationToken);
+        await AppUserService.UpdateAsync(au => au.Language = newLanguage, cancellationToken);
 
         var message = BotMessage.GetSelectedLanguageMessage(newLanguage.Name);
-        _ = _botClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken: cancellationToken);
+        _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken: cancellationToken);
 
         await TriggerAsync(Trigger.ShowProfileInfo, cancellationToken);
     }
-
-    private long? ChatId => _appUserService.Current.ChatId;
 
     public enum Trigger
     {

@@ -12,7 +12,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Name).IsUnicode();
         builder.Property(p => p.Description).IsUnicode();
-
+        builder.Property(p => p.CurrentState).HasConversion<string>().HasMaxLength(50);
+        
         builder.HasOne(p => p.Condition)
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.ConditionId);

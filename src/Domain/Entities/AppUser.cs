@@ -33,6 +33,9 @@ public class AppUser : AuditableEntity
     public Language Language { get; set; }
 
     public ICollection<Product> Products { get; }
+    
+    //todo: consider to use WorkflowType instead of string
+    public string LastMessageWorkflowType { get; set; }
 
     private AppUser()
     {

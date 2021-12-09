@@ -12,22 +12,23 @@ using Telegram.Bot.Types.Enums;
 
 namespace Application.Workflows.Start;
 
-public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.State, DemandCountryWorkflow.Trigger>
+public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.State, DemandCountryWorkflow.Trigger>,
+    StateStorageMode.ITransitional<DemandCountryWorkflow.State>
 {
     private readonly ITelegramBotClient _botClient;
-    private readonly IAppUserService _appUserService;
     private readonly ICountryService _countryService;
 
     StateMachine<State, Trigger>.TriggerWithParameters<CancellationToken> _selectCountryTrigger;
     StateMachine<State, Trigger>.TriggerWithParameters<long?, CancellationToken> _setCountryTrigger;
 
     public DemandCountryWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        ICountryService countryService, IMapper mapper, ILogger<DemandCountryWorkflow> logger) : base(mapper, logger)
-        => (_botClient, _appUserService, _countryService) = (botClient, appUserService, countryService);
+        ICountryService countryService, IMapper mapper, ILogger<DemandCountryWorkflow> logger) : base(botClient,
+        appUserService, mapper, logger)
+        => (_botClient, _countryService) = (botClient, countryService);
 
     public override WorkflowType Type => WorkflowType.DemandCountry;
 
-    protected override State InitialState => GetCbData<DemandCountryCbDto>()?.State ?? State.Initial;
+    public State CurrentState => GetCbData<DemandCountryCbDto>()?.State ?? State.Initial;
 
     protected override Trigger GetTriggerToInvoke()
     {
@@ -38,12 +39,12 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
             return cbTrigger.Value;
         }
 
-        return _appUserService.Current.HasCountry ? Trigger.DoNothing : Trigger.SelectCountry;
+        return CurrentAppUser.HasCountry ? Trigger.DoNothing : Trigger.SelectCountry;
     }
 
     protected override void ConfigureStateMachine()
     {
-        Machine = new StateMachine<State, Trigger>(InitialState);
+        Machine = new StateMachine<State, Trigger>(CurrentState);
 
         _selectCountryTrigger =
             new StateMachine<State, Trigger>.TriggerWithParameters<CancellationToken>(Trigger.SelectCountry);
@@ -76,13 +77,13 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
             _ => throw new ArgumentOutOfRangeException(nameof(trigger), trigger,
                 "There is an unsupported trigger type provided")
         };
-        
+
         await handler;
     }
 
     private async Task ShowCountriesAsync(CancellationToken cancellationToken)
     {
-        var chatId = _appUserService.Current.ChatId;
+        var chatId = CurrentAppUser.ChatId;
 
         var countries = await _countryService.GetAllAsync(cancellationToken);
 
@@ -106,7 +107,7 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
     {
         var country = await _countryService.FirstAsync(c => c.Id == entityId, cancellationToken);
 
-        await _appUserService.UpdateAsync(au => au.Country = country, cancellationToken);
+        await AppUserService.UpdateAsync(au => au.Country = country, cancellationToken);
     }
 
     public enum Trigger

@@ -13,6 +13,7 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
         builder.Property(u => u.FirstName).IsUnicode();
         builder.Property(u => u.LastName).IsUnicode();
         builder.Property(u => u.Status).HasConversion<string>().HasMaxLength(50);
+        builder.Property(u => u.LastMessageWorkflowType).HasMaxLength(50);
         builder.Ignore(u => u.HasCountry);
 
         builder.HasIndex(u => u.ChatId);

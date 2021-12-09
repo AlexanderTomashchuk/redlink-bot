@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211208021932_InitialCreate2")]
+    partial class InitialCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,9 +47,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LanguageCode")
                         .HasColumnType("character varying(20)");
-
-                    b.Property<string>("LastMessageWorkflowType")
-                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsUnicode(true)
@@ -357,10 +356,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<long?>("CurrencyId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("CurrentState")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("CurrentState")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsUnicode(true)
