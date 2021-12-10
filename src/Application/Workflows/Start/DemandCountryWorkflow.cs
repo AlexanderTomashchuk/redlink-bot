@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Stateless;
@@ -22,25 +23,14 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
     StateMachine<State, Trigger>.TriggerWithParameters<long?, CancellationToken> _setCountryTrigger;
 
     public DemandCountryWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        ICountryService countryService, IMapper mapper, ILogger<DemandCountryWorkflow> logger) : base(botClient,
-        appUserService, mapper, logger)
+        ICountryService countryService, IMapper mapper, ILogger<DemandCountryWorkflow> logger,
+        WorkflowFactory workflowFactory)
+        : base(botClient, appUserService, mapper, logger, workflowFactory)
         => (_botClient, _countryService) = (botClient, countryService);
 
-    public override WorkflowType Type => WorkflowType.DemandCountry;
+    protected override WorkflowType WorkflowType => WorkflowType.DemandCountry;
 
     public State CurrentState => GetCbData<DemandCountryCbDto>()?.State ?? State.Initial;
-
-    protected override Trigger GetTriggerToInvoke()
-    {
-        var cbTrigger = GetCbData<DemandCountryCbDto>()?.Trigger;
-
-        if (cbTrigger is not null)
-        {
-            return cbTrigger.Value;
-        }
-
-        return CurrentAppUser.HasCountry ? Trigger.DoNothing : Trigger.SelectCountry;
-    }
 
     protected override void ConfigureStateMachine()
     {
@@ -64,10 +54,10 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
             .OnEntryFromAsync(_setCountryTrigger, SetAppUserCountryAsync);
     }
 
-    protected override async Task TriggerAsync(Trigger? triggerToInvoke = default,
+    protected override async Task TriggerNextAsync(Trigger? triggerToInvoke = default,
         CancellationToken cancellationToken = default)
     {
-        var trigger = GetTriggerToInvoke();
+        var trigger = GetNextTriggerToInvoke();
         var entityId = GetEntityId<DemandCountryCbDto>();
         var handler = trigger switch
         {
@@ -108,6 +98,18 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
         var country = await _countryService.FirstAsync(c => c.Id == entityId, cancellationToken);
 
         await AppUserService.UpdateAsync(au => au.Country = country, cancellationToken);
+    }
+
+    private Trigger GetNextTriggerToInvoke()
+    {
+        var cbTrigger = GetCbData<DemandCountryCbDto>()?.Trigger;
+
+        if (cbTrigger is not null)
+        {
+            return cbTrigger.Value;
+        }
+
+        return CurrentAppUser.HasCountry ? Trigger.DoNothing : Trigger.SelectCountry;
     }
 
     public enum Trigger

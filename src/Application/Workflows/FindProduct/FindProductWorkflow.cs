@@ -1,21 +1,19 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
+using AutoMapper;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 
 namespace Application.Workflows.FindProduct;
 
-public class FindProductWorkflow : Workflow
+public class FindProductWorkflow : Workflow, ICommandWorkflow
 {
-    public FindProductWorkflow(ITelegramBotClient botClient, IAppUserService appUserService)
-        : base(botClient, appUserService)
+    public FindProductWorkflow(ITelegramBotClient botClient, IAppUserService appUserService, IMapper mapper,
+        WorkflowFactory workflowFactory)
+        : base(botClient, appUserService, mapper, workflowFactory)
     {
     }
 
-    public override WorkflowType Type => WorkflowType.FindProduct;
+    protected override WorkflowType WorkflowType => WorkflowType.FindProduct;
 
-    public override async Task RunAsync(Update update, CancellationToken cancellationToken = default)
-    {
-    }
+    public CommandType CommandType => CommandType.Find;
 }

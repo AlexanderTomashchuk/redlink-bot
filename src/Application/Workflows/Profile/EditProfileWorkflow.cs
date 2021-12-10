@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ using Telegram.Bot.Types.Enums;
 namespace Application.Workflows.Profile;
 
 public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.State, EditProfileWorkflow.Trigger>,
-    StateStorageMode.ITransitional<EditProfileWorkflow.State>
+    StateStorageMode.ITransitional<EditProfileWorkflow.State>, ICommandWorkflow
 {
     private readonly ICountryService _countryService;
     private readonly ILanguageService _languageService;
@@ -29,15 +30,13 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
     public EditProfileWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
         ICountryService countryService, ILanguageService languageService, IMapper mapper,
-        ILogger<EditProfileWorkflow> logger) : base(botClient, appUserService, mapper, logger) =>
+        ILogger<EditProfileWorkflow> logger, WorkflowFactory workflowFactory)
+        : base(botClient, appUserService, mapper, logger, workflowFactory) =>
         (_countryService, _languageService) = (countryService, languageService);
 
-    public override WorkflowType Type => WorkflowType.EditProfile;
+    protected override WorkflowType WorkflowType => WorkflowType.EditProfile;
 
     public State CurrentState => GetCbData<EditProfileCqDto>()?.State ?? State.Initial;
-
-    protected override Trigger GetTriggerToInvoke() =>
-        GetCbData<EditProfileCqDto>()?.Trigger ?? Trigger.ShowProfileInfo;
 
     protected override void ConfigureStateMachine()
     {
@@ -85,10 +84,10 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             .Permit(Trigger.ShowProfileInfo, State.ProfileInfoShowing);
     }
 
-    protected override async Task TriggerAsync(Trigger? triggerToInvoke = null,
+    protected override async Task TriggerNextAsync(Trigger? triggerToInvoke = null,
         CancellationToken cancellationToken = default)
     {
-        var trigger = triggerToInvoke ?? GetTriggerToInvoke();
+        var trigger = triggerToInvoke ?? GetNextTriggerToInvoke();
         var entityId = GetEntityId<EditProfileCqDto>();
         var handler = trigger switch
         {
@@ -181,7 +180,7 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
         var message = BotMessage.GetSelectedCountryMessage(newCountry.Name);
         _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken);
 
-        await TriggerAsync(Trigger.ShowProfileInfo, cancellationToken);
+        await TriggerNextAsync(Trigger.ShowProfileInfo, cancellationToken);
     }
 
     private async Task UpdateAppUserLanguageAsync(long? entityId, CancellationToken cancellationToken)
@@ -195,8 +194,11 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
         var message = BotMessage.GetSelectedLanguageMessage(newLanguage.Name);
         _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken: cancellationToken);
 
-        await TriggerAsync(Trigger.ShowProfileInfo, cancellationToken);
+        await TriggerNextAsync(Trigger.ShowProfileInfo, cancellationToken);
     }
+
+    private Trigger GetNextTriggerToInvoke() =>
+        GetCbData<EditProfileCqDto>()?.Trigger ?? Trigger.ShowProfileInfo;
 
     public enum Trigger
     {
@@ -216,4 +218,6 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
         CountryUpdated,
         LanguageUpdated
     }
+
+    public CommandType CommandType => CommandType.Profile;
 }

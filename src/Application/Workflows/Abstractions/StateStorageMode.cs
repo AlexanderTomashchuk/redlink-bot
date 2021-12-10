@@ -1,4 +1,4 @@
-namespace Application.Workflows;
+namespace Application.Workflows.Abstractions;
 
 public static class StateStorageMode
 {

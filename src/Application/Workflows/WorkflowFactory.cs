@@ -2,6 +2,7 @@ using System;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
 using AutoMapper;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -22,20 +23,23 @@ public class WorkflowFactory
         _mapper = mapper;
     }
 
-    public Workflow DetermineWorkflowAsync(Update update)
+    public Workflow DetermineAndCreateWorkflow(Update update)
     {
         var workflowType = update.Type switch
         {
             UpdateType.Message => DetermineMessageWorkflow(update.Message),
             UpdateType.CallbackQuery => DetermineCallbackQueryWorkflow(update.CallbackQuery),
             UpdateType.MyChatMember => WorkflowType.ChatMemberUpdated,
-            UpdateType.Unknown => WorkflowType.Unknown
+            UpdateType.Unknown => WorkflowType.Unknown,
+            _ => WorkflowType.Unknown
         };
 
-        var workflow = ResolveByType(workflowType);
+        var workflow = CreateWorkflow(workflowType);
 
         return workflow;
     }
+
+    public Workflow CreateWorkflow(WorkflowType workflowType) => ResolveByType(workflowType);
 
     private WorkflowType DetermineMessageWorkflow(Message message)
     {
@@ -52,8 +56,10 @@ public class WorkflowFactory
             (_, true, CommandType.ProfileCmdName) => WorkflowType.EditProfile,
             (_, true, CommandType.SellCmdName) => WorkflowType.CreateProduct,
             (_, true, CommandType.FindCmdName) => WorkflowType.FindProduct,
-            (_, false, _) => WorkflowType.FromName(_appUserService.Current.LastMessageWorkflowType),
-            _ => WorkflowType.Unknown
+            (_, false, _) => _appUserService.Current.LastMessageWorkflowType.IsNullOrEmpty()
+                ? WorkflowType.Unknown
+                : WorkflowType.FromName(_appUserService.Current.LastMessageWorkflowType),
+            _ => WorkflowType.Unknown 
         };
 
         return workflowType;

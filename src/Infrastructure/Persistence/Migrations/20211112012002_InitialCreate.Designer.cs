@@ -577,7 +577,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductType", "Type")
+                    b.HasOne("Domain.Entities.ProductType", "WorkflowType")
                         .WithMany("Products")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -589,7 +589,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Seller");
 
-                    b.Navigation("Type");
+                    b.Navigation("WorkflowType");
                 });
 
             modelBuilder.Entity("HashTagProduct", b =>

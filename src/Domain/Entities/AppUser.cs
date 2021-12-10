@@ -35,6 +35,7 @@ public class AppUser : AuditableEntity
     public ICollection<Product> Products { get; }
     
     //todo: consider to use WorkflowType instead of string
+    //todo: rename this prop
     public string LastMessageWorkflowType { get; set; }
 
     private AppUser()

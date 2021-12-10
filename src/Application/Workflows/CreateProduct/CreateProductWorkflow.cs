@@ -5,53 +5,31 @@ using System.Threading.Tasks;
 using Application.Common;
 using Application.Common.Extensions;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace Application.Workflows.CreateProduct;
 
 public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreateProductWorkflow.Trigger>,
-    StateStorageMode.IExternal<ProductState>
+    StateStorageMode.IExternal<ProductState>, ICommandWorkflow, IChainWorkflow
 {
     private readonly IProductService _productService;
 
     public CreateProductWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        IProductService productService, IMapper mapper, ILogger<CreateProductWorkflow> logger) : base(botClient,
-        appUserService, mapper, logger)
+        IProductService productService, IMapper mapper, ILogger<CreateProductWorkflow> logger,
+        WorkflowFactory workflowFactory)
+        : base(botClient, appUserService, mapper, logger, workflowFactory)
     {
         _productService = productService;
     }
 
-    public override WorkflowType Type => WorkflowType.CreateProduct;
-
-    protected override Trigger GetTriggerToInvoke()
-    {
-        var cbTrigger = GetCbData<CreateProductCbDto>()?.Trigger;
-
-        if (cbTrigger is not null)
-        {
-            return cbTrigger.Value;
-        }
-
-        return GetState() switch
-        {
-            ProductState.Initial => Trigger.RequestName,
-            ProductState.NameRequested => Trigger.SetName,
-            ProductState.NameProvided => Trigger.RequestPhoto,
-            ProductState.PhotoRequested => Trigger.SetPhoto,
-            ProductState.PhotoProvided => Trigger.RequestCondition,
-            ProductState.ConditionRequested => Trigger.SetCondition,
-            ProductState.ConditionProvided => Trigger.RequestPrice,
-            ProductState.PriceRequested => Trigger.SetPrice,
-            ProductState.PriceProvided => Trigger.ShowProduct,
-//            ProductState.Finished => expr,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
+    protected override WorkflowType WorkflowType => WorkflowType.CreateProduct;
 
     public ProductState GetState() =>
         AsyncHelpers.RunSync(() => _productService.GetLastNotPublishedProductAsync(CurrentAppUser.Id))
@@ -70,8 +48,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             .Permit(Trigger.RequestName, ProductState.NameRequested);
 
         Machine.Configure(ProductState.NameRequested)
-            .OnEntryAsync(CreateNewProductAsync)
-            .OnEntryAsync(UpdateLastUserWorkflowTypeAsync)
+            .OnEntryAsync(EntryWorkflowAsync)
             .OnEntryFromAsync(Trigger.RequestName, RequestNameAsync)
             .Permit(Trigger.SetName, ProductState.NameProvided);
 
@@ -105,27 +82,39 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             .Permit(Trigger.ShowProduct, ProductState.Finished);
 
         Machine.Configure(ProductState.Finished)
+            .OnEntryAsync(ExitWorkflowAsync)
             .OnEntryFromAsync(Trigger.ShowProduct, ShowProductAsync);
     }
 
-    protected override async Task TriggerAsync(Trigger? triggerToInvoke = default,
+    protected override async Task TriggerNextAsync(Trigger? triggerToInvoke = default,
         CancellationToken cancellationToken = default)
     {
-        var trigger = GetTriggerToInvoke();
+        var trigger = GetNextTriggerToInvoke();
         await Machine.FireAsync(trigger);
     }
 
-    private async Task UpdateLastUserWorkflowTypeAsync() =>
-        await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = Type.Name);
-
-    private async Task CreateNewProductAsync()
+    public async Task EntryWorkflowAsync()
     {
-        CancellationToken cancellationToken = CancellationToken.None;
-
         var newProduct = new Product
             { Seller = CurrentAppUser, CurrentState = Machine.State };
 
-        await _productService.CreateAsync(newProduct, cancellationToken);
+        await _productService.CreateAsync(newProduct);
+
+        await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = WorkflowType.Name);
+    }
+
+    public async Task ExitWorkflowAsync()
+    {
+        await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = "");
+    }
+    
+    public async Task AbortWorkflowAsync(Update update, CancellationToken cancellationToken)
+    {
+        await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
+            p => p.CurrentState = ProductState.Aborted,
+            cancellationToken);
+
+        await ExitWorkflowAsync();
     }
 
     private async Task RequestNameAsync()
@@ -233,6 +222,31 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         _ = Machine.FireAsync(Trigger.ShowProduct);
     }
 
+    private Trigger GetNextTriggerToInvoke()
+    {
+        var cbTrigger = GetCbData<CreateProductCbDto>()?.Trigger;
+
+        if (cbTrigger is not null)
+        {
+            return cbTrigger.Value;
+        }
+
+        return GetState() switch
+        {
+            ProductState.Initial => Trigger.RequestName,
+            ProductState.NameRequested => Trigger.SetName,
+            ProductState.NameProvided => Trigger.RequestPhoto,
+            ProductState.PhotoRequested => Trigger.SetPhoto,
+            ProductState.PhotoProvided => Trigger.RequestCondition,
+            ProductState.ConditionRequested => Trigger.SetCondition,
+            ProductState.ConditionProvided => Trigger.RequestPrice,
+            ProductState.PriceRequested => Trigger.SetPrice,
+            ProductState.PriceProvided => Trigger.ShowProduct,
+//            ProductState.Finished => expr,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
     public enum Trigger
     {
         RequestName,
@@ -245,4 +259,6 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         SetPrice,
         ShowProduct
     }
+
+    public CommandType CommandType => CommandType.Sell;
 }

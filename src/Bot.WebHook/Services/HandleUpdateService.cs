@@ -23,7 +23,7 @@ public class HandleUpdateService
     {
         try
         {
-            var workflow = _workflowFactory.DetermineWorkflowAsync(update);
+            var workflow = _workflowFactory.DetermineAndCreateWorkflow(update);
             await workflow.RunAsync(update, cancellationToken);
         }
         catch (Exception exception)

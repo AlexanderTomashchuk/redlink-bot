@@ -11,5 +11,6 @@ public enum ProductState
     ConditionProvided = 6,
     PriceRequested = 7,
     PriceProvided = 8,
-    Finished = 9
+    Finished = 9,
+    Aborted = 100
 }

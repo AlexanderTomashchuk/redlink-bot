@@ -42,10 +42,10 @@ public class ProductService : IProductService
     public async Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default)
         => await ProductsQuery.OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync(p => p.SellerId == sellerId,cancellationToken);
 
-
+    //todo: rename method
     public async Task<Product> GetLastNotPublishedProductAsync(long sellerId,CancellationToken cancellationToken = default)
         => await ProductsQuery.FirstOrDefaultAsync(p =>
-            p.SellerId == sellerId && p.CurrentState != ProductState.Finished, cancellationToken);
+            p.SellerId == sellerId && !new [] { ProductState.Finished, ProductState.Aborted}.Contains(p.CurrentState), cancellationToken);
 
     public async Task AttachPhotoToLastNotPublishedProductAsync(long sellerId, string photoId,
         CancellationToken cancellationToken = default)

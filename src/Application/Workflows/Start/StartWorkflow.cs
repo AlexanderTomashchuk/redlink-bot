@@ -3,26 +3,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
 using Application.Services.Interfaces;
+using Application.Workflows.Abstractions;
+using AutoMapper;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace Application.Workflows.Start;
 
-public class StartWorkflow : Workflow
+public class StartWorkflow : Workflow, ICommandWorkflow
 {
     private readonly Func<WorkflowType, Workflow> _workflowResolver;
 
-    public StartWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        Func<WorkflowType, Workflow> workflowResolver)
-        : base(botClient, appUserService)
+    public StartWorkflow(ITelegramBotClient botClient, IAppUserService appUserService, IMapper mapper,
+        Func<WorkflowType, Workflow> workflowResolver, WorkflowFactory workflowFactory)
+        : base(botClient, appUserService, mapper, workflowFactory)
     {
         _workflowResolver = workflowResolver;
     }
 
-    public override WorkflowType Type => WorkflowType.Start;
+    protected override WorkflowType WorkflowType => WorkflowType.Start;
 
-    public override async Task RunAsync(Update update, CancellationToken cancellationToken = default)
+    protected override async Task ProcessAsync(Update update, CancellationToken cancellationToken = default)
     {
         var welcomeMessage = BotMessage.GetWelcomeMessage(CurrentAppUser);
 
@@ -32,4 +34,6 @@ public class StartWorkflow : Workflow
         var demandCountryWorkflow = _workflowResolver(WorkflowType.DemandCountry);
         await demandCountryWorkflow.RunAsync(update, cancellationToken);
     }
+
+    public CommandType CommandType => CommandType.Start;
 }

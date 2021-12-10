@@ -3,6 +3,7 @@ using System.Reflection;
 using Application.Services;
 using Application.Services.Interfaces;
 using Application.Workflows;
+using Application.Workflows.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
