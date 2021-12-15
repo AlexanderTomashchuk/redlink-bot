@@ -54,17 +54,22 @@ public abstract class Workflow
 
         var isTheSameWorkflow = WorkflowType == otherRunningWorkflowType;
 
-        if (isTheSameWorkflow)
+        if (isTheSameWorkflow && !IsCommandMessageOfCurrentWorkflow())
         {
-            if (!IsCommandMessageOfCurrentWorkflow())
-                return false;
-            
-            //todo: move this logic to validation part of CreateProductWorkflow
-            await BotClient.SendTextMessageAsync(ChatId, "please finish creating current product before new one",
-                cancellationToken: cancellationToken);
-            return true;
+            return false;
         }
-
+        
+        // if (isTheSameWorkflow)
+        // {
+        //     if (!IsCommandMessageOfCurrentWorkflow())
+        //         return false;
+        //     
+        //     //todo: move this logic to validation part of CreateProductWorkflow
+        //     await BotClient.SendTxtMessageAsync(ChatId, "please finish creating current product before new one",
+        //         cancellationToken: cancellationToken);
+        //     return true;
+        // }
+        
         if (_workflowFactory.CreateWorkflow(otherRunningWorkflowType) is not IChainWorkflow runningChainWorkflow)
             return false;
 
@@ -90,15 +95,11 @@ public abstract class Workflow
         return Task.CompletedTask;
     }
 
-    private Update Update { get; set; }
+    public Update Update { get; set; }
 
     protected AppUser CurrentAppUser => AppUserService.Current;
 
     protected long? ChatId => CurrentAppUser.ChatId;
-
-    protected string MessageText => Update?.Message?.Text;
-
-    protected string MessagePhotoId => Update?.Message?.Photo?.MaxBy(p => p.FileSize)?.FileId;
 
     protected string CallbackQueryId => Update?.CallbackQuery?.Id;
 

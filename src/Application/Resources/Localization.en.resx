@@ -1,0 +1,161 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AttachProductPhoto" xml:space="preserve">
+        <value>Attach the photo of your product (up to 10 MB)</value>
+    </data>
+    <data name="ChooseProductCondition" xml:space="preserve">
+        <value>Choose the condition of the product</value>
+    </data>
+    <data name="EnterProductName" xml:space="preserve">
+        <value>Enter a name for the product you want to sell</value>
+    </data>
+    <data name="EnterProductPrice" xml:space="preserve">
+        <value>Enter a price of product</value>
+    </data>
+    <data name="SelectedLanguage" xml:space="preserve">
+        <value>Selected language</value>
+    </data>
+    <data name="SelectedCountry" xml:space="preserve">
+        <value>Selected country</value>
+    </data>
+    <data name="ChooseLanguageFromList" xml:space="preserve">
+        <value>Please choose your language from the list below</value>
+    </data>
+    <data name="AttachPhotoErr" xml:space="preserve">
+        <value>Attach or take a photo of your product</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>Change language</value>
+    </data>
+    <data name="ChangeCountry" xml:space="preserve">
+        <value>Change country</value>
+    </data>
+    <data name="Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="IncorrectProductPriceFormatErr" xml:space="preserve">
+        <value>The price is provided in incorrect format. Correct format examples: 123 or 123.45</value>
+    </data>
+    <data name="ProductNameAtLeast5CharsErr" xml:space="preserve">
+        <value>The length of the product name must consist of at least 5 characters</value>
+    </data>
+    <data name="ProductPriceGtr0Err" xml:space="preserve">
+        <value>The price should be greater then 0</value>
+    </data>
+    <data name="TypeMsgForProductPriceErr" xml:space="preserve">
+        <value>Type the message to provide the product price</value>
+    </data>
+    <data name="TypeMsgForProductNameErr" xml:space="preserve">
+        <value>Type the message to provide the product name</value>
+    </data>
+    <data name="UseMenuForProductConditonErr" xml:space="preserve">
+        <value>Use the menu to choose the product condition</value>
+    </data>
+    <data name="Hello" xml:space="preserve">
+        <value>Hello</value>
+    </data>
+    <data name="YouCanUseMeUsingCommands" xml:space="preserve">
+        <value>You can control me by sending these commands</value>
+    </data>
+    <data name="Country" xml:space="preserve">
+        <value>Country</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="UseBtnsToChangeProfile" xml:space="preserve">
+        <value>To change profile settings, please use the buttons below</value>
+    </data>
+    <data name="ReviewProductInformation" xml:space="preserve">
+        <value>Please review the product information, edit if necessary and press 'Publish' button to post it</value>
+    </data>
+    <data name="ChooseCountryFromList" xml:space="preserve">
+        <value>Please select your country from the list below</value>
+    </data>
+    <data name="CountryHelpsProvideRelevantProducts" xml:space="preserve">
+        <value>This information will help us to provide you the most relevant products we have in you country</value>
+    </data>
+    <data name="ICanHelpToSellClothes" xml:space="preserve">
+        <value>I can help you sell or buy a variety of clothes</value>
+    </data>
+    <data name="TheProductYouCreated" xml:space="preserve">
+        <value>There is a product you created</value>
+    </data>
+    <data name="YourCurrProfileSettings" xml:space="preserve">
+        <value>Your current profile settings</value>
+    </data>
+    <data name="Publish" xml:space="preserve">
+        <value>Publish</value>
+    </data>
+    <data name="Ukraine" xml:space="preserve">
+        <value>Ukraine</value>
+    </data>
+    <data name="USA" xml:space="preserve">
+        <value>USA</value>
+    </data>
+    <data name="Russia" xml:space="preserve">
+        <value>Russia</value>
+    </data>
+    <data name="Poland" xml:space="preserve">
+        <value>Poland</value>
+    </data>
+    <data name="English" xml:space="preserve">
+        <value>English</value>
+    </data>
+    <data name="Ukrainian" xml:space="preserve">
+        <value>Ukrainian</value>
+    </data>
+    <data name="Russian" xml:space="preserve">
+        <value>Russian</value>
+    </data>
+    <data name="New" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="Perfect" xml:space="preserve">
+        <value>Perfect</value>
+    </data>
+    <data name="VeryGood" xml:space="preserve">
+        <value>Very good</value>
+    </data>
+    <data name="Good" xml:space="preserve">
+        <value>Good</value>
+    </data>
+    <data name="Satisfactory" xml:space="preserve">
+        <value>Satisfactory</value>
+    </data>
+    <data name="Clothes" xml:space="preserve">
+        <value>Clothes</value>
+    </data>
+    <data name="OuterWear" xml:space="preserve">
+        <value>Outer wear</value>
+    </data>
+    <data name="Lingerie" xml:space="preserve">
+        <value>Lingerie</value>
+    </data>
+    <data name="FootWear" xml:space="preserve">
+        <value>Foot wear</value>
+    </data>
+    <data name="Bags" xml:space="preserve">
+        <value>Bags</value>
+    </data>
+    <data name="Accessories" xml:space="preserve">
+        <value>Accessories</value>
+    </data>
+    <data name="Jewelry" xml:space="preserve">
+        <value>Jewelry</value>
+    </data>
+    <data name="ClothesForHome" xml:space="preserve">
+        <value>Clothes for home</value>
+    </data>
+</root>

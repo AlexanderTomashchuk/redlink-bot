@@ -28,6 +28,8 @@ public class AppUser : AuditableEntity
 
     public bool HasCountry => CountryId != null;
 
+    public string LanguageCodeName => (LanguageCode ?? Language.DefaultLanguageCode).ToString().ToLower();
+    
     public Language.LanguageCode? LanguageCode { get; set; }
 
     public Language Language { get; set; }

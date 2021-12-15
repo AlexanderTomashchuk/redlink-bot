@@ -1,6 +1,7 @@
 using System.Text;
 using Domain.Entities;
 using Domain.Extensions;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Common;
 
@@ -11,9 +12,10 @@ public static class BotMessage
         var sb = new StringBuilder();
 
         sb.AppendLine(
-            $"{Emoji.HELLO} Hello {currentAppUser.GetTelegramMarkdownLink()}\\. I can help you sell or buy a variety of clothes\\.");
+            $"{Emoji.HELLO} {l10n.Hello} {currentAppUser.GetTelegramMarkdownLink()}\\. " +
+            $"{l10n.ICanHelpToSellClothes}\\.");
         sb.AppendLine();
-        sb.AppendLine("You can control me by sending these commands:");
+        sb.AppendLine($"{l10n.YouCanUseMeUsingCommands}:");
         foreach (var commandType in CommandType.List)
         {
             sb.AppendLine($"{commandType.Name} - {commandType.Description}".Escape());
@@ -26,19 +28,9 @@ public static class BotMessage
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("Please select your country from the list below\\.");
+        sb.AppendLine($"{l10n.ChooseCountryFromList}\\.");
         sb.AppendLine();
-        sb.AppendLine(
-            "_This information will help us to provide you the most relevant products we have in you country\\._");
-
-        return sb.ToString();
-    }
-
-    public static string GetEditCountryMessage()
-    {
-        var sb = new StringBuilder();
-
-        sb.AppendLine("Please select your country from the list below\\.");
+        sb.AppendLine($"_{l10n.CountryHelpsProvideRelevantProducts}\\._");
 
         return sb.ToString();
     }
@@ -47,38 +39,25 @@ public static class BotMessage
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("Your current profile settings:");
+        sb.AppendLine($"{l10n.YourCurrProfileSettings}:");
         sb.AppendLine();
         sb.AppendLine(
-            $"`{$"{Emoji.COUNTRY} Country:",-13} {currentAppUser.Country.Name}`");
-        sb.AppendLine($"`{$"{Emoji.LANGUAGE} Language:",-13} {currentAppUser.Language.Name}`");
+            $"`{$"{Emoji.COUNTRY} {l10n.Country}:",-13} {l10n.ResourceManager.GetString(currentAppUser.Country.NameLocalizationKey)}`");
+        sb.AppendLine($"`{$"{Emoji.LANGUAGE} {l10n.Language}:",-13} {l10n.ResourceManager.GetString(currentAppUser.Language.NameLocalizationKey)}`");
         sb.AppendLine();
-        sb.AppendLine("_To change profile settings, please use the buttons below\\._");
+        sb.AppendLine($"_{l10n.UseBtnsToChangeProfile}\\._");
 
         return sb.ToString();
     }
 
-    public static string GetEditLanguageMessage()
+    public static string GetShowProductMessage()
     {
         var sb = new StringBuilder();
 
-        sb.AppendLine("Please choose your language from the list below\\.");
+        sb.AppendLine($"{l10n.TheProductYouCreated}\\.");
+        sb.AppendLine();
+        sb.AppendLine($"{l10n.ReviewProductInformation}\\.");
 
         return sb.ToString();
     }
-
-    public static string GetSelectedCountryMessage(string countryName) => $"Selected country: {countryName}";
-
-    public static string GetSelectedLanguageMessage(string languageName) => $"Selected language: {languageName}";
-
-    public static string GetRequestProductNameMessage() => "Please enter a name for the product you want to sell";
-    
-    public static string GetRequestProductPhotoMessage() => "Please attach the photo of your product \\(up to 10 MB\\)";
-    
-    public static string GetRequestProductConditionMessage() => "Please choose the condition of the product";
-    
-    public static string GetRequestProductPriceMessage() => "Please enter a price of your product";
-
-    public static string GetShowProductMessage() =>
-        "There is a product you created\\.\nPlease review the product information, edit if necessary and press 'Publish' button to post it\\.";
 }

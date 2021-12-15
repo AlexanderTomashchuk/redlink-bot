@@ -3,13 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
+using Application.Common.Extensions;
 using Application.Services.Interfaces;
 using Application.Workflows.Abstractions;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
-using Telegram.Bot.Types.Enums;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.Start;
 
@@ -81,7 +82,7 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(countries.Select(c =>
             {
-                var text = $"{c.Flag} {c.Name}";
+                var text = $"{c.Flag} {l10n.ResourceManager.GetString(c.NameLocalizationKey)}";
                 var cbData = new DemandCountryCbDto(State.CountrySelection, Trigger.SetCountry, c.Id);
 
                 return (text, cbData);
@@ -89,8 +90,7 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
             .ChunkBy(2)
             .Build();
 
-        await _botClient.SendTextMessageAsync(chatId, initCountryMessage, ParseMode.MarkdownV2,
-            replyMarkup: replyMarkup, cancellationToken: cancellationToken);
+        await _botClient.SendFormattedTxtMessageAsync(chatId, initCountryMessage, replyMarkup, cancellationToken);
     }
 
     private async Task SetAppUserCountryAsync(long? entityId, CancellationToken cancellationToken)
@@ -98,6 +98,9 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
         var country = await _countryService.FirstAsync(c => c.Id == entityId, cancellationToken);
 
         await AppUserService.UpdateAsync(au => au.Country = country, cancellationToken);
+        
+        var text = $"{l10n.SelectedCountry}: {l10n.ResourceManager.GetString(country.NameLocalizationKey)}";
+        _ = BotClient.AnswerCbQueryAsync(CallbackQueryId, text, cancellationToken);
     }
 
     private Trigger GetNextTriggerToInvoke()

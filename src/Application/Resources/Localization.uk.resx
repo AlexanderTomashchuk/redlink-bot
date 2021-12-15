@@ -1,0 +1,161 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="EnterProductName" xml:space="preserve">
+        <value>Введіть назву товару, який ви хочете продати</value>
+    </data>
+    <data name="AttachProductPhoto" xml:space="preserve">
+        <value>Прикрипіть фотографію вашого товару (розміром до 10 МБ)</value>
+    </data>
+    <data name="ChooseProductCondition" xml:space="preserve">
+        <value>Оберіть стан товару</value>
+    </data>
+    <data name="EnterProductPrice" xml:space="preserve">
+        <value>Вкажіть ціну товару</value>
+    </data>
+    <data name="ChooseLanguageFromList" xml:space="preserve">
+        <value>Будь ласка, виберіть свою мову зі списку нижче</value>
+    </data>
+    <data name="SelectedCountry" xml:space="preserve">
+        <value>Вибрана країна</value>
+    </data>
+    <data name="SelectedLanguage" xml:space="preserve">
+        <value>Вибрана мова</value>
+    </data>
+    <data name="UseMenuForProductConditonErr" xml:space="preserve">
+        <value>Використовуйте меню для вибору стану товару</value>
+    </data>
+    <data name="TypeMsgForProductPriceErr" xml:space="preserve">
+        <value>Введіть повідомлення, щоб вказати ціну товару</value>
+    </data>
+    <data name="TypeMsgForProductNameErr" xml:space="preserve">
+        <value>Введіть повідомлення, щоб вказати назву товару</value>
+    </data>
+    <data name="ProductNameAtLeast5CharsErr" xml:space="preserve">
+        <value>Довжина назви товару повинна складатися не менше ніж з 5 символів</value>
+    </data>
+    <data name="ProductPriceGtr0Err" xml:space="preserve">
+        <value>Ціна повинна бути більше 0</value>
+    </data>
+    <data name="IncorrectProductPriceFormatErr" xml:space="preserve">
+        <value>Ціна вказана в неправильному форматі. Приклади правильного формату: 123 або 123,45</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>Змінити мову</value>
+    </data>
+    <data name="Back" xml:space="preserve">
+        <value>Назад</value>
+    </data>
+    <data name="AttachPhotoErr" xml:space="preserve">
+        <value>Прикріпіть або сфотографуйте свій товар</value>
+    </data>
+    <data name="ChangeCountry" xml:space="preserve">
+        <value>Змінити країну</value>
+    </data>
+    <data name="YourCurrProfileSettings" xml:space="preserve">
+        <value>Ваші поточні налаштування профілю</value>
+    </data>
+    <data name="YouCanUseMeUsingCommands" xml:space="preserve">
+        <value>Ви можете керувати мною, посилаючи ці команди</value>
+    </data>
+    <data name="UseBtnsToChangeProfile" xml:space="preserve">
+        <value>Щоб змінити налаштування профілю, будь ласка, використовуйте кнопки нижче</value>
+    </data>
+    <data name="TheProductYouCreated" xml:space="preserve">
+        <value>Товар, який ви створили</value>
+    </data>
+    <data name="ReviewProductInformation" xml:space="preserve">
+        <value>Будь ласка, ознайомтеся з інформацією про товар, відредагуйте при необхідності і натисніть кнопку "Опублікувати"</value>
+    </data>
+    <data name="Publish" xml:space="preserve">
+        <value>Опублікувати</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Мова</value>
+    </data>
+    <data name="Hello" xml:space="preserve">
+        <value>Привіт</value>
+    </data>
+    <data name="Country" xml:space="preserve">
+        <value>Країна</value>
+    </data>
+    <data name="ChooseCountryFromList" xml:space="preserve">
+        <value>Будь ласка, виберіть свою країну зі списку нижче</value>
+    </data>
+    <data name="CountryHelpsProvideRelevantProducts" xml:space="preserve">
+        <value>Ця інформація допоможе нам надати вам найбільш актуальні товари, які у нас є у вашій країні</value>
+    </data>
+    <data name="ICanHelpToSellClothes" xml:space="preserve">
+        <value>Я можу допомогти вам продати або купити різноманітний одяг</value>
+    </data>
+    <data name="Accessories" xml:space="preserve">
+        <value>Аксесуари</value>
+    </data>
+    <data name="Bags" xml:space="preserve">
+        <value>Сумки</value>
+    </data>
+    <data name="Clothes" xml:space="preserve">
+        <value>Одяг</value>
+    </data>
+    <data name="ClothesForHome" xml:space="preserve">
+        <value>Одяг для дому</value>
+    </data>
+    <data name="English" xml:space="preserve">
+        <value>Англійська</value>
+    </data>
+    <data name="Good" xml:space="preserve">
+        <value>Хороший</value>
+    </data>
+    <data name="Jewelry" xml:space="preserve">
+        <value>Ювелірні прикраси</value>
+    </data>
+    <data name="FootWear" xml:space="preserve">
+        <value>Взуття</value>
+    </data>
+    <data name="Lingerie" xml:space="preserve">
+        <value>Жіноча білизна</value>
+    </data>
+    <data name="New" xml:space="preserve">
+        <value>Новий</value>
+    </data>
+    <data name="OuterWear" xml:space="preserve">
+        <value>Верхній одяг</value>
+    </data>
+    <data name="Perfect" xml:space="preserve">
+        <value>Ідеальний</value>
+    </data>
+    <data name="Poland" xml:space="preserve">
+        <value>Польща</value>
+    </data>
+    <data name="Russia" xml:space="preserve">
+        <value>Росія</value>
+    </data>
+    <data name="Russian" xml:space="preserve">
+        <value>Російська</value>
+    </data>
+    <data name="Satisfactory" xml:space="preserve">
+        <value>Задовільний</value>
+    </data>
+    <data name="Ukraine" xml:space="preserve">
+        <value>Україна</value>
+    </data>
+    <data name="Ukrainian" xml:space="preserve">
+        <value>Українська</value>
+    </data>
+    <data name="USA" xml:space="preserve">
+        <value>США</value>
+    </data>
+    <data name="VeryGood" xml:space="preserve">
+        <value>Відмінний</value>
+    </data>
+</root>

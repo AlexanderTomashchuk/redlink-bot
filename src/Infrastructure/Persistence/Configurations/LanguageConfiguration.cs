@@ -14,7 +14,7 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
         builder.HasKey(l => l.Code);
         builder.Property(l => l.Code).HasTypeToLowerStringConversion();
 
-        builder.Property(l => l.Name).HasMaxLength(50).IsRequired();
+        builder.Property(l => l.NameLocalizationKey).HasMaxLength(50).IsRequired();
         builder.Property(l => l.Code).HasMaxLength(20).IsRequired();
         builder.Property(l => l.Flag).IsUnicode().IsRequired();
 

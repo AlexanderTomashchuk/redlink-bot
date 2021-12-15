@@ -2,12 +2,31 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+#nullable disable
+
 namespace Infrastructure.Persistence.Migrations
 {
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Country",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NameLocalizationKey = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Flag = table.Column<string>(type: "text", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Country", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Currency",
                 columns: table => new
@@ -17,8 +36,8 @@ namespace Infrastructure.Persistence.Migrations
                     Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Abbreviation = table.Column<string>(type: "text", nullable: false),
                     Sign = table.Column<string>(type: "text", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -32,8 +51,8 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Value = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,10 +64,10 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    NameLocalizationKey = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Flag = table.Column<string>(type: "text", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,9 +80,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    NameLocalizationKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,37 +95,13 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    NameLocalizationKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductType", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Country",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Flag = table.Column<string>(type: "text", nullable: false),
-                    DefaultCurrencyId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Country", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Country_Currency_DefaultCurrencyId",
-                        column: x => x.DefaultCurrencyId,
-                        principalTable: "Currency",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -121,9 +116,10 @@ namespace Infrastructure.Persistence.Migrations
                     ChatId = table.Column<long>(type: "bigint", nullable: true),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CountryId = table.Column<long>(type: "bigint", nullable: true),
-                    LanguageCode = table.Column<string>(type: "character varying(20)", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    LanguageCode = table.Column<string>(type: "character varying(20)", nullable: true),
+                    LastMessageWorkflowType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -132,14 +128,12 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_AppUser_Country_CountryId",
                         column: x => x.CountryId,
                         principalTable: "Country",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_AppUser_Language_LanguageCode",
                         column: x => x.LanguageCode,
                         principalTable: "Language",
-                        principalColumn: "Code",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Code");
                 });
 
             migrationBuilder.CreateTable(
@@ -150,12 +144,14 @@ namespace Infrastructure.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ConditionId = table.Column<long>(type: "bigint", nullable: false),
-                    TypeId = table.Column<long>(type: "bigint", nullable: false),
-                    CurrencyId = table.Column<long>(type: "bigint", nullable: false),
+                    ConditionId = table.Column<long>(type: "bigint", nullable: true),
+                    TypeId = table.Column<long>(type: "bigint", nullable: true),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    CurrencyId = table.Column<long>(type: "bigint", nullable: true),
                     SellerId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CurrentState = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -170,20 +166,17 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_Product_Currency_CurrencyId",
                         column: x => x.CurrencyId,
                         principalTable: "Currency",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Product_ProductCondition_ConditionId",
                         column: x => x.ConditionId,
                         principalTable: "ProductCondition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Product_ProductType_TypeId",
                         column: x => x.TypeId,
                         principalTable: "ProductType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -192,9 +185,10 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TelegramId = table.Column<string>(type: "text", nullable: true),
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -232,6 +226,17 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Country",
+                columns: new[] { "Id", "Code", "CreatedOn", "Flag", "ModifiedOn", "NameLocalizationKey" },
+                values: new object[,]
+                {
+                    { 1L, "US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇸", null, "USA" },
+                    { 2L, "UA", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇦", null, "Ukraine" },
+                    { 3L, "PL", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇵🇱", null, "Poland" },
+                    { 4L, "RU", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇷🇺", null, "Russia" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Currency",
                 columns: new[] { "Id", "Abbreviation", "Code", "CreatedOn", "ModifiedOn", "Sign" },
                 values: new object[,]
@@ -254,7 +259,7 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Language",
-                columns: new[] { "Code", "CreatedOn", "Flag", "ModifiedOn", "Name" },
+                columns: new[] { "Code", "CreatedOn", "Flag", "ModifiedOn", "NameLocalizationKey" },
                 values: new object[,]
                 {
                     { "en", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇬🇧", null, "English" },
@@ -264,40 +269,29 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "ProductCondition",
-                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "Name" },
+                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey" },
                 values: new object[,]
                 {
-                    { 5L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Satisfactory" },
-                    { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Good" },
-                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Perfect" },
                     { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "New" },
-                    { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Very good" }
+                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Perfect" },
+                    { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "VeryGood" },
+                    { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Good" },
+                    { 5L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Satisfactory" }
                 });
 
             migrationBuilder.InsertData(
                 table: "ProductType",
-                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "Name" },
+                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey" },
                 values: new object[,]
                 {
-                    { 7L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "jewelry" },
                     { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Clothes" },
                     { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Outer wear" },
                     { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Lingerie" },
-                    { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Foot wear" },
+                    { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "FootWear" },
                     { 5L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bags" },
                     { 6L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Accessories" },
+                    { 7L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Jewelry" },
                     { 8L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Clothes for home" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Country",
-                columns: new[] { "Id", "Code", "CreatedOn", "DefaultCurrencyId", "Flag", "ModifiedOn", "Name" },
-                values: new object[,]
-                {
-                    { 1L, "US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1L, "🇺🇸", null, "USA" },
-                    { 2L, "UA", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2L, "🇺🇦", null, "Ukraine" },
-                    { 3L, "PL", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3L, "🇵🇱", null, "Poland" },
-                    { 4L, "RU", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4L, "🇷🇺", null, "Russia" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -314,11 +308,6 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_AppUser_LanguageCode",
                 table: "AppUser",
                 column: "LanguageCode");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Country_DefaultCurrencyId",
-                table: "Country",
-                column: "DefaultCurrencyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_File_ProductId",
@@ -369,6 +358,9 @@ namespace Infrastructure.Persistence.Migrations
                 name: "AppUser");
 
             migrationBuilder.DropTable(
+                name: "Currency");
+
+            migrationBuilder.DropTable(
                 name: "ProductCondition");
 
             migrationBuilder.DropTable(
@@ -379,9 +371,6 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Language");
-
-            migrationBuilder.DropTable(
-                name: "Currency");
         }
     }
 }

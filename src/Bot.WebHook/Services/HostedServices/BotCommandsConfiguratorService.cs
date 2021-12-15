@@ -14,14 +14,10 @@ namespace Bot.WebHook.Services.HostedServices;
 public class BotCommandsConfiguratorService : IHostedService
 {
     private readonly IServiceProvider _services;
-    private readonly ILogger<BotCommandsConfiguratorService> _logger;
 
-    public BotCommandsConfiguratorService(
-        IServiceProvider serviceProvider,
-        ILogger<BotCommandsConfiguratorService> logger)
+    public BotCommandsConfiguratorService(IServiceProvider serviceProvider)
     {
         _services = serviceProvider;
-        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)

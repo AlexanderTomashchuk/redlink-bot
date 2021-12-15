@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
+using Application.Common.Extensions;
 using Application.Services.Interfaces;
 using Application.Workflows.Abstractions;
 using AutoMapper;
@@ -28,7 +29,7 @@ public class StartWorkflow : Workflow, ICommandWorkflow
     {
         var welcomeMessage = BotMessage.GetWelcomeMessage(CurrentAppUser);
 
-        await BotClient.SendTextMessageAsync(CurrentAppUser.ChatId, welcomeMessage, ParseMode.MarkdownV2,
+        await BotClient.SendFormattedTxtMessageAsync(CurrentAppUser.ChatId, welcomeMessage,
             cancellationToken: cancellationToken);
 
         var demandCountryWorkflow = _workflowResolver(WorkflowType.DemandCountry);

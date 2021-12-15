@@ -52,8 +52,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        //await DispatchEvents();
-
         return result;
     }
 
@@ -63,20 +61,4 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         base.OnModelCreating(builder);
     }
-
-    // private async Task DispatchEvents()
-    // {
-    //     while (true)
-    //     {
-    //         var domainEventEntity = ChangeTracker.Entries<IHasDomainEvent>()
-    //             .Select(x => x.Entity.DomainEvents)
-    //             .SelectMany(x => x)
-    //             .Where(domainEvent => !domainEvent.IsPublished)
-    //             .FirstOrDefault();
-    //         if (domainEventEntity == null) break;
-    //
-    //         domainEventEntity.IsPublished = true;
-    //         await _domainEventService.Publish(domainEventEntity);
-    //     }
-    // }
 }

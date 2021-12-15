@@ -7,18 +7,19 @@ public class ProductCondition : AuditableEntity
 {
     public long Id { get; }
 
-    public string Name { get; }
+    public string NameLocalizationKey { get; }
 
     public ICollection<Product> Products { get; }
 
+    // ReSharper disable once UnusedMember.Local
     private ProductCondition()
     {
     }
 
-    public ProductCondition(long id, string name, ICollection<Product> products = null)
+    public ProductCondition(long id, string nameLocalizationKey, ICollection<Product> products = null)
     {
         Id = id;
-        Name = name;
+        NameLocalizationKey = nameLocalizationKey;
         Products = products;
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.CreateProduct;
 
@@ -20,13 +20,15 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
     StateStorageMode.IExternal<ProductState>, ICommandWorkflow, IChainWorkflow
 {
     private readonly IProductService _productService;
+    private readonly UpdateExt _updateExt;
 
     public CreateProductWorkflow(ITelegramBotClient botClient, IAppUserService appUserService,
-        IProductService productService, IMapper mapper, ILogger<CreateProductWorkflow> logger,
-        WorkflowFactory workflowFactory)
+        IMapper mapper, ILogger<CreateProductWorkflow> logger, WorkflowFactory workflowFactory,
+        IProductService productService, UpdateExt updateExt)
         : base(botClient, appUserService, mapper, logger, workflowFactory)
     {
         _productService = productService;
+        _updateExt = updateExt;
     }
 
     protected override WorkflowType WorkflowType => WorkflowType.CreateProduct;
@@ -45,15 +47,19 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         Machine = new StateMachine<ProductState, Trigger>(GetState, SetState, FiringMode.Queued);
 
         Machine.Configure(ProductState.Initial)
+            .Permit(Trigger.CreateEmptyProduct, ProductState.EmptyProductCreated);
+
+        Machine.Configure(ProductState.EmptyProductCreated)
+            .OnEntryFromAsync(Trigger.CreateEmptyProduct, EntryWorkflowAsync)
             .Permit(Trigger.RequestName, ProductState.NameRequested);
 
         Machine.Configure(ProductState.NameRequested)
-            .OnEntryAsync(EntryWorkflowAsync)
             .OnEntryFromAsync(Trigger.RequestName, RequestNameAsync)
             .Permit(Trigger.SetName, ProductState.NameProvided);
 
         Machine.Configure(ProductState.NameProvided)
             .OnEntryFromAsync(Trigger.SetName, SetNameAsync)
+            .Permit(Trigger.RequestName, ProductState.NameRequested)
             .Permit(Trigger.RequestPhoto, ProductState.PhotoRequested);
 
         Machine.Configure(ProductState.PhotoRequested)
@@ -71,6 +77,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
         Machine.Configure(ProductState.ConditionProvided)
             .OnEntryFromAsync(Trigger.SetCondition, SetConditionAsync)
+            .Permit(Trigger.RequestCondition, ProductState.ConditionRequested)
             .Permit(Trigger.RequestPrice, ProductState.PriceRequested);
 
         Machine.Configure(ProductState.PriceRequested)
@@ -79,6 +86,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
         Machine.Configure(ProductState.PriceProvided)
             .OnEntryFromAsync(Trigger.SetPrice, SetPriceAsync)
+            .Permit(Trigger.RequestPrice, ProductState.PriceRequested)
             .Permit(Trigger.ShowProduct, ProductState.Finished);
 
         Machine.Configure(ProductState.Finished)
@@ -101,13 +109,15 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         await _productService.CreateAsync(newProduct);
 
         await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = WorkflowType.Name);
+
+        _ = Machine.FireAsync(Trigger.RequestName);
     }
 
     public async Task ExitWorkflowAsync()
     {
         await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = "");
     }
-    
+
     public async Task AbortWorkflowAsync(Update update, CancellationToken cancellationToken)
     {
         await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
@@ -117,29 +127,20 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         await ExitWorkflowAsync();
     }
 
-    private async Task RequestNameAsync()
-    {
-        var message = BotMessage.GetRequestProductNameMessage();
+    private async Task RequestNameAsync() => await BotClient.SendTxtMessageAsync(ChatId, l10n.EnterProductName);
 
-        await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2);
-    }
 
-    private async Task RequestPhotoAsync()
-    {
-        var message = BotMessage.GetRequestProductPhotoMessage();
+    private async Task RequestPhotoAsync() => await BotClient.SendTxtMessageAsync(ChatId, l10n.AttachProductPhoto);
 
-        await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2);
-    }
 
     private async Task RequestConditionAsync()
     {
         var productConditions = await _productService.GetProductConditionsAsync();
 
-        var message = BotMessage.GetRequestProductConditionMessage();
         var replyKeyboard = new InlineKeyboardBuilder()
             .AddButtons(productConditions.Select(pc =>
             {
-                var text = pc.Name;
+                var text = l10n.ResourceManager.GetString(pc.NameLocalizationKey);
                 var cbData = new CreateProductCbDto(Trigger.SetCondition, pc.Id);
 
                 return (text, cbData);
@@ -147,15 +148,10 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             .ChunkBy(2)
             .Build();
 
-        await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2, replyKeyboard);
+        await BotClient.SendTxtMessageAsync(ChatId, l10n.ChooseProductCondition, replyKeyboard);
     }
 
-    private async Task RequestPriceAsync()
-    {
-        var message = BotMessage.GetRequestProductPriceMessage();
-
-        await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2);
-    }
+    private async Task RequestPriceAsync() => await BotClient.SendTxtMessageAsync(ChatId, l10n.EnterProductPrice);
 
     private async Task ShowProductAsync()
     {
@@ -164,62 +160,76 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         var message = BotMessage.GetShowProductMessage();
         message += $"\n{product}";
 
-        await BotClient.SendPhotoAsync(ChatId, product.Files.First().TelegramId, message, ParseMode.MarkdownV2);
+        await BotClient.SendImageAsync(ChatId, product.Files.First().TelegramId, message);
     }
 
     private async Task SetNameAsync()
     {
-        var productName = MessageText;
+        var validationResult = _updateExt.ExtractProductName(Update);
 
-        await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id, p => { p.Name = productName; });
-
-        _ = Machine.FireAsync(Trigger.RequestPhoto);
+        await validationResult.Match(
+            async ok =>
+            {
+                await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id, p => { p.Name = ok.Value; });
+                _ = Machine.FireAsync(Trigger.RequestPhoto);
+            },
+            async error =>
+            {
+                await BotClient.SendErrorMessageAsync(ChatId, error.Message);
+                _ = Machine.FireAsync(Trigger.RequestName);
+            });
     }
 
     private async Task SetPhotoAsync()
     {
-        var photoId = MessagePhotoId;
-        try
-        {
-            if (photoId is null)
-            {
-                await BotClient.SendTextMessageAsync(ChatId, "please provide the photo!!");
+        var validationResult = _updateExt.ExtractPhotoId(Update);
 
-                _ = Machine.FireAsync(Trigger.RequestPhoto);
-            }
-            else
+        await validationResult.Match(
+            async ok =>
             {
-                //Action<Product> updateAction = p => { p.Files.Add(new File { ProductId =  } };
-                // await _productService.UpdateAsync(_appUserService.Current, updateAction, cancellationToken);
-                await _productService.AttachPhotoToLastNotPublishedProductAsync(CurrentAppUser.Id, photoId);
-
+                await _productService.AttachPhotoToLastNotPublishedProductAsync(CurrentAppUser.Id, ok.Value);
                 _ = Machine.FireAsync(Trigger.RequestCondition);
-            }
-        }
-        catch (Exception e)
-        {
-            await BotClient.SendTextMessageAsync(ChatId, e.Message);
-            _ = Machine.FireAsync(Trigger.RequestPhoto);
-        }
+            },
+            async error =>
+            {
+                await BotClient.SendErrorMessageAsync(ChatId, error.Message);
+                _ = Machine.FireAsync(Trigger.RequestPhoto);
+            });
     }
 
     private async Task SetConditionAsync()
     {
-        var productConditionId = GetEntityId<CreateProductCbDto>();
+        var validationResult = _updateExt.ExtractProductCondition<CreateProductCbDto>(Update);
 
-        await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
-            p => { p.ConditionId = productConditionId; });
-
-        _ = Machine.FireAsync(Trigger.RequestPrice);
+        await validationResult.Match(
+            async ok =>
+            {
+                await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
+                    p => { p.ConditionId = ok.Value; });
+                _ = Machine.FireAsync(Trigger.RequestPrice);
+            },
+            async error =>
+            {
+                await BotClient.SendErrorMessageAsync(ChatId, error.Message);
+                _ = Machine.FireAsync(Trigger.RequestCondition);
+            });
     }
 
     private async Task SetPriceAsync()
     {
-        var price = decimal.Parse(MessageText);
+        var validationResult = _updateExt.ExtractProductPrice(Update);
 
-        await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id, p => { p.Price = price; });
-
-        _ = Machine.FireAsync(Trigger.ShowProduct);
+        await validationResult.Match(
+            async ok =>
+            {
+                await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id, p => { p.Price = ok.Value; });
+                _ = Machine.FireAsync(Trigger.ShowProduct);
+            },
+            async error =>
+            {
+                await BotClient.SendErrorMessageAsync(ChatId, error.Message);
+                _ = Machine.FireAsync(Trigger.RequestPrice);
+            });
     }
 
     private Trigger GetNextTriggerToInvoke()
@@ -233,7 +243,8 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
         return GetState() switch
         {
-            ProductState.Initial => Trigger.RequestName,
+            ProductState.Initial => Trigger.CreateEmptyProduct,
+            ProductState.EmptyProductCreated => Trigger.RequestName,
             ProductState.NameRequested => Trigger.SetName,
             ProductState.NameProvided => Trigger.RequestPhoto,
             ProductState.PhotoRequested => Trigger.SetPhoto,
@@ -242,13 +253,13 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             ProductState.ConditionProvided => Trigger.RequestPrice,
             ProductState.PriceRequested => Trigger.SetPrice,
             ProductState.PriceProvided => Trigger.ShowProduct,
-//            ProductState.Finished => expr,
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
     public enum Trigger
     {
+        CreateEmptyProduct,
         RequestName,
         SetName,
         RequestPhoto,

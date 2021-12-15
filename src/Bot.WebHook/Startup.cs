@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Globalization;
 using Application;
 using Application.Services;
 using Application.Services.Interfaces;
@@ -8,6 +10,7 @@ using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,6 +39,27 @@ public class Startup
 
         services.AddOptions();
 
+        services.AddRequestLocalization(config =>
+        {
+            // var defaultNumberFormat = new NumberFormatInfo
+            // {
+            //     NumberDecimalSeparator = ".",
+            //     CurrencyDecimalSeparator = "."
+            // };
+
+            var enCulture = new CultureInfo("en");// { NumberFormat = defaultNumberFormat };
+            var ukCulture = new CultureInfo("uk");// { NumberFormat = defaultNumberFormat };
+            var ruCulture = new CultureInfo("ru");// { NumberFormat = defaultNumberFormat };
+
+            config.DefaultRequestCulture = new RequestCulture(enCulture);
+            config.SupportedCultures = new List<CultureInfo> { enCulture, ukCulture, ruCulture };
+            
+            config.SupportedUICultures= new List<CultureInfo> { enCulture, ukCulture, ruCulture };
+
+            config.RequestCultureProviders.Clear();
+            config.RequestCultureProviders.Add(new AppUserCultureProvider());
+        });
+        
         services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
 
         services.AddHttpClient("tgwebhook")
@@ -77,6 +101,9 @@ public class Startup
         });
 
         app.UseMiddleware<AppUserInitMiddleware>();
+        
+        var requestLocalizationOptions = app.ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+        app.UseRequestLocalization(requestLocalizationOptions.Value);
 
         app.UseEndpoints(endpoints =>
         {

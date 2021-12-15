@@ -13,22 +13,19 @@ public class Currency : AuditableEntity
 
     public string Sign { get; }
 
-    public ICollection<Country> Countries { get; }
-
     public ICollection<Product> Products { get; }
 
+    // ReSharper disable once UnusedMember.Local
     private Currency()
     {
     }
 
-    public Currency(long id, string code, string abbreviation, string sign, ICollection<Country> countries = null,
-        ICollection<Product> products = null)
+    public Currency(long id, string code, string abbreviation, string sign, ICollection<Product> products = null)
     {
         Id = id;
         Code = code;
         Abbreviation = abbreviation;
         Sign = sign;
-        Countries = countries;
         Products = products;
     }
 }

@@ -10,12 +10,12 @@ public class ProductConditionConfiguration : IEntityTypeConfiguration<ProductCon
     {
         builder.ToTable("ProductCondition");
         builder.HasKey(pc => pc.Id);
-        builder.Property(pc => pc.Name).HasMaxLength(100).IsRequired();
+        builder.Property(pc => pc.NameLocalizationKey).HasMaxLength(100).IsRequired();
 
         builder.HasData(
             new ProductCondition(1, "New"),
             new ProductCondition(2, "Perfect"),
-            new ProductCondition(3, "Very good"),
+            new ProductCondition(3, "VeryGood"),
             new ProductCondition(4, "Good"),
             new ProductCondition(5, "Satisfactory")
         );

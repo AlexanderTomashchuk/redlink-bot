@@ -15,20 +15,21 @@ public class Language : AuditableEntity
     public LanguageCode Code { get; }
     public static LanguageCode DefaultLanguageCode => LanguageCode.En;
 
-    public string Name { get; }
+    public string NameLocalizationKey { get; }
 
     public string Flag { get; }
 
     public ICollection<AppUser> Users { get; }
 
+    // ReSharper disable once UnusedMember.Local
     private Language()
     {
     }
 
-    public Language(LanguageCode code, string name, string flag, ICollection<AppUser> users = null)
+    public Language(LanguageCode code, string nameLocalizationKey, string flag, ICollection<AppUser> users = null)
     {
         Code = code;
-        Name = name;
+        NameLocalizationKey = nameLocalizationKey;
         Flag = flag;
         Users = users;
     }

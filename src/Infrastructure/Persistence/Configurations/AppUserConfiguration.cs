@@ -15,6 +15,7 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
         builder.Property(u => u.Status).HasConversion<string>().HasMaxLength(50);
         builder.Property(u => u.LastMessageWorkflowType).HasMaxLength(50);
         builder.Ignore(u => u.HasCountry);
+        builder.Ignore(u => u.LanguageCodeName);
 
         builder.HasIndex(u => u.ChatId);
 

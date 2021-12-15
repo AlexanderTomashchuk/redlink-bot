@@ -7,30 +7,25 @@ public class Country : AuditableEntity
 {
     public long Id { get; }
 
-    public string Name { get; }
+    public string NameLocalizationKey { get; }
 
     public string Code { get; }
 
     public string Flag { get; }
 
-    public long DefaultCurrencyId { get; }
-
-    public Currency DefaultCurrency { get; }
-
     public ICollection<AppUser> Users { get; }
 
+    // ReSharper disable once UnusedMember.Local
     private Country()
     {
     }
 
-    public Country(long id, string name, string code, string flag,
-        long defaultCurrencyId, ICollection<AppUser> users = null)
+    public Country(long id, string nameLocalizationKey, string code, string flag, ICollection<AppUser> users = null)
     {
         Id = id;
-        Name = name;
+        NameLocalizationKey = nameLocalizationKey;
         Code = code;
         Flag = flag;
-        DefaultCurrencyId = defaultCurrencyId;
         Users = users;
     }
 }

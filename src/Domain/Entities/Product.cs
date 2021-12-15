@@ -39,6 +39,8 @@ public class Product : AuditableEntity
     {
         var sb = new StringBuilder();
 
+        //todo: ot localization
+        //todo: move to application
         sb.AppendLine($"*{Name.Escape()}*");
         sb.AppendLine();
         //sb.AppendLine($"💰 _{string.Join(' ', Price, Currency.Abbreviation).Escape()}_");
@@ -50,7 +52,8 @@ public class Product : AuditableEntity
         //sb.AppendLine($"{Description.Escape()}");
         //sb.AppendLine();
         //sb.AppendLine($"Раздел: {Type.Name.Escape()}");
-        sb.AppendLine($"Состояние: {Condition.Name.Escape()}");
+        //todo: localization for condition
+        //sb.AppendLine($"Состояние: {Condition.Name.Escape()}");
         sb.AppendLine($"Продавец: [{Seller.FirstName} {Seller.LastName}](tg://user?id={Seller.Id})");
 
         return sb.ToString();

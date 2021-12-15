@@ -3,6 +3,7 @@ using Application.Common.Extensions;
 using Application.Workflows;
 using Newtonsoft.Json;
 using Telegram.Bot.Types.ReplyMarkups;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Common;
 
@@ -33,7 +34,7 @@ public class InlineKeyboardBuilder
     {
         _backButton = new InlineKeyboardButton
         {
-            Text = $"{Emoji.BACK} Back", CallbackData = JsonConvert.SerializeObject(callbackQueryDto)
+            Text = $"{Emoji.BACK} {l10n.Back}", CallbackData = JsonConvert.SerializeObject(callbackQueryDto)
         };
         return this;
     }

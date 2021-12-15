@@ -7,10 +7,12 @@ public class HashTag : AuditableEntity
 {
     public long Id { get; }
 
+    //todo: implement localization for hashtags
     public string Value { get; }
 
     public ICollection<Product> Products { get; }
 
+    // ReSharper disable once UnusedMember.Local
     private HashTag()
     {
     }

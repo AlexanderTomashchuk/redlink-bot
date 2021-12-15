@@ -47,7 +47,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<string>("LastMessageWorkflowType")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsUnicode(true)
@@ -90,9 +91,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("DefaultCurrencyId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Flag")
                         .IsRequired()
                         .IsUnicode(true)
@@ -101,14 +99,12 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DefaultCurrencyId");
 
                     b.ToTable("Country", (string)null);
 
@@ -118,36 +114,32 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 1L,
                             Code = "US",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 1L,
                             Flag = "🇺🇸",
-                            Name = "USA"
+                            NameLocalizationKey = "USA"
                         },
                         new
                         {
                             Id = 2L,
                             Code = "UA",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 2L,
                             Flag = "🇺🇦",
-                            Name = "Ukraine"
+                            NameLocalizationKey = "Ukraine"
                         },
                         new
                         {
                             Id = 3L,
                             Code = "PL",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 3L,
                             Flag = "🇵🇱",
-                            Name = "Poland"
+                            NameLocalizationKey = "Poland"
                         },
                         new
                         {
                             Id = 4L,
                             Code = "RU",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 4L,
                             Flag = "🇷🇺",
-                            Name = "Russia"
+                            NameLocalizationKey = "Russia"
                         });
                 });
 
@@ -307,7 +299,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -322,21 +314,21 @@ namespace Infrastructure.Persistence.Migrations
                             Code = "en",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇬🇧",
-                            Name = "English"
+                            NameLocalizationKey = "English"
                         },
                         new
                         {
                             Code = "uk",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇺🇦",
-                            Name = "Ukrainian"
+                            NameLocalizationKey = "Ukrainian"
                         },
                         new
                         {
                             Code = "ru",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇷🇺",
-                            Name = "Russian"
+                            NameLocalizationKey = "Russian"
                         });
                 });
 
@@ -409,7 +401,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -423,31 +415,31 @@ namespace Infrastructure.Persistence.Migrations
                         {
                             Id = 1L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "New"
+                            NameLocalizationKey = "New"
                         },
                         new
                         {
                             Id = 2L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Perfect"
+                            NameLocalizationKey = "Perfect"
                         },
                         new
                         {
                             Id = 3L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Very good"
+                            NameLocalizationKey = "VeryGood"
                         },
                         new
                         {
                             Id = 4L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Good"
+                            NameLocalizationKey = "Good"
                         },
                         new
                         {
                             Id = 5L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Satisfactory"
+                            NameLocalizationKey = "Satisfactory"
                         });
                 });
 
@@ -465,7 +457,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -479,49 +471,49 @@ namespace Infrastructure.Persistence.Migrations
                         {
                             Id = 1L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Clothes"
+                            NameLocalizationKey = "Clothes"
                         },
                         new
                         {
                             Id = 2L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Outer wear"
+                            NameLocalizationKey = "Outer wear"
                         },
                         new
                         {
                             Id = 3L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Lingerie"
+                            NameLocalizationKey = "Lingerie"
                         },
                         new
                         {
                             Id = 4L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Foot wear"
+                            NameLocalizationKey = "FootWear"
                         },
                         new
                         {
                             Id = 5L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Bags"
+                            NameLocalizationKey = "Bags"
                         },
                         new
                         {
                             Id = 6L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Accessories"
+                            NameLocalizationKey = "Accessories"
                         },
                         new
                         {
                             Id = 7L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "jewelry"
+                            NameLocalizationKey = "Jewelry"
                         },
                         new
                         {
                             Id = 8L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Clothes for home"
+                            NameLocalizationKey = "Clothes for home"
                         });
                 });
 
@@ -555,17 +547,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Country", b =>
-                {
-                    b.HasOne("Domain.Entities.Currency", "DefaultCurrency")
-                        .WithMany("Countries")
-                        .HasForeignKey("DefaultCurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DefaultCurrency");
-                });
-
             modelBuilder.Entity("Domain.Entities.File", b =>
                 {
                     b.HasOne("Domain.Entities.Product", "Product")
@@ -593,7 +574,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductType", "WorkflowType")
+                    b.HasOne("Domain.Entities.ProductType", "Type")
                         .WithMany("Products")
                         .HasForeignKey("TypeId");
 
@@ -603,7 +584,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Seller");
 
-                    b.Navigation("WorkflowType");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HashTagProduct", b =>
@@ -633,8 +614,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Currency", b =>
                 {
-                    b.Navigation("Countries");
-
                     b.Navigation("Products");
                 });
 

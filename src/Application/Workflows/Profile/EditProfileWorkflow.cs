@@ -12,7 +12,7 @@ using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
-using Telegram.Bot.Types.Enums;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.Profile;
 
@@ -107,21 +107,19 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
     {
         var message = BotMessage.GetProfileInfoMessage(CurrentAppUser);
         var replyMarkup = new InlineKeyboardBuilder()
-            .AddButton("Change country", new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectCountry))
-            .AddButton("Change language", new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectLanguage))
+            .AddButton(l10n.ChangeCountry, new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectCountry))
+            .AddButton(l10n.ChangeLanguage, new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectLanguage))
             .ChunkBy(2)
             .Build();
 
         if (MessageIdBelongsToCb is not null)
         {
-            await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
-                replyMarkup,
-                cancellationToken);
+            await BotClient.EditFormattedMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, message, 
+                replyMarkup, cancellationToken);
         }
         else
         {
-            await BotClient.SendTextMessageAsync(ChatId, message, ParseMode.MarkdownV2, replyMarkup,
-                cancellationToken);
+            await BotClient.SendFormattedTxtMessageAsync(ChatId, message, replyMarkup, cancellationToken);
         }
     }
 
@@ -129,11 +127,10 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
     {
         var countries = await _countryService.GetAllAsync(cancellationToken);
 
-        var message = BotMessage.GetEditCountryMessage();
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(countries.Select(c =>
             {
-                var text = $"{c.Flag} {c.Name}";
+                var text = $"{c.Flag} {l10n.ResourceManager.GetString(c.NameLocalizationKey)}";
                 var cbData = new EditProfileCqDto(State.CountrySelection, Trigger.UpdateCountry, c.Id);
 
                 return (text, cbData);
@@ -143,20 +140,18 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             .Build();
 
         Debug.Assert(MessageIdBelongsToCb != null, nameof(MessageIdBelongsToCb) + " != null");
-        await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
-            replyMarkup,
-            cancellationToken);
+        await BotClient.EditMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, l10n.ChooseCountryFromList,
+            replyMarkup, cancellationToken);
     }
 
     private async Task ShowLanguagesAsync(CancellationToken cancellationToken)
     {
         var languages = await _languageService.GetAllAsync(cancellationToken);
 
-        var message = BotMessage.GetEditLanguageMessage();
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(languages.Select(l =>
             {
-                var text = l.Name;
+                var text = l10n.ResourceManager.GetString(l.NameLocalizationKey);
                 var cbData = new EditProfileCqDto(State.LanguageSelection, Trigger.UpdateLanguage, (long)l.Code);
 
                 return (text, cbData);
@@ -166,9 +161,8 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
             .Build();
 
         Debug.Assert(MessageIdBelongsToCb != null, nameof(MessageIdBelongsToCb) + " != null");
-        await BotClient.EditMessageTextAsync(ChatId, MessageIdBelongsToCb.Value, message, ParseMode.MarkdownV2,
-            replyMarkup,
-            cancellationToken);
+        await BotClient.EditMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, l10n.ChooseLanguageFromList,
+            replyMarkup, cancellationToken);
     }
 
     private async Task UpdateAppUserCountryAsync(long? entityId, CancellationToken cancellationToken)
@@ -177,8 +171,8 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
         await AppUserService.UpdateAsync(au => au.Country = newCountry, cancellationToken);
 
-        var message = BotMessage.GetSelectedCountryMessage(newCountry.Name);
-        _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken);
+        var text = $"{l10n.SelectedCountry}: {l10n.ResourceManager.GetString(newCountry.NameLocalizationKey)}";
+        _ = BotClient.AnswerCbQueryAsync(CallbackQueryId, text, cancellationToken);
 
         await TriggerNextAsync(Trigger.ShowProfileInfo, cancellationToken);
     }
@@ -191,8 +185,8 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
         await AppUserService.UpdateAsync(au => au.Language = newLanguage, cancellationToken);
 
-        var message = BotMessage.GetSelectedLanguageMessage(newLanguage.Name);
-        _ = BotClient.AnswerCallbackQueryAsync(CallbackQueryId, message, cancellationToken: cancellationToken);
+        var text = $"{l10n.SelectedLanguage}: {l10n.ResourceManager.GetString(newLanguage.NameLocalizationKey)}";
+        _ = BotClient.AnswerCbQueryAsync(CallbackQueryId, text, cancellationToken);
 
         await TriggerNextAsync(Trigger.ShowProfileInfo, cancellationToken);
     }

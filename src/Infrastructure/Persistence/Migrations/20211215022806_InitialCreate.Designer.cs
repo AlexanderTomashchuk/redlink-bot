@@ -7,26 +7,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+#nullable disable
+
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211112012002_InitialCreate")]
+    [Migration("20211215022806_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.11")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("ChatId")
                         .HasColumnType("bigint");
@@ -35,22 +39,25 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FirstName")
                         .IsUnicode(true)
                         .HasColumnType("text");
 
                     b.Property<string>("LanguageCode")
-                        .IsRequired()
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("LastMessageWorkflowType")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("LastName")
                         .IsUnicode(true)
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
@@ -67,15 +74,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LanguageCode");
 
-                    b.ToTable("AppUser");
+                    b.ToTable("AppUser", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Country", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -83,10 +91,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<long>("DefaultCurrencyId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Flag")
                         .IsRequired()
@@ -94,18 +99,16 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DefaultCurrencyId");
-
-                    b.ToTable("Country");
+                    b.ToTable("Country", (string)null);
 
                     b.HasData(
                         new
@@ -113,36 +116,32 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 1L,
                             Code = "US",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 1L,
                             Flag = "🇺🇸",
-                            Name = "USA"
+                            NameLocalizationKey = "USA"
                         },
                         new
                         {
                             Id = 2L,
                             Code = "UA",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 2L,
                             Flag = "🇺🇦",
-                            Name = "Ukraine"
+                            NameLocalizationKey = "Ukraine"
                         },
                         new
                         {
                             Id = 3L,
                             Code = "PL",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 3L,
                             Flag = "🇵🇱",
-                            Name = "Poland"
+                            NameLocalizationKey = "Poland"
                         },
                         new
                         {
                             Id = 4L,
                             Code = "RU",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DefaultCurrencyId = 4L,
                             Flag = "🇷🇺",
-                            Name = "Russia"
+                            NameLocalizationKey = "Russia"
                         });
                 });
 
@@ -150,8 +149,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Abbreviation")
                         .IsRequired()
@@ -164,10 +164,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Sign")
                         .IsRequired()
@@ -176,7 +176,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currency");
+                    b.ToTable("Currency", (string)null);
 
                     b.HasData(
                         new
@@ -217,37 +217,42 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("TelegramId")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("File");
+                    b.ToTable("File", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.HashTag", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -256,7 +261,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HashTag");
+                    b.ToTable("HashTag", (string)null);
 
                     b.HasData(
                         new
@@ -286,7 +291,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Flag")
                         .IsRequired()
@@ -294,16 +299,16 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.HasKey("Code");
 
-                    b.ToTable("Language");
+                    b.ToTable("Language", (string)null);
 
                     b.HasData(
                         new
@@ -311,21 +316,21 @@ namespace Infrastructure.Persistence.Migrations
                             Code = "en",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇬🇧",
-                            Name = "English"
+                            NameLocalizationKey = "English"
                         },
                         new
                         {
                             Code = "uk",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇺🇦",
-                            Name = "Ukrainian"
+                            NameLocalizationKey = "Ukrainian"
                         },
                         new
                         {
                             Code = "ru",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Flag = "🇷🇺",
-                            Name = "Russian"
+                            NameLocalizationKey = "Russian"
                         });
                 });
 
@@ -333,33 +338,42 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
 
-                    b.Property<long>("ConditionId")
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ConditionId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("CurrencyId")
+                    b.Property<long?>("CurrencyId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
                         .IsUnicode(true)
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsUnicode(true)
                         .HasColumnType("text");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
                     b.Property<long>("SellerId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TypeId")
+                    b.Property<long?>("TypeId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -372,61 +386,62 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductCondition", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCondition");
+                    b.ToTable("ProductCondition", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "New"
+                            NameLocalizationKey = "New"
                         },
                         new
                         {
                             Id = 2L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Perfect"
+                            NameLocalizationKey = "Perfect"
                         },
                         new
                         {
                             Id = 3L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Very good"
+                            NameLocalizationKey = "VeryGood"
                         },
                         new
                         {
                             Id = 4L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Good"
+                            NameLocalizationKey = "Good"
                         },
                         new
                         {
                             Id = 5L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Satisfactory"
+                            NameLocalizationKey = "Satisfactory"
                         });
                 });
 
@@ -434,72 +449,73 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("NameLocalizationKey")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductType");
+                    b.ToTable("ProductType", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Clothes"
+                            NameLocalizationKey = "Clothes"
                         },
                         new
                         {
                             Id = 2L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Outer wear"
+                            NameLocalizationKey = "Outer wear"
                         },
                         new
                         {
                             Id = 3L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Lingerie"
+                            NameLocalizationKey = "Lingerie"
                         },
                         new
                         {
                             Id = 4L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Foot wear"
+                            NameLocalizationKey = "FootWear"
                         },
                         new
                         {
                             Id = 5L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Bags"
+                            NameLocalizationKey = "Bags"
                         },
                         new
                         {
                             Id = 6L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Accessories"
+                            NameLocalizationKey = "Accessories"
                         },
                         new
                         {
                             Id = 7L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "jewelry"
+                            NameLocalizationKey = "Jewelry"
                         },
                         new
                         {
                             Id = 8L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Clothes for home"
+                            NameLocalizationKey = "Clothes for home"
                         });
                 });
 
@@ -515,7 +531,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("ProductHashTags");
+                    b.ToTable("ProductHashTags", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
@@ -526,24 +542,11 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasOne("Domain.Entities.Language", "Language")
                         .WithMany("Users")
-                        .HasForeignKey("LanguageCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LanguageCode");
 
                     b.Navigation("Country");
 
                     b.Navigation("Language");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Country", b =>
-                {
-                    b.HasOne("Domain.Entities.Currency", "DefaultCurrency")
-                        .WithMany("Countries")
-                        .HasForeignKey("DefaultCurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DefaultCurrency");
                 });
 
             modelBuilder.Entity("Domain.Entities.File", b =>
@@ -561,15 +564,11 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.ProductCondition", "Condition")
                         .WithMany("Products")
-                        .HasForeignKey("ConditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConditionId");
 
                     b.HasOne("Domain.Entities.Currency", "Currency")
                         .WithMany("Products")
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("Domain.Entities.AppUser", "Seller")
                         .WithMany("Products")
@@ -577,11 +576,9 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductType", "WorkflowType")
+                    b.HasOne("Domain.Entities.ProductType", "Type")
                         .WithMany("Products")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TypeId");
 
                     b.Navigation("Condition");
 
@@ -589,7 +586,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("Seller");
 
-                    b.Navigation("WorkflowType");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HashTagProduct", b =>
@@ -619,8 +616,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Currency", b =>
                 {
-                    b.Navigation("Countries");
-
                     b.Navigation("Products");
                 });
 

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Application.Common.Extensions;
 using Application.Services;
 using Application.Services.Interfaces;
 using Application.Workflows;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddTransient<ILanguageService, LanguageService>();
         services.AddTransient<ICountryService, CountryService>();
         services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<UpdateExt>();
 
         services.AddScoped<WorkflowFactory>();
         services.Scan(scan =>
