@@ -9,4 +9,5 @@ public static class Emoji
     public static string LANGUAGE = "💬";
     public static string BACK = "◀️"; // ⬅️  🔙  ◀️
     public static string WARNING = "⚠️";
+    public static string MONEY_BAG = "💰";
 }

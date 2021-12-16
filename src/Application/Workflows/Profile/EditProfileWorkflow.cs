@@ -12,6 +12,8 @@ using Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
+using Emoji = Application.Common.Emoji;
 using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.Profile;
@@ -105,7 +107,19 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
     private async Task ShowProfileInfoAsync(CancellationToken cancellationToken)
     {
-        var message = BotMessage.GetProfileInfoMessage(CurrentAppUser);
+        var text = new MessageTextBuilder(ParseMode.MarkdownV2)
+            .AddTextLine($"{l10n.YourCurrProfileSettings}:")
+            .BreakLine()
+            .AddTextLine(
+                $"{$"{Emoji.COUNTRY} {l10n.Country}:",-13} {l10n.ResourceManager.GetString(CurrentAppUser.Country.NameLocalizationKey)}",
+                TextStyle.Code)
+            .AddTextLine(
+                $"{$"{Emoji.LANGUAGE} {l10n.Language}:",-13} {l10n.ResourceManager.GetString(CurrentAppUser.Language.NameLocalizationKey)}",
+                TextStyle.Code)
+            .BreakLine()
+            .AddTextLine($"{l10n.UseBtnsToChangeProfile}.", TextStyle.Italic)
+            .Build();
+ 
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButton(l10n.ChangeCountry, new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectCountry))
             .AddButton(l10n.ChangeLanguage, new EditProfileCqDto(State.ProfileInfoShowing, Trigger.SelectLanguage))
@@ -114,12 +128,12 @@ public class EditProfileWorkflow : StateMachineWorkflow<EditProfileWorkflow.Stat
 
         if (MessageIdBelongsToCb is not null)
         {
-            await BotClient.EditFormattedMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, message, 
+            await BotClient.EditFormattedMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, text, 
                 replyMarkup, cancellationToken);
         }
         else
         {
-            await BotClient.SendFormattedTxtMessageAsync(ChatId, message, replyMarkup, cancellationToken);
+            await BotClient.SendFormattedTxtMessageAsync(ChatId, text, replyMarkup, cancellationToken);
         }
     }
 

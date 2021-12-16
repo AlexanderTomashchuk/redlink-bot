@@ -46,10 +46,10 @@ public abstract class Workflow
         if (this is not ICommandWorkflow)
             return false;
 
-        if (CurrentAppUser.LastMessageWorkflowType.IsNullOrEmpty())
+        if (CurrentAppUser.InProgressChainWorkflowName.IsNullOrEmpty())
             return false;
 
-        if (!WorkflowType.TryFromName(CurrentAppUser.LastMessageWorkflowType, out var otherRunningWorkflowType))
+        if (!WorkflowType.TryFromName(CurrentAppUser.InProgressChainWorkflowName, out var otherRunningWorkflowType))
             return false;
 
         var isTheSameWorkflow = WorkflowType == otherRunningWorkflowType;

@@ -158,4 +158,13 @@
     <data name="VeryGood" xml:space="preserve">
         <value>Отличное</value>
     </data>
+    <data name="Condition" xml:space="preserve">
+        <value>Состояние</value>
+    </data>
+    <data name="Seller" xml:space="preserve">
+        <value>Продавец</value>
+    </data>
+    <data name="SelectedCondition" xml:space="preserve">
+        <value>Выбранное состояние</value>
+    </data>
 </root>

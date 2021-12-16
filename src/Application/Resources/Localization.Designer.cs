@@ -338,5 +338,23 @@ namespace Application.Resources {
                 return ResourceManager.GetString("ClothesForHome", resourceCulture);
             }
         }
+        
+        internal static string Condition {
+            get {
+                return ResourceManager.GetString("Condition", resourceCulture);
+            }
+        }
+        
+        internal static string Seller {
+            get {
+                return ResourceManager.GetString("Seller", resourceCulture);
+            }
+        }
+        
+        internal static string SelectedCondition {
+            get {
+                return ResourceManager.GetString("SelectedCondition", resourceCulture);
+            }
+        }
     }
 }

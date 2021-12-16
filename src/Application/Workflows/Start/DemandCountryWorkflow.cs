@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
 using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.Start;
@@ -78,7 +79,12 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
 
         var countries = await _countryService.GetAllAsync(cancellationToken);
 
-        var initCountryMessage = BotMessage.GetInitCountryMessage();
+        var text = new MessageTextBuilder(ParseMode.MarkdownV2)
+            .AddTextLine($"{l10n.ChooseCountryFromList}.")
+            .BreakLine()
+            .AddTextLine($"{l10n.CountryHelpsProvideRelevantProducts}.", TextStyle.Italic)
+            .Build();
+        
         var replyMarkup = new InlineKeyboardBuilder()
             .AddButtons(countries.Select(c =>
             {
@@ -90,7 +96,7 @@ public class DemandCountryWorkflow : StateMachineWorkflow<DemandCountryWorkflow.
             .ChunkBy(2)
             .Build();
 
-        await _botClient.SendFormattedTxtMessageAsync(chatId, initCountryMessage, replyMarkup, cancellationToken);
+        await _botClient.SendFormattedTxtMessageAsync(chatId, text, replyMarkup, cancellationToken);
     }
 
     private async Task SetAppUserCountryAsync(long? entityId, CancellationToken cancellationToken)

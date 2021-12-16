@@ -26,31 +26,40 @@ public class ProductService : IProductService
         return result.Entity;
     }
 
-    public async Task<Product> UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
-        CancellationToken cancellationToken = default)
+    public async Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default)
     {
-        var lastUserProduct = await GetLastNotPublishedProductAsync(sellerId);
-
-        //todo: fix this shit
-        if (lastUserProduct is null) return lastUserProduct;
-        
-        updateAction.Invoke(lastUserProduct);
-        await _context.SaveChangesAsync(cancellationToken);
-        return lastUserProduct;
+        return await ProductsQuery
+            .OrderByDescending(p => p.CreatedOn)
+            .FirstOrDefaultAsync(p => p.SellerId == sellerId, cancellationToken);
     }
 
-    public async Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default)
-        => await ProductsQuery.OrderByDescending(p => p.CreatedOn).FirstOrDefaultAsync(p => p.SellerId == sellerId,cancellationToken);
+    public async Task<Product> GetInProgressProductAsync(long sellerId,
+        CancellationToken cancellationToken = default)
+    {
+        return await ProductsQuery
+            .OrderByDescending(p => p.CreatedOn)
+            .FirstOrDefaultAsync(p =>
+                    p.SellerId == sellerId &&
+                    !new[] { ProductState.ReadyForPublishing, ProductState.Published, ProductState.Aborted }.Contains(
+                        p.CurrentState),
+                cancellationToken);
+    }
 
-    //todo: rename method
-    public async Task<Product> GetLastNotPublishedProductAsync(long sellerId,CancellationToken cancellationToken = default)
-        => await ProductsQuery.FirstOrDefaultAsync(p =>
-            p.SellerId == sellerId && !new [] { ProductState.Finished, ProductState.Aborted}.Contains(p.CurrentState), cancellationToken);
+    public async Task UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
+        CancellationToken cancellationToken = default)
+    {
+        var lastUserProduct = await GetInProgressProductAsync(sellerId);
+
+        if (lastUserProduct is null) return;
+
+        updateAction.Invoke(lastUserProduct);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
 
     public async Task AttachPhotoToLastNotPublishedProductAsync(long sellerId, string photoId,
         CancellationToken cancellationToken = default)
     {
-        var lastUserProduct = await GetLastNotPublishedProductAsync(sellerId);
+        var lastUserProduct = await GetInProgressProductAsync(sellerId, cancellationToken);
 
         if (lastUserProduct is not null)
         {

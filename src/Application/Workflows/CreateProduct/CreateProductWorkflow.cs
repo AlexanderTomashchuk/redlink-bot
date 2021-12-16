@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Stateless;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Emoji = Application.Common.Emoji;
 using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.CreateProduct;
@@ -34,7 +36,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
     protected override WorkflowType WorkflowType => WorkflowType.CreateProduct;
 
     public ProductState GetState() =>
-        AsyncHelpers.RunSync(() => _productService.GetLastNotPublishedProductAsync(CurrentAppUser.Id))
+        AsyncHelpers.RunSync(() => _productService.GetInProgressProductAsync(CurrentAppUser.Id))
             ?.CurrentState ?? ProductState.Initial;
 
     public void SetState(ProductState state) =>
@@ -87,9 +89,9 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         Machine.Configure(ProductState.PriceProvided)
             .OnEntryFromAsync(Trigger.SetPrice, SetPriceAsync)
             .Permit(Trigger.RequestPrice, ProductState.PriceRequested)
-            .Permit(Trigger.ShowProduct, ProductState.Finished);
+            .Permit(Trigger.ShowProduct, ProductState.ReadyForPublishing);
 
-        Machine.Configure(ProductState.Finished)
+        Machine.Configure(ProductState.ReadyForPublishing)
             .OnEntryAsync(ExitWorkflowAsync)
             .OnEntryFromAsync(Trigger.ShowProduct, ShowProductAsync);
     }
@@ -108,14 +110,14 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
         await _productService.CreateAsync(newProduct);
 
-        await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = WorkflowType.Name);
+        await AppUserService.UpdateAsync(u => u.InProgressChainWorkflowName = WorkflowType.Name);
 
         _ = Machine.FireAsync(Trigger.RequestName);
     }
 
     public async Task ExitWorkflowAsync()
     {
-        await AppUserService.UpdateAsync(u => u.LastMessageWorkflowType = "");
+        await AppUserService.UpdateAsync(u => u.InProgressChainWorkflowName = "");
     }
 
     public async Task AbortWorkflowAsync(Update update, CancellationToken cancellationToken)
@@ -153,14 +155,30 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
     private async Task RequestPriceAsync() => await BotClient.SendTxtMessageAsync(ChatId, l10n.EnterProductPrice);
 
+    //todo: ONERROR MOVE TO PREV STATE
+    //todo: post localization should be the same as country default language
     private async Task ShowProductAsync()
     {
         var product = await _productService.GetLastProductAsync(CurrentAppUser.Id);
 
-        var message = BotMessage.GetShowProductMessage();
-        message += $"\n{product}";
+        var text = new MessageTextBuilder(ParseMode.MarkdownV2)
+            .AddTextLine($"{l10n.TheProductYouCreated}.")
+            .BreakLine()
+            .AddTextLine($"{l10n.ReviewProductInformation}.")
+            .BreakLine()
+            .AddTextLine(product.Name, TextStyle.Bold)
+            //.AddTextLine($"{Emoji.MONEY_BAG} {product.Price} {product.Currency.Abbreviation}", TextStyle.Italic)
+            .AddTextLine($"{Emoji.MONEY_BAG} {product.Price}", TextStyle.Italic)
+            .BreakLine()
+            //.AddTextLine($"{string.Join(" ", product.HashTags.Select(ht => ht.Value))}")
+            //.AddTextLine(product.Description)
+            //.AddTextLine($"Раздел: {l10n.ResourceManager.GetString(product.Type.NameLocalizationKey)}")
+            .AddTextLine($"{l10n.Condition}: {l10n.ResourceManager.GetString(product.Condition.NameLocalizationKey)}")
+            .AddTextLine($"{l10n.Seller}: ")
+            .AddTelegramLink(CurrentAppUser.GetUsername(), CurrentAppUser.Id, TelegramLinkType.User)
+            .Build();
 
-        await BotClient.SendImageAsync(ChatId, product.Files.First().TelegramId, message);
+        await BotClient.SendImageAsync(ChatId, product.Files.First().TelegramId, text);
     }
 
     private async Task SetNameAsync()
@@ -206,6 +224,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             {
                 await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
                     p => { p.ConditionId = ok.Value; });
+                _ = BotClient.AnswerCbQueryAsync(CallbackQueryId);
                 _ = Machine.FireAsync(Trigger.RequestPrice);
             },
             async error =>

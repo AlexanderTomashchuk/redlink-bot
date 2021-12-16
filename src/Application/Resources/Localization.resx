@@ -165,4 +165,13 @@
     <data name="ClothesForHome" xml:space="preserve">
         <value>Clothes for home</value>
     </data>
+    <data name="Condition" xml:space="preserve">
+        <value>Condition</value>
+    </data>
+    <data name="Seller" xml:space="preserve">
+        <value>Seller</value>
+    </data>
+    <data name="SelectedCondition" xml:space="preserve">
+        <value>Chosen condition</value>
+    </data>
 </root>

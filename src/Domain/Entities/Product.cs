@@ -34,28 +34,4 @@ public class Product : AuditableEntity
     public AppUser Seller { get; set; }
 
     public ProductState CurrentState { get; set; }
-
-    public override string ToString()
-    {
-        var sb = new StringBuilder();
-
-        //todo: ot localization
-        //todo: move to application
-        sb.AppendLine($"*{Name.Escape()}*");
-        sb.AppendLine();
-        //sb.AppendLine($"💰 _{string.Join(' ', Price, Currency.Abbreviation).Escape()}_");
-        sb.AppendLine($"💰 _{string.Join(' ', Price).Escape()}_");
-        sb.AppendLine();
-        //var hashTags = string.Join(" ", HashTags).Escape();
-        //sb.AppendLine(hashTags);
-        //sb.AppendLine();
-        //sb.AppendLine($"{Description.Escape()}");
-        //sb.AppendLine();
-        //sb.AppendLine($"Раздел: {Type.Name.Escape()}");
-        //todo: localization for condition
-        //sb.AppendLine($"Состояние: {Condition.Name.Escape()}");
-        sb.AppendLine($"Продавец: [{Seller.FirstName} {Seller.LastName}](tg://user?id={Seller.Id})");
-
-        return sb.ToString();
-    }
 }

@@ -56,9 +56,9 @@ public class WorkflowFactory
             (_, true, CommandType.ProfileCmdName) => WorkflowType.EditProfile,
             (_, true, CommandType.SellCmdName) => WorkflowType.CreateProduct,
             (_, true, CommandType.FindCmdName) => WorkflowType.FindProduct,
-            (_, false, _) => _appUserService.Current.LastMessageWorkflowType.IsNullOrEmpty()
+            (_, false, _) => _appUserService.Current.InProgressChainWorkflowName.IsNullOrEmpty()
                 ? WorkflowType.Unknown
-                : WorkflowType.FromName(_appUserService.Current.LastMessageWorkflowType),
+                : WorkflowType.FromName(_appUserService.Current.InProgressChainWorkflowName),
             _ => WorkflowType.Unknown 
         };
 

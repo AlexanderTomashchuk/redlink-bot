@@ -9,6 +9,8 @@ using AutoMapper;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Emoji = Application.Common.Emoji;
+using l10n = Application.Resources.Localization;
 
 namespace Application.Workflows.Start;
 
@@ -27,10 +29,13 @@ public class StartWorkflow : Workflow, ICommandWorkflow
 
     protected override async Task ProcessAsync(Update update, CancellationToken cancellationToken = default)
     {
-        var welcomeMessage = BotMessage.GetWelcomeMessage(CurrentAppUser);
+        var text = new MessageTextBuilder(ParseMode.MarkdownV2)
+            .AddTextLine($"{Emoji.HELLO} {l10n.Hello} ")
+            .AddTelegramLink(CurrentAppUser.GetUsername(), CurrentAppUser.Id, TelegramLinkType.User)
+            .AddTextLine($"{l10n.ICanHelpToSellClothes}.")
+            .Build();
 
-        await BotClient.SendFormattedTxtMessageAsync(CurrentAppUser.ChatId, welcomeMessage,
-            cancellationToken: cancellationToken);
+        await BotClient.SendFormattedTxtMessageAsync(CurrentAppUser.ChatId, text, cancellationToken: cancellationToken);
 
         var demandCountryWorkflow = _workflowResolver(WorkflowType.DemandCountry);
         await demandCountryWorkflow.RunAsync(update, cancellationToken);

@@ -12,6 +12,7 @@ public enum ProductState
     ConditionProvided,
     PriceRequested,
     PriceProvided,
-    Finished,
+    ReadyForPublishing,
+    Published = 99,
     Aborted = 100
 }

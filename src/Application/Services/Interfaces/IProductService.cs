@@ -10,12 +10,12 @@ public interface IProductService
 {
     Task<Product> CreateAsync(Product newProduct, CancellationToken cancellationToken = default);
 
-    Task<Product> UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
+    Task UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
         CancellationToken cancellationToken = default);
 
     Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default);
-    
-    Task<Product> GetLastNotPublishedProductAsync(long sellerId, CancellationToken cancellationToken = default);
+
+    Task<Product> GetInProgressProductAsync(long sellerId, CancellationToken cancellationToken = default);
 
     Task AttachPhotoToLastNotPublishedProductAsync(long sellerId, string photoId,
         CancellationToken cancellationToken = default);

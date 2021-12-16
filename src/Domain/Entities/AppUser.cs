@@ -36,9 +36,7 @@ public class AppUser : AuditableEntity
 
     public ICollection<Product> Products { get; }
     
-    //todo: consider to use WorkflowType instead of string
-    //todo: rename this prop
-    public string LastMessageWorkflowType { get; set; }
+    public string InProgressChainWorkflowName { get; set; }
 
     private AppUser()
     {
@@ -47,11 +45,5 @@ public class AppUser : AuditableEntity
     public string GetUsername()
     {
         return (Username ?? string.Join(" ", FirstName, LastName).Trim()).Escape();
-    }
-
-    public string GetTelegramMarkdownLink()
-    {
-        var userName = GetUsername();
-        return $"[{userName}](tg://user?id={Id})";
     }
 }
