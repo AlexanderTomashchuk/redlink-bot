@@ -174,4 +174,13 @@
     <data name="SelectedCondition" xml:space="preserve">
         <value>Chosen condition</value>
     </data>
+    <data name="UseMenuForProductCurrencyErr" xml:space="preserve">
+        <value>Use the menu to choose the product currency</value>
+    </data>
+    <data name="ChooseProductCurrency" xml:space="preserve">
+        <value>Choose the currency of the product</value>
+    </data>
+    <data name="PublishPostErr" xml:space="preserve">
+        <value>Before proceeding, press the 'Publish' button to publish the product or use the /sell command to create a new product</value>
+    </data>
 </root>

@@ -12,6 +12,8 @@ public enum ProductState
     ConditionProvided,
     PriceRequested,
     PriceProvided,
+    CurrencyRequested,
+    CurrencyProvided,
     ReadyForPublishing,
     Published = 99,
     Aborted = 100

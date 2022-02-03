@@ -13,6 +13,8 @@ public interface IProductService
     Task UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
         CancellationToken cancellationToken = default);
 
+    Task<Product> GetProductByIdAsync(long productId, CancellationToken cancellationToken = default);
+    
     Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default);
 
     Task<Product> GetInProgressProductAsync(long sellerId, CancellationToken cancellationToken = default);
@@ -21,4 +23,6 @@ public interface IProductService
         CancellationToken cancellationToken = default);
 
     Task<List<ProductCondition>> GetProductConditionsAsync(CancellationToken cancellationToken = default);
+
+    Task<List<Currency>> GetProductCurrenciesAsync(CancellationToken cancellationToken = default);
 }

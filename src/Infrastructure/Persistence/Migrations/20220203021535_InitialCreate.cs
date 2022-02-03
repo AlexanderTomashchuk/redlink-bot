@@ -19,6 +19,7 @@ namespace Infrastructure.Persistence.Migrations
                     NameLocalizationKey = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Flag = table.Column<string>(type: "text", nullable: false),
+                    DefaultLanguageCode = table.Column<string>(type: "text", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -117,7 +118,7 @@ namespace Infrastructure.Persistence.Migrations
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CountryId = table.Column<long>(type: "bigint", nullable: true),
                     LanguageCode = table.Column<string>(type: "character varying(20)", nullable: true),
-                    LastMessageWorkflowType = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    InProgressChainWorkflowName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -227,13 +228,13 @@ namespace Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Country",
-                columns: new[] { "Id", "Code", "CreatedOn", "Flag", "ModifiedOn", "NameLocalizationKey" },
+                columns: new[] { "Id", "Code", "CreatedOn", "DefaultLanguageCode", "Flag", "ModifiedOn", "NameLocalizationKey" },
                 values: new object[,]
                 {
-                    { 1L, "US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇸", null, "USA" },
-                    { 2L, "UA", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇺🇦", null, "Ukraine" },
-                    { 3L, "PL", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇵🇱", null, "Poland" },
-                    { 4L, "RU", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "🇷🇺", null, "Russia" }
+                    { 1L, "US", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "en", "🇺🇸", null, "USA" },
+                    { 2L, "UA", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "uk", "🇺🇦", null, "Ukraine" },
+                    { 3L, "PL", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "en", "🇵🇱", null, "Poland" },
+                    { 4L, "RU", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "ru", "🇷🇺", null, "Russia" }
                 });
 
             migrationBuilder.InsertData(

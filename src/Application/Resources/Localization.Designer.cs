@@ -356,5 +356,23 @@ namespace Application.Resources {
                 return ResourceManager.GetString("SelectedCondition", resourceCulture);
             }
         }
+        
+        internal static string UseMenuForProductCurrencyErr {
+            get {
+                return ResourceManager.GetString("UseMenuForProductCurrencyErr", resourceCulture);
+            }
+        }
+        
+        internal static string ChooseProductCurrency {
+            get {
+                return ResourceManager.GetString("ChooseProductCurrency", resourceCulture);
+            }
+        }
+        
+        internal static string PublishPostErr {
+            get {
+                return ResourceManager.GetString("PublishPostErr", resourceCulture);
+            }
+        }
     }
 }

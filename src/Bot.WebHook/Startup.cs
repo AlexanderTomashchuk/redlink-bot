@@ -61,6 +61,7 @@ public class Startup
         });
         
         services.Configure<BotConfiguration>(Configuration.GetSection("BotConfiguration"));
+        services.Configure<ChannelsConfiguration>(Configuration.GetSection("ChannelsConfiguration"));
 
         services.AddHttpClient("tgwebhook")
             .AddTypedClient<ITelegramBotClient>((_, provider) =>

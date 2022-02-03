@@ -13,6 +13,8 @@ public class Country : AuditableEntity
 
     public string Flag { get; }
 
+    public Language.LanguageCode DefaultLanguageCode { get; }
+
     public ICollection<AppUser> Users { get; }
 
     // ReSharper disable once UnusedMember.Local
@@ -20,12 +22,14 @@ public class Country : AuditableEntity
     {
     }
 
-    public Country(long id, string nameLocalizationKey, string code, string flag, ICollection<AppUser> users = null)
+    public Country(long id, string nameLocalizationKey, string code, string flag, Language.LanguageCode defaultLanguageCode,
+        ICollection<AppUser> users = null)
     {
         Id = id;
         NameLocalizationKey = nameLocalizationKey;
         Code = code;
         Flag = flag;
+        DefaultLanguageCode = defaultLanguageCode;
         Users = users;
     }
 }

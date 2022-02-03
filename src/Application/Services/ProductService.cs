@@ -26,6 +26,11 @@ public class ProductService : IProductService
         return result.Entity;
     }
 
+    public async Task<Product> GetProductByIdAsync(long productId, CancellationToken cancellationToken = default)
+    {
+        return await ProductsQuery.FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
+    }
+
     public async Task<Product> GetLastProductAsync(long sellerId, CancellationToken cancellationToken = default)
     {
         return await ProductsQuery
@@ -36,13 +41,15 @@ public class ProductService : IProductService
     public async Task<Product> GetInProgressProductAsync(long sellerId,
         CancellationToken cancellationToken = default)
     {
-        return await ProductsQuery
+        var product = await ProductsQuery
             .OrderByDescending(p => p.CreatedOn)
             .FirstOrDefaultAsync(p =>
                     p.SellerId == sellerId &&
-                    !new[] { ProductState.ReadyForPublishing, ProductState.Published, ProductState.Aborted }.Contains(
+                    !new[] { ProductState.Published, ProductState.Aborted }.Contains(
                         p.CurrentState),
                 cancellationToken);
+
+        return product;
     }
 
     public async Task UpdateLastNotPublishedAsync(long sellerId, Action<Product> updateAction,
@@ -76,9 +83,19 @@ public class ProductService : IProductService
 
         return allProductConditions;
     }
+    
+    public async Task<List<Currency>> GetProductCurrenciesAsync(CancellationToken cancellationToken = default)
+    {
+        var allProductCurrencies = await _context.Currencies
+            .OrderBy(pc => pc.Id)
+            .ToListAsync(cancellationToken);
 
+        return allProductCurrencies;
+    }
+    
     private IIncludableQueryable<Product, ICollection<File>> ProductsQuery =>
         _context.Products
             .Include(p => p.Condition)
+            .Include(p => p.Currency)
             .Include(p => p.Files);
 }

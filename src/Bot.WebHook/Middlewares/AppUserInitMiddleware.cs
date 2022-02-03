@@ -20,7 +20,7 @@ public class AppUserInitMiddleware : IMiddleware
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
         var stream = context.Request.Body;
-
+        
         using var reader = new StreamReader(stream);
 
         var requestBodyAsString = await reader.ReadToEndAsync();

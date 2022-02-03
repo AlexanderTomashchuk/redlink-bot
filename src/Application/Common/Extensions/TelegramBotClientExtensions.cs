@@ -164,7 +164,7 @@ public static class TelegramBotClientExtensions
         CancellationToken cancellationToken = default
     )
     {
-        return botClient.SendPhotoAsync(chatId, photo, caption, ParseMode.MarkdownV2,
+        return botClient.SendPhotoAsync(chatId, photo, caption, ParseMode.MarkdownV2, replyMarkup: replyMarkup,
             cancellationToken: cancellationToken);
     }
 }

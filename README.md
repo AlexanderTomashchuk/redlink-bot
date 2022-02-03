@@ -1,7 +1,7 @@
 # redlink-bot
 
 ```
-docker rm pg_container --force; docker volume rm redlink-bot-postgesql_redlink-db-data;
+docker rm pg_container --force; docker volume rm redlink-bot_redlink-db-data;
 ```
 
 ```

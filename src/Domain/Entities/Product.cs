@@ -23,7 +23,7 @@ public class Product : AuditableEntity
 
     public decimal Price { get; set; }
 
-    public long? CurrencyId { get; }
+    public long? CurrencyId { get; set; }
     public Currency Currency { get; set; }
  
     public ICollection<HashTag> HashTags { get; }

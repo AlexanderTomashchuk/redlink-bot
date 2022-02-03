@@ -91,6 +91,10 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("DefaultLanguageCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Flag")
                         .IsRequired()
                         .IsUnicode(true)
@@ -114,6 +118,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 1L,
                             Code = "US",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultLanguageCode = "en",
                             Flag = "🇺🇸",
                             NameLocalizationKey = "USA"
                         },
@@ -122,6 +127,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 2L,
                             Code = "UA",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultLanguageCode = "uk",
                             Flag = "🇺🇦",
                             NameLocalizationKey = "Ukraine"
                         },
@@ -130,6 +136,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 3L,
                             Code = "PL",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultLanguageCode = "en",
                             Flag = "🇵🇱",
                             NameLocalizationKey = "Poland"
                         },
@@ -138,6 +145,7 @@ namespace Infrastructure.Persistence.Migrations
                             Id = 4L,
                             Code = "RU",
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DefaultLanguageCode = "ru",
                             Flag = "🇷🇺",
                             NameLocalizationKey = "Russia"
                         });

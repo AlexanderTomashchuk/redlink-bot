@@ -167,4 +167,7 @@
     <data name="SelectedCondition" xml:space="preserve">
         <value>Выбранное состояние</value>
     </data>
+    <data name="PublishPostErr" xml:space="preserve">
+        <value>Прежде чем продолжить, нажмите кнопку 'Опубликовать' для публикации товара или используйте команду /sell чтобы создать новый товар</value>
+    </data>
 </root>

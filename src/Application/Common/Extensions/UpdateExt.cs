@@ -36,7 +36,7 @@ public class UpdateExt
 
         if (!update.Message.Photo.Any())
             return new ErrorResult(l10n.AttachPhotoErr);
-        
+
         return new PhotoIdResult(update.Message.Photo.MaxBy(p => p.FileSize)?.FileId);
     }
 
@@ -69,7 +69,35 @@ public class UpdateExt
 
         return new ProductPriceResult(price);
     }
-    
+
+    public OneOf<ProductCurrencyResult, ErrorResult> ExtractProductCurrency<T>(Update update)
+        where T : CallbackQueryDto
+    {
+        if (update?.CallbackQuery?.Data is null)
+            return new ErrorResult(l10n.UseMenuForProductCurrencyErr);
+
+        var dto = _mapper.Map<T>(update.CallbackQuery.Data);
+
+        if (dto?.EntityId is null)
+            return new ErrorResult(l10n.UseMenuForProductCurrencyErr);
+
+        return new ProductCurrencyResult((long)dto.EntityId);
+    }
+
+    public OneOf<ProductIdResult, ErrorResult> ExtractProductIdForPublishing<T>(Update update)
+        where T : CallbackQueryDto
+    {
+        if (update?.CallbackQuery?.Data is null)
+            return new ErrorResult(l10n.PublishPostErr);
+
+        var dto = _mapper.Map<T>(update.CallbackQuery.Data);
+
+        if (dto?.EntityId is null)
+            return new ErrorResult(l10n.PublishPostErr);
+
+        return new ProductIdResult((long)dto.EntityId);
+    }
+
     public class ProductNameResult
     {
         public string Value { get; }
@@ -103,13 +131,33 @@ public class UpdateExt
     public class ProductPriceResult
     {
         public decimal Value { get; }
-        
+
         public ProductPriceResult(decimal value)
         {
             Value = value;
         }
     }
-    
+
+    public class ProductCurrencyResult
+    {
+        public long Value { get; }
+
+        public ProductCurrencyResult(long value)
+        {
+            Value = value;
+        }
+    }
+
+    public class ProductIdResult
+    {
+        public long Value { get; }
+
+        public ProductIdResult(long value)
+        {
+            Value = value;
+        }
+    }
+
     public class ErrorResult
     {
         public string Message { get; }

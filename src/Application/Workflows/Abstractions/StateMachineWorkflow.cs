@@ -14,12 +14,12 @@ public abstract class StateMachineWorkflow<TState, TTrigger> : Workflow
     where TState : struct
     where TTrigger : struct
 {
-    private readonly ILogger _logger;
+    protected readonly ILogger Logger;
 
     protected StateMachineWorkflow(ITelegramBotClient botClient, IAppUserService appUserService, IMapper mapper,
         ILogger logger, WorkflowFactory workflowFactory)
         : base(botClient, appUserService, mapper, workflowFactory)
-        => _logger = logger;
+        => Logger = logger;
 
     protected abstract Task TriggerNextAsync(TTrigger? triggerToInvoke = default,
         CancellationToken cancellationToken = default);
@@ -33,7 +33,7 @@ public abstract class StateMachineWorkflow<TState, TTrigger> : Workflow
         ConfigureStateMachine();
 
         Machine.OnTransitioned(t =>
-            _logger.LogInformation(
+            Logger.LogInformation(
                 "OnTransitioned: {Source} -> {Destination} via {Trigger}({Parameters})", t.Source, t.Destination,
                 t.Trigger, string.Join(", ", t.Parameters)));
     }
