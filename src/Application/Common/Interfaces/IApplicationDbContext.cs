@@ -17,7 +17,7 @@ public interface IApplicationDbContext
 
     DbSet<ProductCondition> ProductConditions { get; set; }
 
-    DbSet<ProductType> ProductTypes { get; set; }
+    DbSet<ProductCategory> ProductCategories { get; set; }
 
     DbSet<AppUser> Users { get; set; }
 

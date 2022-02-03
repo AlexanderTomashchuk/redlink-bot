@@ -374,5 +374,41 @@ namespace Application.Resources {
                 return ResourceManager.GetString("PublishPostErr", resourceCulture);
             }
         }
+        
+        internal static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        internal static string ChooseProductCategory {
+            get {
+                return ResourceManager.GetString("ChooseProductCategory", resourceCulture);
+            }
+        }
+        
+        internal static string ChooseProductSection {
+            get {
+                return ResourceManager.GetString("ChooseProductSection", resourceCulture);
+            }
+        }
+        
+        internal static string ChosenCategory {
+            get {
+                return ResourceManager.GetString("ChosenCategory", resourceCulture);
+            }
+        }
+        
+        internal static string ChosenCondition {
+            get {
+                return ResourceManager.GetString("ChosenCondition", resourceCulture);
+            }
+        }
+        
+        internal static string ChosenCurrency {
+            get {
+                return ResourceManager.GetString("ChosenCurrency", resourceCulture);
+            }
+        }
     }
 }

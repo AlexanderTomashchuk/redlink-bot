@@ -76,6 +76,28 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductCategory",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NameLocalizationKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    ParentId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductCategory_ProductCategory_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "ProductCategory",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductCondition",
                 columns: table => new
                 {
@@ -88,21 +110,6 @@ namespace Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductCondition", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductType",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NameLocalizationKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,7 +153,7 @@ namespace Infrastructure.Persistence.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     ConditionId = table.Column<long>(type: "bigint", nullable: true),
-                    TypeId = table.Column<long>(type: "bigint", nullable: true),
+                    CategoryId = table.Column<long>(type: "bigint", nullable: true),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     CurrencyId = table.Column<long>(type: "bigint", nullable: true),
                     SellerId = table.Column<long>(type: "bigint", nullable: false),
@@ -169,14 +176,14 @@ namespace Infrastructure.Persistence.Migrations
                         principalTable: "Currency",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_Product_ProductCategory_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ProductCategory",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Product_ProductCondition_ConditionId",
                         column: x => x.ConditionId,
                         principalTable: "ProductCondition",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Product_ProductType_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "ProductType",
                         principalColumn: "Id");
                 });
 
@@ -269,6 +276,15 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "ProductCategory",
+                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey", "ParentId" },
+                values: new object[,]
+                {
+                    { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Footwear", null },
+                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bags", null }
+                });
+
+            migrationBuilder.InsertData(
                 table: "ProductCondition",
                 columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey" },
                 values: new object[,]
@@ -281,18 +297,15 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "ProductType",
-                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey" },
+                table: "ProductCategory",
+                columns: new[] { "Id", "CreatedOn", "ModifiedOn", "NameLocalizationKey", "ParentId" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Clothes" },
-                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Outer wear" },
-                    { 3L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Lingerie" },
-                    { 4L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "FootWear" },
-                    { 5L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bags" },
-                    { 6L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Accessories" },
-                    { 7L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Jewelry" },
-                    { 8L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Clothes for home" }
+                    { 1001L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "AnkleBoots", 1L },
+                    { 1002L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Boots", 1L },
+                    { 2001L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Bags", 2L },
+                    { 2002L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Backpacks", 2L },
+                    { 2003L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "ClutchBags", 2L }
                 });
 
             migrationBuilder.CreateIndex(
@@ -316,6 +329,11 @@ namespace Infrastructure.Persistence.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Product_CategoryId",
+                table: "Product",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Product_ConditionId",
                 table: "Product",
                 column: "ConditionId");
@@ -331,9 +349,9 @@ namespace Infrastructure.Persistence.Migrations
                 column: "SellerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_TypeId",
-                table: "Product",
-                column: "TypeId");
+                name: "IX_ProductCategory_ParentId",
+                table: "ProductCategory",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductHashTags_ProductsId",
@@ -362,10 +380,10 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Currency");
 
             migrationBuilder.DropTable(
-                name: "ProductCondition");
+                name: "ProductCategory");
 
             migrationBuilder.DropTable(
-                name: "ProductType");
+                name: "ProductCondition");
 
             migrationBuilder.DropTable(
                 name: "Country");

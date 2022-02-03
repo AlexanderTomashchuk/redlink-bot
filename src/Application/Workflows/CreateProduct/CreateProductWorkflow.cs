@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -64,7 +65,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
     protected override void ConfigureStateMachine()
     {
         Machine = new StateMachine<ProductState, Trigger>(GetState, SetState, FiringMode.Queued);
-        
+
         Machine.Configure(ProductState.Initial)
             .Permit(Trigger.CreateEmptyProduct, ProductState.EmptyProductCreated);
 
@@ -79,6 +80,15 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         Machine.Configure(ProductState.NameProvided)
             .OnEntryFromAsync(Trigger.SetName, SetNameAsync)
             .Permit(Trigger.RequestName, ProductState.NameRequested)
+            .Permit(Trigger.RequestCategory, ProductState.CategoryRequested);
+
+        Machine.Configure(ProductState.CategoryRequested)
+            .OnEntryFromAsync(Trigger.RequestCategory, RequestCategoryAsync)
+            .Permit(Trigger.SetCategory, ProductState.CategoryProvided);
+
+        Machine.Configure(ProductState.CategoryProvided)
+            .OnEntryFromAsync(Trigger.SetCategory, SetCategoryAsync)
+            .Permit(Trigger.RequestCategory, ProductState.CategoryRequested)
             .Permit(Trigger.RequestPhoto, ProductState.PhotoRequested);
 
         Machine.Configure(ProductState.PhotoRequested)
@@ -148,7 +158,9 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             ProductState.Initial => Trigger.CreateEmptyProduct,
             ProductState.EmptyProductCreated => Trigger.RequestName,
             ProductState.NameRequested => Trigger.SetName,
-            ProductState.NameProvided => Trigger.RequestPhoto,
+            ProductState.NameProvided => Trigger.RequestCategory,
+            ProductState.CategoryRequested => Trigger.SetCategory,
+            ProductState.CategoryProvided => Trigger.RequestPhoto,
             ProductState.PhotoRequested => Trigger.SetPhoto,
             ProductState.PhotoProvided => Trigger.RequestCondition,
             ProductState.ConditionRequested => Trigger.SetCondition,
@@ -198,13 +210,94 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             async ok =>
             {
                 await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id, p => { p.Name = ok.Value; });
-                _ = Machine.FireAsync(Trigger.RequestPhoto);
+                _ = Machine.FireAsync(Trigger.RequestCategory);
             },
             async error =>
             {
                 await BotClient.SendErrorMessageAsync(ChatId, error.Message);
                 _ = Machine.FireAsync(Trigger.RequestName);
             });
+    }
+
+    private async Task RequestCategoryAsync()
+    {
+        if (ShouldShowSubCategories())
+        {
+            var parentCategoryId = GetCbData<CreateProductCbDto>().EntityId;
+            var subCategories =
+                await _productService.GetProductCategoriesAsync(pc => pc.ParentId == parentCategoryId);
+
+            var replyKeyboard = CreateKeyboard(subCategories)
+                .WithBackButton(new CreateProductCbDto(Trigger.SetCategory, parentCategoryId) { IsBackButton = true })
+                .Build();
+
+            await BotClient.EditMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, l10n.ChooseProductCategory,
+                replyKeyboard);
+        }
+        else
+        {
+            var rootCategories = await _productService
+                .GetProductCategoriesAsync(pc => pc.ParentId == null);
+
+            var replyKeyboard = CreateKeyboard(rootCategories).Build();
+
+            if (MessageIdBelongsToCb is not null)
+            {
+                await BotClient.EditMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, l10n.ChooseProductSection,
+                    replyKeyboard);
+            }
+            else
+            {
+                await BotClient.SendTxtMessageAsync(ChatId, l10n.ChooseProductSection, replyKeyboard);
+            }
+        }
+
+        bool ShouldShowSubCategories()
+        {
+            var cbData = GetCbData<CreateProductCbDto>();
+
+            return cbData?.EntityId != null && !cbData.IsBackButton;
+        }
+
+        InlineKeyboardBuilder CreateKeyboard(IEnumerable<ProductCategory> categories) =>
+            new InlineKeyboardBuilder()
+                .AddButtons(categories.Select(pc =>
+                {
+                    //var text = l10n.ResourceManager.GetString(pc.NameLocalizationKey);
+                    //todo: add localization
+                    var text = pc.NameLocalizationKey;
+                    var newCbData = new CreateProductCbDto(Trigger.SetCategory, pc.Id);
+
+                    return (text, newCbData);
+                }))
+                .ChunkBy(3);
+    }
+
+    private async Task SetCategoryAsync()
+    {
+        //todo: add validation
+        var cbData = GetCbData<CreateProductCbDto>();
+        var selectedProductCategory =
+            await _productService.GetSingleProductCategoryAsync(pc => pc.Id == cbData.EntityId);
+
+        var chosenCategoryText =
+            $"{l10n.ChosenCategory}: {selectedProductCategory.NameLocalizationKey}";
+        //todo: uncomment after adding all categories
+        //$"{l10n.ChosenCategory}: {l10n.ResourceManager.GetString(selectedProductCategory.NameLocalizationKey)}";
+
+        var task = selectedProductCategory.HasSubCategories switch
+        {
+            true => Machine.FireAsync(Trigger.RequestCategory),
+            false => Task.WhenAll(
+                _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
+                    p => { p.CategoryId = cbData.EntityId; }),
+                BotClient.AnswerCbQueryAsync(CallbackQueryId, chosenCategoryText),
+                BotClient.SendTxtMessageAsync(ChatId, chosenCategoryText),
+                Machine.FireAsync(Trigger.RequestPhoto)
+            )
+        };
+
+        await task;
     }
 
     private async Task RequestPhotoAsync() => await BotClient.SendTxtMessageAsync(ChatId, l10n.AttachProductPhoto);
@@ -251,9 +344,14 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         await validationResult.Match(
             async ok =>
             {
+                var conditionInfo = await _productService.GetSingleProductConditionAsync(pc => pc.Id == ok.Value);
+                var chosenConditionText =
+                    $"{l10n.ChosenCondition}: {l10n.ResourceManager.GetString(conditionInfo.NameLocalizationKey)}";
+
                 await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
                     p => { p.ConditionId = ok.Value; });
-                _ = BotClient.AnswerCbQueryAsync(CallbackQueryId);
+                _ = BotClient.AnswerCbQueryAsync(CallbackQueryId, chosenConditionText);
+                _ = BotClient.SendTxtMessageAsync(ChatId, chosenConditionText);
                 _ = Machine.FireAsync(Trigger.RequestPrice);
             },
             async error =>
@@ -307,9 +405,13 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         await validationResult.Match(
             async ok =>
             {
+                var currencyInfo = await _productService.GetSingleProductCurrencyAsync(pc => pc.Id == ok.Value);
+                var chosenCurrencyText = $"{l10n.ChosenCurrency}: {currencyInfo.Abbreviation}";
+
                 await _productService.UpdateLastNotPublishedAsync(CurrentAppUser.Id,
                     p => { p.CurrencyId = ok.Value; });
-                _ = BotClient.AnswerCbQueryAsync(CallbackQueryId);
+                _ = BotClient.AnswerCbQueryAsync(CallbackQueryId, chosenCurrencyText);
+                _ = BotClient.SendTxtMessageAsync(ChatId, chosenCurrencyText);
                 _ = Machine.FireAsync(Trigger.ShowProduct);
             },
             async error =>
@@ -371,28 +473,31 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         var countryDefaultLanguageCode = CurrentAppUser.Country.DefaultLanguageCode;
         var culture = new CultureInfo(countryDefaultLanguageCode.ToString().ToLower());
 
+        var categoryKeyText = l10n.ResourceManager.GetString("Category", culture);
+        //todo: uncomment after adding localization
+        //var categoryValueText = l10n.ResourceManager.GetString(product.Category.NameLocalizationKey, culture);
+        var categoryValueText = product.Category.NameLocalizationKey;
         var conditionKeyText = l10n.ResourceManager.GetString("Condition", culture);
         var conditionValueText = l10n.ResourceManager.GetString(product.Condition.NameLocalizationKey, culture);
-        var sellerKeyText = l10n.ResourceManager.GetString("Seller", culture);
+        //var sellerKeyText = l10n.ResourceManager.GetString("Seller", culture);
 
         var text = new MessageTextBuilder(ParseMode.MarkdownV2)
             .AddTextLine(product.Name, TextStyle.Bold)
             .AddTextLine($"{Emoji.MONEY_BAG} {product.Price} {product.Currency.Abbreviation}", TextStyle.Italic)
             .BreakLine()
-            //todo: add category as hash tag
-            .AddTextLine($"{ToHashTag(conditionValueText)}")
+            .AddTextLine($"{ToHashTag(categoryValueText)} {ToHashTag(conditionValueText)}")
             .BreakLine()
             //.AddTextLine($"{string.Join(" ", product.HashTags.Select(ht => ht.Value))}")
             //.AddTextLine(product.Description)
-            //.AddTextLine($"Раздел: {l10n.ResourceManager.GetString(product.Type.NameLocalizationKey)}")
+            .AddTextLine($"{categoryKeyText}: {categoryValueText}")
             .AddTextLine($"{conditionKeyText}: {conditionValueText}")
-            .AddTextLine($"{sellerKeyText}: ")
-            .AddTelegramLink(CurrentAppUser.GetUsername(), CurrentAppUser.Id, TelegramLinkType.User)
+            //.AddTextLine($"{sellerKeyText}: ")
+            //.AddTelegramLink(CurrentAppUser.GetUsername(), CurrentAppUser.Id, TelegramLinkType.User)
             .Build();
 
         return text;
 
-        string ToHashTag(string text) => $"#{text.ToLowerInvariant()}";
+        string ToHashTag(string txt) => $"#{txt.ToLowerInvariant()}";
     }
 
     public enum Trigger
@@ -400,6 +505,8 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         CreateEmptyProduct,
         RequestName,
         SetName,
+        RequestCategory,
+        SetCategory,
         RequestPhoto,
         SetPhoto,
         RequestCondition,

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Interfaces;
@@ -75,6 +76,36 @@ public class ProductService : IProductService
         }
     }
 
+    public async Task<List<ProductCategory>> GetProductCategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        var allProductCategories = await ProductCategoriesQuery
+            .OrderBy(pc => pc.Id)
+            .ToListAsync(cancellationToken);
+
+        return allProductCategories;
+    }
+
+    public async Task<List<ProductCategory>> GetProductCategoriesAsync(
+        Expression<Func<ProductCategory, bool>> expression,
+        CancellationToken cancellationToken = default)
+    {
+        var productCategories = await ProductCategoriesQuery
+            .Where(expression)
+            .OrderBy(pc => pc.Id)
+            .ToListAsync(cancellationToken);
+
+        return productCategories;
+    }
+
+    public async Task<ProductCategory> GetSingleProductCategoryAsync(Expression<Func<ProductCategory, bool>> expression,
+        CancellationToken cancellationToken = default)
+    {
+        var productCategories = await ProductCategoriesQuery
+            .SingleAsync(expression, cancellationToken);
+
+        return productCategories;
+    }
+
     public async Task<List<ProductCondition>> GetProductConditionsAsync(CancellationToken cancellationToken = default)
     {
         var allProductConditions = await _context.ProductConditions
@@ -83,7 +114,11 @@ public class ProductService : IProductService
 
         return allProductConditions;
     }
-    
+
+    public async Task<ProductCondition> GetSingleProductConditionAsync(
+        Expression<Func<ProductCondition, bool>> expression, CancellationToken cancellationToken = default)
+        => await _context.ProductConditions.SingleAsync(expression, cancellationToken);
+
     public async Task<List<Currency>> GetProductCurrenciesAsync(CancellationToken cancellationToken = default)
     {
         var allProductCurrencies = await _context.Currencies
@@ -92,10 +127,20 @@ public class ProductService : IProductService
 
         return allProductCurrencies;
     }
-    
+
+    public async Task<Currency> GetSingleProductCurrencyAsync(Expression<Func<Currency, bool>> expression,
+        CancellationToken cancellationToken = default)
+        => await _context.Currencies.SingleAsync(expression, cancellationToken);
+
+    private IIncludableQueryable<ProductCategory, ICollection<ProductCategory>> ProductCategoriesQuery =>
+        _context.ProductCategories
+            .Include(pc => pc.Parent)
+            .Include(pc => pc.SubCategories);
+
     private IIncludableQueryable<Product, ICollection<File>> ProductsQuery =>
         _context.Products
             .Include(p => p.Condition)
             .Include(p => p.Currency)
+            .Include(p => p.Category)
             .Include(p => p.Files);
 }

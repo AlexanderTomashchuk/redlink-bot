@@ -170,4 +170,28 @@
     <data name="PublishPostErr" xml:space="preserve">
         <value>Перш ніж продовжити, натисніть кнопку 'Опублікувати' для публікації товару або використайте команду /sell щоб створити новий товар</value>
     </data>
+    <data name="Category" xml:space="preserve">
+        <value>Категорія</value>
+    </data>
+    <data name="ChooseProductCategory" xml:space="preserve">
+        <value>Тепер оберіть категорію товару</value>
+    </data>
+    <data name="ChooseProductSection" xml:space="preserve">
+        <value>Оберіть розділ товару</value>
+    </data>
+    <data name="ChooseProductCurrency" xml:space="preserve">
+        <value>Оберіть валюту товару</value>
+    </data>
+    <data name="UseMenuForProductCurrencyErr" xml:space="preserve">
+        <value>Використовуйте меню для вибору валюту товару</value>
+    </data>
+    <data name="ChosenCategory" xml:space="preserve">
+        <value>Обрана категорія</value>
+    </data>
+    <data name="ChosenCondition" xml:space="preserve">
+        <value>Обраний стан</value>
+    </data>
+    <data name="ChosenCurrency" xml:space="preserve">
+        <value>Обрана валюта</value>
+    </data>
 </root>

@@ -348,6 +348,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("CategoryId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("ConditionId")
                         .HasColumnType("bigint");
 
@@ -379,10 +382,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<long>("SellerId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("TypeId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ConditionId");
 
@@ -390,9 +392,85 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.HasIndex("TypeId");
-
                     b.ToTable("Product", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NameLocalizationKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<long?>("ParentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("ProductCategory", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Footwear"
+                        },
+                        new
+                        {
+                            Id = 1001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "AnkleBoots",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Boots",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Bags"
+                        },
+                        new
+                        {
+                            Id = 2001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Bags",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Backpacks",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "ClutchBags",
+                            ParentId = 2L
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductCondition", b =>
@@ -451,80 +529,6 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProductType", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NameLocalizationKey")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductType", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Clothes"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Outer wear"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Lingerie"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "FootWear"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Bags"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Accessories"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Jewelry"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            NameLocalizationKey = "Clothes for home"
-                        });
-                });
-
             modelBuilder.Entity("HashTagProduct", b =>
                 {
                     b.Property<long>("HashTagsId")
@@ -568,6 +572,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
+                    b.HasOne("Domain.Entities.ProductCategory", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("Domain.Entities.ProductCondition", "Condition")
                         .WithMany("Products")
                         .HasForeignKey("ConditionId");
@@ -582,17 +590,23 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ProductType", "Type")
-                        .WithMany("Products")
-                        .HasForeignKey("TypeId");
+                    b.Navigation("Category");
 
                     b.Navigation("Condition");
 
                     b.Navigation("Currency");
 
                     b.Navigation("Seller");
+                });
 
-                    b.Navigation("Type");
+            modelBuilder.Entity("Domain.Entities.ProductCategory", b =>
+                {
+                    b.HasOne("Domain.Entities.ProductCategory", "Parent")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("HashTagProduct", b =>
@@ -635,12 +649,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Files");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProductCondition", b =>
+            modelBuilder.Entity("Domain.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("SubCategories");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProductType", b =>
+            modelBuilder.Entity("Domain.Entities.ProductCondition", b =>
                 {
                     b.Navigation("Products");
                 });

@@ -170,4 +170,28 @@
     <data name="PublishPostErr" xml:space="preserve">
         <value>Прежде чем продолжить, нажмите кнопку 'Опубликовать' для публикации товара или используйте команду /sell чтобы создать новый товар</value>
     </data>
+    <data name="Category" xml:space="preserve">
+        <value>Категория</value>
+    </data>
+    <data name="ChooseProductCategory" xml:space="preserve">
+        <value>Теперь выберите категорию товара</value>
+    </data>
+    <data name="ChooseProductSection" xml:space="preserve">
+        <value>Выберите раздел товара</value>
+    </data>
+    <data name="ChooseProductCurrency" xml:space="preserve">
+        <value>Выберите валюту товара</value>
+    </data>
+    <data name="UseMenuForProductCurrencyErr" xml:space="preserve">
+        <value>Используйте меню, чтобы выбрать валюту товару</value>
+    </data>
+    <data name="ChosenCategory" xml:space="preserve">
+        <value>Выбранная категория</value>
+    </data>
+    <data name="ChosenCurrency" xml:space="preserve">
+        <value>Выбранная валюта</value>
+    </data>
+    <data name="ChosenCondition" xml:space="preserve">
+        <value>Выбранное состояние</value>
+    </data>
 </root>

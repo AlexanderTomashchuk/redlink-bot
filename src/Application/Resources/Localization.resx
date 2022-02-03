@@ -183,4 +183,22 @@
     <data name="PublishPostErr" xml:space="preserve">
         <value>Before proceeding, press the 'Publish' button to publish the product or use the /sell command to create a new product</value>
     </data>
+    <data name="Category" xml:space="preserve">
+        <value>Category</value>
+    </data>
+    <data name="ChooseProductCategory" xml:space="preserve">
+        <value>Now choose the category of the product</value>
+    </data>
+    <data name="ChooseProductSection" xml:space="preserve">
+        <value>Choose the section of the product</value>
+    </data>
+    <data name="ChosenCategory" xml:space="preserve">
+        <value>Chosen category</value>
+    </data>
+    <data name="ChosenCondition" xml:space="preserve">
+        <value>Chosen condition</value>
+    </data>
+    <data name="ChosenCurrency" xml:space="preserve">
+        <value>Chosen currency</value>
+    </data>
 </root>

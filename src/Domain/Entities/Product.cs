@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.Text;
 using Domain.Common;
-using Domain.Extensions;
+// ReSharper disable UnassignedGetOnlyAutoProperty
 
 namespace Domain.Entities;
 
@@ -17,14 +16,13 @@ public class Product : AuditableEntity
 
     public ProductCondition Condition { get; }
 
-    public long? TypeId { get; }
-
-    public ProductType Type { get; set; }
+    public long? CategoryId { get; set; }
+    public ProductCategory Category { get; }
 
     public decimal Price { get; set; }
 
     public long? CurrencyId { get; set; }
-    public Currency Currency { get; set; }
+    public Currency Currency { get; }
  
     public ICollection<HashTag> HashTags { get; }
 

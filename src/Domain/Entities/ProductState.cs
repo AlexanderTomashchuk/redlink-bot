@@ -6,6 +6,8 @@ public enum ProductState
     EmptyProductCreated,
     NameRequested,
     NameProvided,
+    CategoryRequested,
+    CategoryProvided,
     PhotoRequested,
     PhotoProvided,
     ConditionRequested,

@@ -30,7 +30,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<ProductCondition> ProductConditions { get; set; }
 
-    public DbSet<ProductType> ProductTypes { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
 
     public DbSet<AppUser> Users { get; set; }
 

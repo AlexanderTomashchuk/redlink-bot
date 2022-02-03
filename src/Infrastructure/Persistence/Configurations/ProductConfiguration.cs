@@ -18,9 +18,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.ConditionId);
 
-        builder.HasOne(p => p.Type)
+        builder.HasOne(p => p.Category)
             .WithMany(t => t.Products)
-            .HasForeignKey(p => p.TypeId);
+            .HasForeignKey(p => p.CategoryId);
 
         builder.HasOne(p => p.Currency)
             .WithMany(c => c.Products)
