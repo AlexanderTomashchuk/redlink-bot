@@ -137,14 +137,14 @@
     <data name="Clothes" xml:space="preserve">
         <value>Clothes</value>
     </data>
-    <data name="OuterWear" xml:space="preserve">
-        <value>Outer wear</value>
+    <data name="Outerwear" xml:space="preserve">
+        <value>Outerwear</value>
     </data>
     <data name="Lingerie" xml:space="preserve">
         <value>Lingerie</value>
     </data>
-    <data name="FootWear" xml:space="preserve">
-        <value>Foot wear</value>
+    <data name="Footwear" xml:space="preserve">
+        <value>Footwear</value>
     </data>
     <data name="Bags" xml:space="preserve">
         <value>Bags</value>
@@ -193,5 +193,221 @@
     </data>
     <data name="ChosenCurrency" xml:space="preserve">
         <value>Chosen currency</value>
+    </data>
+    <data name="Boots" xml:space="preserve">
+        <value>Boots</value>
+    </data>
+    <data name="AnkleBoots" xml:space="preserve">
+        <value>Ankle boots</value>
+    </data>
+    <data name="Sneakers" xml:space="preserve">
+        <value>Sneakers</value>
+    </data>
+    <data name="Uggs" xml:space="preserve">
+        <value>Uggs</value>
+    </data>
+    <data name="RubberisedBoots" xml:space="preserve">
+        <value>Rubberised boots</value>
+    </data>
+    <data name="FlipFlops" xml:space="preserve">
+        <value>Flip flops</value>
+    </data>
+    <data name="Shoes" xml:space="preserve">
+        <value>Shoes</value>
+    </data>
+    <data name="Ballerinas" xml:space="preserve">
+        <value>Ballerinas</value>
+    </data>
+    <data name="Loafers" xml:space="preserve">
+        <value>Loafers</value>
+    </data>
+    <data name="Sandals" xml:space="preserve">
+        <value>Sandals</value>
+    </data>
+    <data name="Moccasins" xml:space="preserve">
+        <value>Moccasins</value>
+    </data>
+    <data name="Espadrilles" xml:space="preserve">
+        <value>Espadrilles</value>
+    </data>
+    <data name="Slippers" xml:space="preserve">
+        <value>Slippers</value>
+    </data>
+    <data name="Mules" xml:space="preserve">
+        <value>Mules</value>
+    </data>
+    <data name="Backpacks" xml:space="preserve">
+        <value>Backpacks</value>
+    </data>
+    <data name="ClutchBags" xml:space="preserve">
+        <value>Clutch bags</value>
+    </data>
+    <data name="ToiletryBags" xml:space="preserve">
+        <value>Toiletry bags</value>
+    </data>
+    <data name="DocumentCovers" xml:space="preserve">
+        <value>Document covers</value>
+    </data>
+    <data name="Cardholders" xml:space="preserve">
+        <value>Cardholders</value>
+    </data>
+    <data name="Wallets" xml:space="preserve">
+        <value>Wallets</value>
+    </data>
+    <data name="Knitwear" xml:space="preserve">
+        <value>Knitwear</value>
+    </data>
+    <data name="SweatshirtsHoodies" xml:space="preserve">
+        <value>Sweatshirts | Hoodies</value>
+    </data>
+    <data name="Trousers" xml:space="preserve">
+        <value>Trousers</value>
+    </data>
+    <data name="TShirts" xml:space="preserve">
+        <value>T-shirts</value>
+    </data>
+    <data name="Shirts" xml:space="preserve">
+        <value>Shirts</value>
+    </data>
+    <data name="Shorts" xml:space="preserve">
+        <value>Shorts</value>
+    </data>
+    <data name="SuitsJumpsuits" xml:space="preserve">
+        <value>Suits | Jumpsuits </value>
+    </data>
+    <data name="Loungewear" xml:space="preserve">
+        <value>Loungewear</value>
+    </data>
+    <data name="Sportswear" xml:space="preserve">
+        <value>Sportswear</value>
+    </data>
+    <data name="Skirts" xml:space="preserve">
+        <value>Skirts</value>
+    </data>
+    <data name="Jeans" xml:space="preserve">
+        <value>Jeans</value>
+    </data>
+    <data name="Dresses" xml:space="preserve">
+        <value>Dresses</value>
+    </data>
+    <data name="Coats" xml:space="preserve">
+        <value>Coats</value>
+    </data>
+    <data name="TrenchCoats" xml:space="preserve">
+        <value>Trench coats</value>
+    </data>
+    <data name="Jackets" xml:space="preserve">
+        <value>Jackets</value>
+    </data>
+    <data name="FurCoats" xml:space="preserve">
+        <value>Fur coats</value>
+    </data>
+    <data name="Gilets" xml:space="preserve">
+        <value>Gilets</value>
+    </data>
+    <data name="Blazers" xml:space="preserve">
+        <value>Blazers</value>
+    </data>
+    <data name="PufferJackets" xml:space="preserve">
+        <value>Puffer jackets</value>
+    </data>
+    <data name="Parkas" xml:space="preserve">
+        <value>Parkas</value>
+    </data>
+    <data name="DoubleFacedJackets" xml:space="preserve">
+        <value>Double-faced jackets</value>
+    </data>
+    <data name="Glasses" xml:space="preserve">
+        <value>Glasses</value>
+    </data>
+    <data name="Headwear" xml:space="preserve">
+        <value>Headwear</value>
+    </data>
+    <data name="Headwears" xml:space="preserve">
+        <value>Headwears</value>
+    </data>
+    <data name="Belts" xml:space="preserve">
+        <value>Belts</value>
+    </data>
+    <data name="Scarves" xml:space="preserve">
+        <value>Scarves</value>
+    </data>
+    <data name="Gloves" xml:space="preserve">
+        <value>Gloves</value>
+    </data>
+    <data name="Umbrellas" xml:space="preserve">
+        <value>Umbrellas</value>
+    </data>
+    <data name="Bras" xml:space="preserve">
+        <value>Bras</value>
+    </data>
+    <data name="Briefs" xml:space="preserve">
+        <value>Briefs</value>
+    </data>
+    <data name="Swimwear" xml:space="preserve">
+        <value>Swimwear</value>
+    </data>
+    <data name="SocksTights" xml:space="preserve">
+        <value>Socks | Tights</value>
+    </data>
+    <data name="Bodysuits" xml:space="preserve">
+        <value>Bodysuits</value>
+    </data>
+    <data name="Corsets" xml:space="preserve">
+        <value>Corsets</value>
+    </data>
+    <data name="Jewellery" xml:space="preserve">
+        <value>Jewellery</value>
+    </data>
+    <data name="Necklaces" xml:space="preserve">
+        <value>Necklaces</value>
+    </data>
+    <data name="Rings" xml:space="preserve">
+        <value>Rings</value>
+    </data>
+    <data name="Bracelets" xml:space="preserve">
+        <value>Bracelets</value>
+    </data>
+    <data name="LegBracelets" xml:space="preserve">
+        <value>Leg bracelets</value>
+    </data>
+    <data name="Earrings" xml:space="preserve">
+        <value>Earrings</value>
+    </data>
+    <data name="EarCuffs" xml:space="preserve">
+        <value>Ear cuffs</value>
+    </data>
+    <data name="HairClips" xml:space="preserve">
+        <value>Hair clips</value>
+    </data>
+    <data name="Nightwear" xml:space="preserve">
+        <value>Nightwear</value>
+    </data>
+    <data name="Pyjamas" xml:space="preserve">
+        <value>Pyjamas</value>
+    </data>
+    <data name="SlipDresses" xml:space="preserve">
+        <value>Slip dresses</value>
+    </data>
+    <data name="DressingGowns" xml:space="preserve">
+        <value>Dressing gowns</value>
+    </data>
+    <data name="Perfumes" xml:space="preserve">
+        <value>Perfumes</value>
+    </data>
+    <data name="CosmeticsAndAccessories" xml:space="preserve">
+        <value>Cosmetics &amp; accessories</value>
+    </data>
+    <data name="DogsClothesAndAccessories" xml:space="preserve">
+        <value>Dog clothes &amp; accessories</value>
+    </data>
+    <data name="BudgetProduct" xml:space="preserve">
+        <value>Budget product</value>
+    </data>
+    <data name="ModerateProduct" xml:space="preserve">
+        <value>Moderate product</value>
+    </data>
+    <data name="ExpensiveProduct" xml:space="preserve">
+        <value>Expensive product</value>
     </data>
 </root>

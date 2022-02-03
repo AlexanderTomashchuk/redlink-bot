@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Common;
@@ -231,6 +233,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
                 .WithBackButton(new CreateProductCbDto(Trigger.SetCategory, parentCategoryId) { IsBackButton = true })
                 .Build();
 
+            //todo: change text - add "Chosen section: {section_name}"
             await BotClient.EditMessageTxtAsync(ChatId, MessageIdBelongsToCb.Value, l10n.ChooseProductCategory,
                 replyKeyboard);
         }
@@ -263,14 +266,12 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             new InlineKeyboardBuilder()
                 .AddButtons(categories.Select(pc =>
                 {
-                    //var text = l10n.ResourceManager.GetString(pc.NameLocalizationKey);
-                    //todo: add localization
-                    var text = pc.NameLocalizationKey;
+                    var text = l10n.ResourceManager.GetString(pc.NameLocalizationKey);
                     var newCbData = new CreateProductCbDto(Trigger.SetCategory, pc.Id);
 
                     return (text, newCbData);
                 }))
-                .ChunkBy(3);
+                .ChunkBy(2);
     }
 
     private async Task SetCategoryAsync()
@@ -281,9 +282,7 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
             await _productService.GetSingleProductCategoryAsync(pc => pc.Id == cbData.EntityId);
 
         var chosenCategoryText =
-            $"{l10n.ChosenCategory}: {selectedProductCategory.NameLocalizationKey}";
-        //todo: uncomment after adding all categories
-        //$"{l10n.ChosenCategory}: {l10n.ResourceManager.GetString(selectedProductCategory.NameLocalizationKey)}";
+            $"{l10n.ChosenCategory}: {l10n.ResourceManager.GetString(selectedProductCategory.NameLocalizationKey)}";
 
         var task = selectedProductCategory.HasSubCategories switch
         {
@@ -474,18 +473,19 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
         var culture = new CultureInfo(countryDefaultLanguageCode.ToString().ToLower());
 
         var categoryKeyText = l10n.ResourceManager.GetString("Category", culture);
-        //todo: uncomment after adding localization
-        //var categoryValueText = l10n.ResourceManager.GetString(product.Category.NameLocalizationKey, culture);
-        var categoryValueText = product.Category.NameLocalizationKey;
+        var categoryValueText = l10n.ResourceManager.GetString(product.Category.NameLocalizationKey, culture);
         var conditionKeyText = l10n.ResourceManager.GetString("Condition", culture);
         var conditionValueText = l10n.ResourceManager.GetString(product.Condition.NameLocalizationKey, culture);
         //var sellerKeyText = l10n.ResourceManager.GetString("Seller", culture);
+        var priceDescriptionLocalizationKey = GetPriceDescriptionLocalizationKey(product.Currency, product.Price);
+        var priceDescription = l10n.ResourceManager.GetString(priceDescriptionLocalizationKey, culture);
 
         var text = new MessageTextBuilder(ParseMode.MarkdownV2)
             .AddTextLine(product.Name, TextStyle.Bold)
-            .AddTextLine($"{Emoji.MONEY_BAG} {product.Price} {product.Currency.Abbreviation}", TextStyle.Italic)
+            .AddTextLine($"{Emoji.MONEY_BAG} {product.Price}{product.Currency.Abbreviation}", TextStyle.Italic)
             .BreakLine()
             .AddTextLine($"{ToHashTag(categoryValueText)} {ToHashTag(conditionValueText)}")
+            .AddTextLine($"{ToHashTag(priceDescription)}")
             .BreakLine()
             //.AddTextLine($"{string.Join(" ", product.HashTags.Select(ht => ht.Value))}")
             //.AddTextLine(product.Description)
@@ -497,7 +497,35 @@ public class CreateProductWorkflow : StateMachineWorkflow<ProductState, CreatePr
 
         return text;
 
-        string ToHashTag(string txt) => $"#{txt.ToLowerInvariant()}";
+        string ToHashTag(string txt)
+        {
+            var arr = txt.ToCharArray();
+
+            arr = Array.FindAll(arr, c => char.IsLetter(c) || char.IsWhiteSpace(c));
+
+            txt = new string(arr);
+
+            txt = txt.Replace(" ", "_");
+
+            return $"#{txt.ToLowerInvariant()}";
+        }
+
+        string GetPriceDescriptionLocalizationKey(Currency currency, decimal price) =>
+            (currency.Code, price) switch
+            {
+                ("USD", <= 30) => "BudgetProduct",
+                ("USD", > 30 and <= 100) => "ModerateProduct",
+                ("USD", > 100) => "ExpensiveProduct",
+
+                ("UAH", <= 500) => "BudgetProduct",
+                ("UAH", > 500 and <= 2500) => "ModerateProduct",
+                ("UAH", > 2500) => "ExpensiveProduct",
+
+                ("RUB", <= 1500) => "BudgetProduct",
+                ("RUB", > 1500 and <= 6500) => "ModerateProduct",
+                ("RUB", > 6500) => "ExpensiveProduct",
+                _ => string.Empty
+            };
     }
 
     public enum Trigger

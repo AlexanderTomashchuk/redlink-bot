@@ -297,9 +297,9 @@ namespace Application.Resources {
             }
         }
         
-        internal static string OuterWear {
+        internal static string Outerwear {
             get {
-                return ResourceManager.GetString("OuterWear", resourceCulture);
+                return ResourceManager.GetString("Outerwear", resourceCulture);
             }
         }
         
@@ -309,9 +309,9 @@ namespace Application.Resources {
             }
         }
         
-        internal static string FootWear {
+        internal static string Footwear {
             get {
-                return ResourceManager.GetString("FootWear", resourceCulture);
+                return ResourceManager.GetString("Footwear", resourceCulture);
             }
         }
         
@@ -408,6 +408,438 @@ namespace Application.Resources {
         internal static string ChosenCurrency {
             get {
                 return ResourceManager.GetString("ChosenCurrency", resourceCulture);
+            }
+        }
+        
+        internal static string AnkleBoots {
+            get {
+                return ResourceManager.GetString("AnkleBoots", resourceCulture);
+            }
+        }
+        
+        internal static string Boots {
+            get {
+                return ResourceManager.GetString("Boots", resourceCulture);
+            }
+        }
+        
+        internal static string Sneakers {
+            get {
+                return ResourceManager.GetString("Sneakers", resourceCulture);
+            }
+        }
+        
+        internal static string Uggs {
+            get {
+                return ResourceManager.GetString("Uggs", resourceCulture);
+            }
+        }
+        
+        internal static string RubberisedBoots {
+            get {
+                return ResourceManager.GetString("RubberisedBoots", resourceCulture);
+            }
+        }
+        
+        internal static string FlipFlops {
+            get {
+                return ResourceManager.GetString("FlipFlops", resourceCulture);
+            }
+        }
+        
+        internal static string Shoes {
+            get {
+                return ResourceManager.GetString("Shoes", resourceCulture);
+            }
+        }
+        
+        internal static string Ballerinas {
+            get {
+                return ResourceManager.GetString("Ballerinas", resourceCulture);
+            }
+        }
+        
+        internal static string Loafers {
+            get {
+                return ResourceManager.GetString("Loafers", resourceCulture);
+            }
+        }
+        
+        internal static string Sandals {
+            get {
+                return ResourceManager.GetString("Sandals", resourceCulture);
+            }
+        }
+        
+        internal static string Moccasins {
+            get {
+                return ResourceManager.GetString("Moccasins", resourceCulture);
+            }
+        }
+        
+        internal static string Espadrilles {
+            get {
+                return ResourceManager.GetString("Espadrilles", resourceCulture);
+            }
+        }
+        
+        internal static string Slippers {
+            get {
+                return ResourceManager.GetString("Slippers", resourceCulture);
+            }
+        }
+        
+        internal static string Mules {
+            get {
+                return ResourceManager.GetString("Mules", resourceCulture);
+            }
+        }
+        
+        internal static string Backpacks {
+            get {
+                return ResourceManager.GetString("Backpacks", resourceCulture);
+            }
+        }
+        
+        internal static string ClutchBags {
+            get {
+                return ResourceManager.GetString("ClutchBags", resourceCulture);
+            }
+        }
+        
+        internal static string ToiletryBags {
+            get {
+                return ResourceManager.GetString("ToiletryBags", resourceCulture);
+            }
+        }
+        
+        internal static string DocumentCovers {
+            get {
+                return ResourceManager.GetString("DocumentCovers", resourceCulture);
+            }
+        }
+        
+        internal static string Cardholders {
+            get {
+                return ResourceManager.GetString("Cardholders", resourceCulture);
+            }
+        }
+        
+        internal static string Wallets {
+            get {
+                return ResourceManager.GetString("Wallets", resourceCulture);
+            }
+        }
+        
+        internal static string Knitwear {
+            get {
+                return ResourceManager.GetString("Knitwear", resourceCulture);
+            }
+        }
+        
+        internal static string SweatshirtsHoodies {
+            get {
+                return ResourceManager.GetString("SweatshirtsHoodies", resourceCulture);
+            }
+        }
+        
+        internal static string Trousers {
+            get {
+                return ResourceManager.GetString("Trousers", resourceCulture);
+            }
+        }
+        
+        internal static string TShirts {
+            get {
+                return ResourceManager.GetString("TShirts", resourceCulture);
+            }
+        }
+        
+        internal static string Shirts {
+            get {
+                return ResourceManager.GetString("Shirts", resourceCulture);
+            }
+        }
+        
+        internal static string Shorts {
+            get {
+                return ResourceManager.GetString("Shorts", resourceCulture);
+            }
+        }
+        
+        internal static string SuitsJumpsuits {
+            get {
+                return ResourceManager.GetString("SuitsJumpsuits", resourceCulture);
+            }
+        }
+        
+        internal static string Loungewear {
+            get {
+                return ResourceManager.GetString("Loungewear", resourceCulture);
+            }
+        }
+        
+        internal static string Sportswear {
+            get {
+                return ResourceManager.GetString("Sportswear", resourceCulture);
+            }
+        }
+        
+        internal static string Skirts {
+            get {
+                return ResourceManager.GetString("Skirts", resourceCulture);
+            }
+        }
+        
+        internal static string Jeans {
+            get {
+                return ResourceManager.GetString("Jeans", resourceCulture);
+            }
+        }
+        
+        internal static string Dresses {
+            get {
+                return ResourceManager.GetString("Dresses", resourceCulture);
+            }
+        }
+        
+        internal static string Coats {
+            get {
+                return ResourceManager.GetString("Coats", resourceCulture);
+            }
+        }
+        
+        internal static string TrenchCoats {
+            get {
+                return ResourceManager.GetString("TrenchCoats", resourceCulture);
+            }
+        }
+        
+        internal static string Jackets {
+            get {
+                return ResourceManager.GetString("Jackets", resourceCulture);
+            }
+        }
+        
+        internal static string FurCoats {
+            get {
+                return ResourceManager.GetString("FurCoats", resourceCulture);
+            }
+        }
+        
+        internal static string Gilets {
+            get {
+                return ResourceManager.GetString("Gilets", resourceCulture);
+            }
+        }
+        
+        internal static string Blazers {
+            get {
+                return ResourceManager.GetString("Blazers", resourceCulture);
+            }
+        }
+        
+        internal static string PufferJackets {
+            get {
+                return ResourceManager.GetString("PufferJackets", resourceCulture);
+            }
+        }
+        
+        internal static string Parkas {
+            get {
+                return ResourceManager.GetString("Parkas", resourceCulture);
+            }
+        }
+        
+        internal static string DoubleFacedJackets {
+            get {
+                return ResourceManager.GetString("DoubleFacedJackets", resourceCulture);
+            }
+        }
+        
+        internal static string Glasses {
+            get {
+                return ResourceManager.GetString("Glasses", resourceCulture);
+            }
+        }
+        
+        internal static string Headwear {
+            get {
+                return ResourceManager.GetString("Headwear", resourceCulture);
+            }
+        }
+        
+        internal static string Headwears {
+            get {
+                return ResourceManager.GetString("Headwears", resourceCulture);
+            }
+        }
+        
+        internal static string Belts {
+            get {
+                return ResourceManager.GetString("Belts", resourceCulture);
+            }
+        }
+        
+        internal static string Scarves {
+            get {
+                return ResourceManager.GetString("Scarves", resourceCulture);
+            }
+        }
+        
+        internal static string Gloves {
+            get {
+                return ResourceManager.GetString("Gloves", resourceCulture);
+            }
+        }
+        
+        internal static string Umbrellas {
+            get {
+                return ResourceManager.GetString("Umbrellas", resourceCulture);
+            }
+        }
+        
+        internal static string Bras {
+            get {
+                return ResourceManager.GetString("Bras", resourceCulture);
+            }
+        }
+        
+        internal static string Briefs {
+            get {
+                return ResourceManager.GetString("Briefs", resourceCulture);
+            }
+        }
+        
+        internal static string Swimwear {
+            get {
+                return ResourceManager.GetString("Swimwear", resourceCulture);
+            }
+        }
+        
+        internal static string SocksTights {
+            get {
+                return ResourceManager.GetString("SocksTights", resourceCulture);
+            }
+        }
+        
+        internal static string Bodysuits {
+            get {
+                return ResourceManager.GetString("Bodysuits", resourceCulture);
+            }
+        }
+        
+        internal static string Corsets {
+            get {
+                return ResourceManager.GetString("Corsets", resourceCulture);
+            }
+        }
+        
+        internal static string Jewellery {
+            get {
+                return ResourceManager.GetString("Jewellery", resourceCulture);
+            }
+        }
+        
+        internal static string Necklaces {
+            get {
+                return ResourceManager.GetString("Necklaces", resourceCulture);
+            }
+        }
+        
+        internal static string Rings {
+            get {
+                return ResourceManager.GetString("Rings", resourceCulture);
+            }
+        }
+        
+        internal static string Bracelets {
+            get {
+                return ResourceManager.GetString("Bracelets", resourceCulture);
+            }
+        }
+        
+        internal static string LegBracelets {
+            get {
+                return ResourceManager.GetString("LegBracelets", resourceCulture);
+            }
+        }
+        
+        internal static string Earrings {
+            get {
+                return ResourceManager.GetString("Earrings", resourceCulture);
+            }
+        }
+        
+        internal static string EarCuffs {
+            get {
+                return ResourceManager.GetString("EarCuffs", resourceCulture);
+            }
+        }
+        
+        internal static string HairClips {
+            get {
+                return ResourceManager.GetString("HairClips", resourceCulture);
+            }
+        }
+        
+        internal static string Nightwear {
+            get {
+                return ResourceManager.GetString("Nightwear", resourceCulture);
+            }
+        }
+        
+        internal static string Pyjamas {
+            get {
+                return ResourceManager.GetString("Pyjamas", resourceCulture);
+            }
+        }
+        
+        internal static string SlipDresses {
+            get {
+                return ResourceManager.GetString("SlipDresses", resourceCulture);
+            }
+        }
+        
+        internal static string DressingGowns {
+            get {
+                return ResourceManager.GetString("DressingGowns", resourceCulture);
+            }
+        }
+        
+        internal static string Perfumes {
+            get {
+                return ResourceManager.GetString("Perfumes", resourceCulture);
+            }
+        }
+        
+        internal static string CosmeticsAndAccessories {
+            get {
+                return ResourceManager.GetString("CosmeticsAndAccessories", resourceCulture);
+            }
+        }
+        
+        internal static string DogsClothesAndAccessories {
+            get {
+                return ResourceManager.GetString("DogsClothesAndAccessories", resourceCulture);
+            }
+        }
+        
+        internal static string BudgetProduct {
+            get {
+                return ResourceManager.GetString("BudgetProduct", resourceCulture);
+            }
+        }
+        
+        internal static string ModerateProduct {
+            get {
+                return ResourceManager.GetString("ModerateProduct", resourceCulture);
+            }
+        }
+        
+        internal static string ExpensiveProduct {
+            get {
+                return ResourceManager.GetString("ExpensiveProduct", resourceCulture);
             }
         }
     }

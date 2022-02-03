@@ -446,6 +446,90 @@ namespace Infrastructure.Persistence.Migrations
                         },
                         new
                         {
+                            Id = 1003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Sneakers",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Uggs",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "RubberisedBoots",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "FlipFlops",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1007L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Shoes",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1008L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Ballerinas",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1009L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Loafers",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1010L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Sandals",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1011L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Moccasins",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1012L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Espadrilles",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1013L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Slippers",
+                            ParentId = 1L
+                        },
+                        new
+                        {
+                            Id = 1014L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Mules",
+                            ParentId = 1L
+                        },
+                        new
+                        {
                             Id = 2L,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NameLocalizationKey = "Bags"
@@ -470,6 +554,410 @@ namespace Infrastructure.Persistence.Migrations
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NameLocalizationKey = "ClutchBags",
                             ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "ToiletryBags",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "DocumentCovers",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Cardholders",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 2007L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Wallets",
+                            ParentId = 2L
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Clothes"
+                        },
+                        new
+                        {
+                            Id = 3001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Knitwear",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "SweatshirtsHoodies",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Trousers",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "TShirts",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Shirts",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Shorts",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3007L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "SuitsJumpsuits",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3008L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Loungewear",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3009L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Sportswear",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3010L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Skirts",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3011L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Jeans",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 3012L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Dresses",
+                            ParentId = 3L
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Outerwear"
+                        },
+                        new
+                        {
+                            Id = 4001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Coats",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "TrenchCoats",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Jackets",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "FurCoats",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Gilets",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Blazers",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4007L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "PufferJackets",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4008L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Parkas",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 4009L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "DoubleFacedJackets",
+                            ParentId = 4L
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 5001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Glasses",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 5002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Headwears",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 5003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Belts",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 5004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Scarves",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 5005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Gloves",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 5006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Umbrellas",
+                            ParentId = 5L
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Lingerie"
+                        },
+                        new
+                        {
+                            Id = 6001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Bras",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 6002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Briefs",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 6003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Swimwear",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 6004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "SocksTights",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 6005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Bodysuits",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 6006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Corsets",
+                            ParentId = 6L
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Jewellery"
+                        },
+                        new
+                        {
+                            Id = 7001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Necklaces",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Rings",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Bracelets",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "LegBracelets",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7005L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Earrings",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7006L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "EarCuffs",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 7007L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "HairClips",
+                            ParentId = 7L
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Nightwear"
+                        },
+                        new
+                        {
+                            Id = 8001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Pyjamas",
+                            ParentId = 8L
+                        },
+                        new
+                        {
+                            Id = 8002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "SlipDresses",
+                            ParentId = 8L
+                        },
+                        new
+                        {
+                            Id = 8003L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "DressingGowns",
+                            ParentId = 8L
+                        },
+                        new
+                        {
+                            Id = 8004L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Slippers",
+                            ParentId = 8L
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "DogsClothesAndAccessories"
+                        },
+                        new
+                        {
+                            Id = 9001L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Clothes",
+                            ParentId = 9L
+                        },
+                        new
+                        {
+                            Id = 9002L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Accessories",
+                            ParentId = 9L
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "Perfumes"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            NameLocalizationKey = "CosmeticsAndAccessories"
                         });
                 });
 

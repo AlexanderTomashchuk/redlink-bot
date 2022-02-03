@@ -119,7 +119,7 @@
     <data name="Jewelry" xml:space="preserve">
         <value>Ювелирные украшения</value>
     </data>
-    <data name="FootWear" xml:space="preserve">
+    <data name="Footwear" xml:space="preserve">
         <value>Обувь</value>
     </data>
     <data name="Lingerie" xml:space="preserve">
@@ -128,7 +128,7 @@
     <data name="New" xml:space="preserve">
         <value>Новый</value>
     </data>
-    <data name="OuterWear" xml:space="preserve">
+    <data name="Outerwear" xml:space="preserve">
         <value>Верхняя одежда</value>
     </data>
     <data name="Perfect" xml:space="preserve">
@@ -193,5 +193,221 @@
     </data>
     <data name="ChosenCondition" xml:space="preserve">
         <value>Выбранное состояние</value>
+    </data>
+    <data name="Boots" xml:space="preserve">
+        <value>Сапоги</value>
+    </data>
+    <data name="AnkleBoots" xml:space="preserve">
+        <value>Ботинки</value>
+    </data>
+    <data name="Sneakers" xml:space="preserve">
+        <value>Кроссовки | кеды</value>
+    </data>
+    <data name="FlipFlops" xml:space="preserve">
+        <value>Вьетнамки</value>
+    </data>
+    <data name="Sandals" xml:space="preserve">
+        <value>Босоножки</value>
+    </data>
+    <data name="Moccasins" xml:space="preserve">
+        <value>Мокасины</value>
+    </data>
+    <data name="Loafers" xml:space="preserve">
+        <value>Лоферы</value>
+    </data>
+    <data name="RubberisedBoots" xml:space="preserve">
+        <value>Резиновые сапоги</value>
+    </data>
+    <data name="Shoes" xml:space="preserve">
+        <value>Туфли</value>
+    </data>
+    <data name="Uggs" xml:space="preserve">
+        <value>Угги</value>
+    </data>
+    <data name="Ballerinas" xml:space="preserve">
+        <value>Балетки</value>
+    </data>
+    <data name="Espadrilles" xml:space="preserve">
+        <value>Эспадрильи</value>
+    </data>
+    <data name="Mules" xml:space="preserve">
+        <value>Мюли</value>
+    </data>
+    <data name="Slippers" xml:space="preserve">
+        <value>Тапочки</value>
+    </data>
+    <data name="Wallets" xml:space="preserve">
+        <value>Кошельки</value>
+    </data>
+    <data name="Cardholders" xml:space="preserve">
+        <value>Кардхолдеры</value>
+    </data>
+    <data name="Backpacks" xml:space="preserve">
+        <value>Рюкзаки</value>
+    </data>
+    <data name="ClutchBags" xml:space="preserve">
+        <value>Клачи</value>
+    </data>
+    <data name="DocumentCovers" xml:space="preserve">
+        <value>Обложки для документов</value>
+    </data>
+    <data name="ToiletryBags" xml:space="preserve">
+        <value>Косметички</value>
+    </data>
+    <data name="Knitwear" xml:space="preserve">
+        <value>Трикотаж</value>
+    </data>
+    <data name="SweatshirtsHoodies" xml:space="preserve">
+        <value>Свитшоты | толстовки</value>
+    </data>
+    <data name="Trousers" xml:space="preserve">
+        <value>Штаны</value>
+    </data>
+    <data name="TShirts" xml:space="preserve">
+        <value>Футболки</value>
+    </data>
+    <data name="Shirts" xml:space="preserve">
+        <value>Рубашки</value>
+    </data>
+    <data name="Shorts" xml:space="preserve">
+        <value>Шорты</value>
+    </data>
+    <data name="SuitsJumpsuits" xml:space="preserve">
+        <value>Костюмы и комбинезоны</value>
+    </data>
+    <data name="Loungewear" xml:space="preserve">
+        <value>Одежда для дома</value>
+    </data>
+    <data name="Sportswear" xml:space="preserve">
+        <value>Одежда для спорта</value>
+    </data>
+    <data name="Skirts" xml:space="preserve">
+        <value>Юбки</value>
+    </data>
+    <data name="Jeans" xml:space="preserve">
+        <value>Джинсы</value>
+    </data>
+    <data name="Dresses" xml:space="preserve">
+        <value>Платья</value>
+    </data>
+    <data name="Coats" xml:space="preserve">
+        <value>Пальто</value>
+    </data>
+    <data name="TrenchCoats" xml:space="preserve">
+        <value>Плащи</value>
+    </data>
+    <data name="Jackets" xml:space="preserve">
+        <value>Куртки</value>
+    </data>
+    <data name="FurCoats" xml:space="preserve">
+        <value>Шубы</value>
+    </data>
+    <data name="Gilets" xml:space="preserve">
+        <value>Жилетки</value>
+    </data>
+    <data name="Blazers" xml:space="preserve">
+        <value>Пиджаки и жакеты</value>
+    </data>
+    <data name="PufferJackets" xml:space="preserve">
+        <value>Пуховики</value>
+    </data>
+    <data name="Parkas" xml:space="preserve">
+        <value>Парки</value>
+    </data>
+    <data name="DoubleFacedJackets" xml:space="preserve">
+        <value>Дубленки</value>
+    </data>
+    <data name="Glasses" xml:space="preserve">
+        <value>Очки</value>
+    </data>
+    <data name="Headwear" xml:space="preserve">
+        <value>Головные уборы</value>
+    </data>
+    <data name="Headwears" xml:space="preserve">
+        <value>Головные уборы</value>
+    </data>
+    <data name="Belts" xml:space="preserve">
+        <value>Ремни</value>
+    </data>
+    <data name="Scarves" xml:space="preserve">
+        <value>Шарфы и платки</value>
+    </data>
+    <data name="Gloves" xml:space="preserve">
+        <value>Перчатки и варежки</value>
+    </data>
+    <data name="Umbrellas" xml:space="preserve">
+        <value>Зонты</value>
+    </data>
+    <data name="Bras" xml:space="preserve">
+        <value>Бюстгальтеры</value>
+    </data>
+    <data name="Briefs" xml:space="preserve">
+        <value>Трусики</value>
+    </data>
+    <data name="Swimwear" xml:space="preserve">
+        <value>Одежда для плаванья</value>
+    </data>
+    <data name="SocksTights" xml:space="preserve">
+        <value>Носки | Колготы</value>
+    </data>
+    <data name="Bodysuits" xml:space="preserve">
+        <value>Боди</value>
+    </data>
+    <data name="Corsets" xml:space="preserve">
+        <value>Корсеты</value>
+    </data>
+    <data name="Jewellery" xml:space="preserve">
+        <value>Ювелирные украшения</value>
+    </data>
+    <data name="Necklaces" xml:space="preserve">
+        <value>Ожерелья</value>
+    </data>
+    <data name="Rings" xml:space="preserve">
+        <value>Кольца</value>
+    </data>
+    <data name="Bracelets" xml:space="preserve">
+        <value>Браслеты</value>
+    </data>
+    <data name="LegBracelets" xml:space="preserve">
+        <value>Браслеты на ногу</value>
+    </data>
+    <data name="Earrings" xml:space="preserve">
+        <value>Сережки</value>
+    </data>
+    <data name="EarCuffs" xml:space="preserve">
+        <value>Кафы</value>
+    </data>
+    <data name="HairClips" xml:space="preserve">
+        <value>Заколки</value>
+    </data>
+    <data name="Nightwear" xml:space="preserve">
+        <value>Одежда для дома и сна</value>
+    </data>
+    <data name="Pyjamas" xml:space="preserve">
+        <value>Пижамы</value>
+    </data>
+    <data name="SlipDresses" xml:space="preserve">
+        <value>Ночнушки</value>
+    </data>
+    <data name="DressingGowns" xml:space="preserve">
+        <value>Халаты</value>
+    </data>
+    <data name="Perfumes" xml:space="preserve">
+        <value>Парфюмерия</value>
+    </data>
+    <data name="CosmeticsAndAccessories" xml:space="preserve">
+        <value>Косметика и аксессуары</value>
+    </data>
+    <data name="DogsClothesAndAccessories" xml:space="preserve">
+        <value>Одежда и аксессуары для животных</value>
+    </data>
+    <data name="BudgetProduct" xml:space="preserve">
+        <value>Бюджетный товар</value>
+    </data>
+    <data name="ModerateProduct" xml:space="preserve">
+        <value>Товар средней стоимости</value>
+    </data>
+    <data name="ExpensiveProduct" xml:space="preserve">
+        <value>Дорогой товар</value>
     </data>
 </root>
